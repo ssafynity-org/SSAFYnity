@@ -82,6 +82,29 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void checkOut(CheckDto check) {
 
+        LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+        Long memberId = check.getMemberId();
+        int year = localDateTime.getYear();
+        int month = localDateTime.getMonthValue();
+        int day = localDateTime.getDayOfMonth();
+        String id = memberId + "-" + year + "-" + month;
+
+        // 현재 멤버의 이번달 도큐먼트 조회
+        Attendance attendance = attendanceRepository.findById(id).orElseThrow(()->
+                new AttendanceNotFoundException("출석정보가 없습니다."));
+
+        // 퇴실시간
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String time = localDateTime.format(format);
+
+        // 늦었는지 아닌지 판별
+        if(localDateTime.toLocalTime().isAfter(CHECK_OUT_END) || localDateTime.toLocalTime().equals(CHECK_OUT_END)){
+            attendance.getRecords().get(day).updateCheckOutTime(time);
+            attendance.getRecords().get(day).updateStatus("조퇴");
+        } else{
+            attendance.getRecords().get(day).updateCheckOutTime(time);
+        }
+
     }
 
     @Override

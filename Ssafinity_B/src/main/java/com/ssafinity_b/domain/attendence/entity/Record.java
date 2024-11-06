@@ -19,4 +19,13 @@ public class Record {
         this.checkOutTime = updateRecord.getCheckOutTime();
         this.status = updateRecord.getStatus();
     }
+
+    public void updateCheckOutTime(String checkOutTime){
+        this.checkOutTime = checkOutTime;
+    }
+
+    public void updateStatus(String status){
+        this.status = status;
+    }
+
 }
