@@ -3,6 +3,7 @@ package com.ssafinity_b.domain.attendence.controller;
 import com.ssafinity_b.domain.attendence.dto.*;
 import com.ssafinity_b.domain.attendence.service.AttendanceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/attendance")
 @RequiredArgsConstructor
+@Tag(name = "Attendance 컨트롤러")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;

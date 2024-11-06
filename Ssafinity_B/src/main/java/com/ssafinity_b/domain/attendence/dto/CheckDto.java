@@ -2,9 +2,6 @@ package com.ssafinity_b.domain.attendence.dto;
 
 import lombok.*;
 
-import java.sql.Time;
-import java.util.Date;
-
 @Getter
 @Setter
 @Builder

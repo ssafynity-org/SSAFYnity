@@ -1,8 +1,6 @@
 package com.ssafinity_b.domain.member.service;
 
-import com.ssafinity_b.domain.member.dto.CreateMemberDto;
-import com.ssafinity_b.domain.member.dto.GetMemberDto;
-import com.ssafinity_b.domain.member.dto.UpdateMemberDto;
+import com.ssafinity_b.domain.member.dto.*;
 
 public interface MemberService {
 

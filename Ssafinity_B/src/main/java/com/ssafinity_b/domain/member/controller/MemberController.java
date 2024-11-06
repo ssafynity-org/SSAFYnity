@@ -1,10 +1,9 @@
 package com.ssafinity_b.domain.member.controller;
 
-import com.ssafinity_b.domain.member.dto.CreateMemberDto;
-import com.ssafinity_b.domain.member.dto.GetMemberDto;
-import com.ssafinity_b.domain.member.dto.UpdateMemberDto;
+import com.ssafinity_b.domain.member.dto.*;
 import com.ssafinity_b.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
+@Tag(name = "Member 컨트롤러")
 public class MemberController {
 
     private final MemberService memberService;
