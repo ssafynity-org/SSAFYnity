@@ -14,6 +14,5 @@ public class CheckDto {
 
     private Long memberId;
     private String date;
-    private String time;
 
 }

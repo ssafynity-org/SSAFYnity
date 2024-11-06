@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +48,34 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public void checkIn(CheckDto check) {
+        LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+        Long memberId = check.getMemberId();
+        int year = localDateTime.getYear();
+        int month = localDateTime.getMonthValue();
+        int day = localDateTime.getDayOfMonth();
+        String id = memberId + "-" + year + "-" + month;
+
+        // 현재 멤버의 이번달 도큐먼트 조회
+        Attendance attendance = attendanceRepository.findById(id).orElseThrow(()->
+                new AttendanceNotFoundException("출석정보가 없습니다."));
+
+        // 입실시간
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String time = localDateTime.format(format);
+
+        // 지각인지 아닌지 판별
+        if(localDateTime.toLocalTime().isAfter(CHECK_IN_END) || localDateTime.toLocalTime().equals(CHECK_IN_END)){
+            Record record = Record.builder()
+                    .checkInTime(time)
+                    .status("지각")
+                    .build();
+            attendance.getRecords().put(day, record);
+        } else{
+            Record record = Record.builder()
+                    .checkInTime(time)
+                    .build();
+            attendance.getRecords().put(day, record);
+        }
 
     }
 
