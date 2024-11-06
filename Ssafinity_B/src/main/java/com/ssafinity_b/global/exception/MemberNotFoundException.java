@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 @RequiredArgsConstructor
-public class CheckInException extends RuntimeException{
+public class MemberNotFoundException extends RuntimeException{
 
-    public CheckInException(String message){
+    public MemberNotFoundException(String message){
         super(message);
     }
 }

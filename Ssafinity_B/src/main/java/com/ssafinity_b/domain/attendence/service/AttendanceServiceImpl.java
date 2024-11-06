@@ -1,16 +1,15 @@
 package com.ssafinity_b.domain.attendence.service;
 
-import com.ssafinity_b.domain.attendence.dto.CheckDto;
+import com.ssafinity_b.domain.attendence.dto.*;
 import com.ssafinity_b.domain.attendence.entity.Attendance;
+import com.ssafinity_b.domain.attendence.entity.Record;
 import com.ssafinity_b.domain.attendence.repository.AttendanceRepository;
-import com.ssafinity_b.global.exception.CheckInException;
+import com.ssafinity_b.global.exception.AttendanceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +30,34 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void checkOut(CheckDto check) {
 
+    }
+
+    @Override
+    public String create(CreateAttendanceDto createAttendanceDto) {
+        Attendance attendance = new Attendance(createAttendanceDto.getMemberId(), createAttendanceDto.getYear(), createAttendanceDto.getMonth());
+        Attendance savedAttendance = attendanceRepository.save(attendance);
+        return savedAttendance.getId();
+    }
+
+    @Override
+    public GetAttendanceDto get(Long memberId, int year, int month) {
+        Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(()->
+                new AttendanceNotFoundException("출석정보가 없습니다."));
+        return new GetAttendanceDto(attendance);
+    }
+
+    @Transactional
+    @Override
+    public String update(UpdateRecordDto updateRecord) {
+        Attendance attendance = attendanceRepository.findById(updateRecord.getId()).orElseThrow(()->
+                new AttendanceNotFoundException("출석정보가 없습니다."));
+        attendance.getRecordList().add(new Record(updateRecord));
+        Attendance updatedAttendance = attendanceRepository.save(attendance);
+        return updatedAttendance.getId();
+    }
+
+    @Override
+    public void delete(Long memberId, int year, int month) {
+        attendanceRepository.deleteById(memberId+"-"+year+"-"+month);
     }
 }

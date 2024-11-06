@@ -41,4 +41,18 @@ public class Member {
         this.name = memberDto.getName();
     }
 
+    public Member updateEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Member updatePassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    public Member updateName(String name) {
+        this.name = name;
+        return this;
+    }
 }

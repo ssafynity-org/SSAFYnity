@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 @RequiredArgsConstructor
-public class CheckInException extends RuntimeException{
+public class AttendanceNotFoundException extends RuntimeException{
 
-    public CheckInException(String message){
+    public AttendanceNotFoundException(String message){
         super(message);
     }
 }

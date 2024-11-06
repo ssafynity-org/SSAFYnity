@@ -22,7 +22,7 @@ public class MemberController {
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){
         GetMemberDto memberDto = memberService.getMember(memberId);
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
@@ -34,7 +34,7 @@ public class MemberController {
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{memberId}")
     public ResponseEntity<?> deleteMember(@PathVariable Long memberId){
         memberService.deleteMember(memberId);
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
