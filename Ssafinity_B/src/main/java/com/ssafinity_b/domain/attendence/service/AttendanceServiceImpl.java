@@ -130,7 +130,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public GetAttendanceDto get(Long memberId, int year, int month) {
+    public GetAttendanceDto getAttendance(Long memberId, int year, int month) {
         Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(()->
                 new AttendanceNotFoundException("출석정보가 없습니다."));
         return new GetAttendanceDto(attendance);

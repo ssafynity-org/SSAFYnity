@@ -10,7 +10,7 @@ public interface AttendanceService {
 
     String create(CreateAttendanceDto createAttendanceDto);
 
-    GetAttendanceDto get(Long memberId, int year, int month);
+    GetAttendanceDto getAttendance(Long memberId, int year, int month);
 
     String update(UpdateRecordDto updateRecord);
 
