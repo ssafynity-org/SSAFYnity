@@ -4,12 +4,19 @@ import com.ssafinity_b.domain.attendence.dto.*;
 import com.ssafinity_b.domain.attendence.entity.Attendance;
 import com.ssafinity_b.domain.attendence.entity.Record;
 import com.ssafinity_b.domain.attendence.repository.AttendanceRepository;
+import com.ssafinity_b.domain.member.entity.Member;
+import com.ssafinity_b.domain.member.repository.MemberRepository;
 import com.ssafinity_b.global.exception.AttendanceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +28,22 @@ public class AttendanceServiceImpl implements AttendanceService {
     private static final LocalTime CHECK_IN_END = LocalTime.of(9, 0);
     private static final LocalTime CHECK_OUT_START = LocalTime.of(18, 0);
     private static final LocalTime CHECK_OUT_END = LocalTime.of(18, 30);
+    private final MemberRepository memberRepository;
+
+    /* 매월 1일 새벽 4시에 회원마다 그 월의 출결기록 문서 생성 */
+    @Scheduled(cron = "0 0 4 1 * *")
+    public void createAttendanceDocument() {
+        LocalDateTime date = LocalDateTime.now();
+        int year = date.getYear();
+        int month = date.getMonthValue();
+
+        List<Member> memberList = memberRepository.findAll();
+        for(int i = 0;i<memberList.size();i++){
+            Long memberId = memberList.get(i).getMemberId();
+            Attendance attendance = new Attendance(memberId, year, month);
+            Attendance savedAttendance = attendanceRepository.save(attendance);
+        }
+    }
 
     @Override
     public void checkIn(CheckDto check) {
@@ -51,7 +74,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public String update(UpdateRecordDto updateRecord) {
         Attendance attendance = attendanceRepository.findById(updateRecord.getId()).orElseThrow(()->
                 new AttendanceNotFoundException("출석정보가 없습니다."));
-        attendance.getRecordList().add(new Record(updateRecord));
+        attendance.getRecords().put(updateRecord.getDay(), new Record(updateRecord));
         Attendance updatedAttendance = attendanceRepository.save(attendance);
         return updatedAttendance.getId();
     }
@@ -60,4 +83,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     public void delete(Long memberId, int year, int month) {
         attendanceRepository.deleteById(memberId+"-"+year+"-"+month);
     }
+
+
 }

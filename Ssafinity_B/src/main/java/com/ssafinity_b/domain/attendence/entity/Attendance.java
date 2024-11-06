@@ -1,8 +1,5 @@
 package com.ssafinity_b.domain.attendence.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Document
 @Getter
@@ -25,14 +22,14 @@ public class Attendance {
     private Long memberId;
     private int year;
     private int month;
-    private List<Record> recordList;
+    private Map<Integer, Record> records;
 
     public Attendance(Long memberId, int year, int month){
         this.id = memberId + "-" + year + "-" + month;
         this.memberId = memberId;
         this.year = year;
         this.month = month;
-        this.recordList = new ArrayList<>();
+        this.records = new HashMap<>();
     }
 
 }
