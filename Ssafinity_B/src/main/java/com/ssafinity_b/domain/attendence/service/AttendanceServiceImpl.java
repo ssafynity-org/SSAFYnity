@@ -7,6 +7,8 @@ import com.ssafinity_b.domain.attendence.repository.AttendanceRepository;
 import com.ssafinity_b.domain.member.entity.Member;
 import com.ssafinity_b.domain.member.repository.MemberRepository;
 import com.ssafinity_b.global.exception.AttendanceNotFoundException;
+import com.ssafinity_b.global.exception.CheckInException;
+import com.ssafinity_b.global.exception.CheckOutException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public void checkIn(CheckDto check) {
+
         LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+
+        // 입실시간 이전이면 실패 응답
+        if(localDateTime.toLocalTime().isBefore(CHECK_IN_START)){
+            throw new CheckInException("아직 입실 시간이 아닙니다.");
+        }
+
         Long memberId = check.getMemberId();
         int year = localDateTime.getYear();
         int month = localDateTime.getMonthValue();
@@ -83,6 +92,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     public void checkOut(CheckDto check) {
 
         LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+
+        // 퇴실시간 이전이면 실패 응답
+        if(localDateTime.toLocalTime().isBefore(CHECK_OUT_START)){
+            throw new CheckOutException("아직 퇴실 시간이 아닙니다.");
+        }
+
         Long memberId = check.getMemberId();
         int year = localDateTime.getYear();
         int month = localDateTime.getMonthValue();

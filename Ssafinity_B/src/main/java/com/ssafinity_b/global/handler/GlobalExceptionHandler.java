@@ -2,6 +2,7 @@ package com.ssafinity_b.global.handler;
 
 import com.ssafinity_b.global.exception.AttendanceNotFoundException;
 import com.ssafinity_b.global.exception.CheckInException;
+import com.ssafinity_b.global.exception.CheckOutException;
 import com.ssafinity_b.global.exception.MemberNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +12,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /* member */
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    /* attendance */
     @ExceptionHandler(CheckInException.class)
     public ResponseEntity<String> handleCheckInException(CheckInException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(CheckOutException.class)
+    public ResponseEntity<String> handleCheckOutException(CheckOutException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
 
     @ExceptionHandler(AttendanceNotFoundException.class)
     public ResponseEntity<String> handleAttendanceNotFoundException(AttendanceNotFoundException ex){
