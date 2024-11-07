@@ -38,6 +38,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+	// Jsoup
+	implementation 'org.jsoup:jsoup:1.15.3'
 }
 
 tasks.named('test') {

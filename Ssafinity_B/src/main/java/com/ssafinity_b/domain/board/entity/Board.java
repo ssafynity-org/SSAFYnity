@@ -32,6 +32,11 @@ public class Board {
         this.content = createBoardDto.getContent();
     }
 
+    public Board(CreateBoardDto createBoardDto, String filteredHtml) {
+        this.title = createBoardDto.getTitle();
+        this.content = filteredHtml;
+    }
+
     public void updateTitle(String title){
         this.title = title;
     }
