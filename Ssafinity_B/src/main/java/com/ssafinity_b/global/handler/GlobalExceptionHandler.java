@@ -1,9 +1,6 @@
 package com.ssafinity_b.global.handler;
 
-import com.ssafinity_b.global.exception.AttendanceNotFoundException;
-import com.ssafinity_b.global.exception.CheckInException;
-import com.ssafinity_b.global.exception.CheckOutException;
-import com.ssafinity_b.global.exception.MemberNotFoundException;
+import com.ssafinity_b.global.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,4 +31,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAttendanceNotFoundException(AttendanceNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    /* board */
+    @ExceptionHandler(BoardNotFoundException.class)
+    public ResponseEntity<String> handleBoardNotFoundException(BoardNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

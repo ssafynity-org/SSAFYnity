@@ -1,8 +1,6 @@
 package com.ssafinity_b.domain.board.service;
 
-import com.ssafinity_b.domain.board.dto.CreateBoardDto;
-import com.ssafinity_b.domain.board.dto.GetBoardDto;
-import com.ssafinity_b.domain.board.dto.UpdateBoardDto;
+import com.ssafinity_b.domain.board.dto.*;
 
 import java.util.List;
 

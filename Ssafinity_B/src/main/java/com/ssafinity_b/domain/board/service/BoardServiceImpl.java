@@ -1,15 +1,15 @@
 package com.ssafinity_b.domain.board.service;
 
-import com.ssafinity_b.domain.board.dto.CreateBoardDto;
-import com.ssafinity_b.domain.board.dto.GetBoardDto;
-import com.ssafinity_b.domain.board.dto.UpdateBoardDto;
+import com.ssafinity_b.domain.board.dto.*;
 import com.ssafinity_b.domain.board.entity.Board;
 import com.ssafinity_b.domain.board.repository.BoardRepository;
 import com.ssafinity_b.domain.member.entity.Member;
 import com.ssafinity_b.domain.member.repository.MemberRepository;
+import com.ssafinity_b.global.exception.BoardNotFoundException;
 import com.ssafinity_b.global.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,26 +24,37 @@ public class BoardServiceImpl implements BoardService{
     public Long createBoard(CreateBoardDto createBoardDto) {
         Member member = memberRepository.findById(createBoardDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
         Board board = new Board(createBoardDto);
-        return 0;
+        board.updateMember(member);
+        Board savedBoard = boardRepository.save(board);
+        return savedBoard.getBoardId();
     }
 
     @Override
     public List<GetBoardDto> getAllBoard() {
-        return List.of();
+        List<Board> boardList = boardRepository.findAll();
+        return boardList.stream()
+                .map(board -> new GetBoardDto(board.getBoardId(), board.getTitle(), board.getContent()))
+                .toList();
     }
 
     @Override
     public GetBoardDto getBoard(Long boardId) {
-        return null;
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        return new GetBoardDto(board);
     }
 
+    @Transactional
     @Override
     public Long updateBoard(UpdateBoardDto updateBoardDto) {
-        return 0;
+        Board board = boardRepository.findById(updateBoardDto.getBoardId()).orElseThrow(BoardNotFoundException::new);
+        board.updateTitle(updateBoardDto.getTitle());
+        board.updateContent(updateBoardDto.getContent());
+        return board.getBoardId();
     }
 
     @Override
     public void deleteBoard(Long boardId) {
-
+        Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
+        boardRepository.delete(board);
     }
 }

@@ -1,8 +1,6 @@
 package com.ssafinity_b.domain.board.controller;
 
-import com.ssafinity_b.domain.board.dto.CreateBoardDto;
-import com.ssafinity_b.domain.board.dto.GetBoardDto;
-import com.ssafinity_b.domain.board.dto.UpdateBoardDto;
+import com.ssafinity_b.domain.board.dto.*;
 import com.ssafinity_b.domain.board.service.BoardService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
