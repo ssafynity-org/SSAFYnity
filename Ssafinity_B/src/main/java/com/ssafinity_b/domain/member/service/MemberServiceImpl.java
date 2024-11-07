@@ -23,16 +23,14 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public GetMemberDto getMember(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(()->
-                new MemberNotFoundException("회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return new GetMemberDto(member);
     }
 
     @Transactional
     @Override
     public Long updateMember(UpdateMemberDto memberDto) {
-        Member member = memberRepository.findById(memberDto.getMemberId()).orElseThrow(() ->
-                new MemberNotFoundException("회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(memberDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
         member.updateMember(memberDto);
 //        member.updateEmail(memberDto.getEmail())
 //                .updateName(memberDto.getName())

@@ -55,7 +55,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 입실시간 이전이면 실패 응답
         if(localDateTime.toLocalTime().isBefore(CHECK_IN_START)){
-            throw new CheckInException("아직 입실 시간이 아닙니다.");
+            throw new CheckInException();
         }
 
         Long memberId = check.getMemberId();
@@ -65,8 +65,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         String id = memberId + "-" + year + "-" + month;
 
         // 현재 멤버의 이번달 도큐먼트 조회
-        Attendance attendance = attendanceRepository.findById(id).orElseThrow(()->
-                new AttendanceNotFoundException("출석정보가 없습니다."));
+        Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
 
         // 입실시간
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -95,7 +94,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 퇴실시간 이전이면 실패 응답
         if(localDateTime.toLocalTime().isBefore(CHECK_OUT_START)){
-            throw new CheckOutException("아직 퇴실 시간이 아닙니다.");
+            throw new CheckOutException();
         }
 
         Long memberId = check.getMemberId();
@@ -105,8 +104,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         String id = memberId + "-" + year + "-" + month;
 
         // 현재 멤버의 이번달 도큐먼트 조회
-        Attendance attendance = attendanceRepository.findById(id).orElseThrow(()->
-                new AttendanceNotFoundException("출석정보가 없습니다."));
+        Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
 
         // 퇴실시간
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -131,16 +129,14 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public GetAttendanceDto getAttendance(Long memberId, int year, int month) {
-        Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(()->
-                new AttendanceNotFoundException("출석정보가 없습니다."));
+        Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(AttendanceNotFoundException::new);
         return new GetAttendanceDto(attendance);
     }
 
     @Transactional
     @Override
     public String update(UpdateRecordDto updateRecord) {
-        Attendance attendance = attendanceRepository.findById(updateRecord.getId()).orElseThrow(()->
-                new AttendanceNotFoundException("출석정보가 없습니다."));
+        Attendance attendance = attendanceRepository.findById(updateRecord.getId()).orElseThrow(AttendanceNotFoundException::new);
         attendance.getRecords().put(updateRecord.getDay(), new Record(updateRecord));
         Attendance updatedAttendance = attendanceRepository.save(attendance);
         return updatedAttendance.getId();

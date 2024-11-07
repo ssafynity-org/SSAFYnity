@@ -1,14 +1,14 @@
 package com.ssafinity_b.domain.member.entity;
 
+import com.ssafinity_b.domain.board.entity.Board;
 import com.ssafinity_b.domain.member.dto.UpdateMemberDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,6 +26,12 @@ public class Member {
     private String password;
 
     private String name;
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Board> boardList;
+
+
+
 
     public static Member of(String email, String password, String name){
         return Member.builder()

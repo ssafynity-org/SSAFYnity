@@ -1,12 +1,8 @@
 package com.ssafinity_b.global.exception;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-
-@RequiredArgsConstructor
 public class CheckInException extends RuntimeException{
 
-    public CheckInException(String message){
-        super(message);
+    public CheckInException(){
+        super("입실 시간이 아닙니다.");
     }
 }
