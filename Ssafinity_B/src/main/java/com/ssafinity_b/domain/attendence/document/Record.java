@@ -1,4 +1,4 @@
-package com.ssafinity_b.domain.attendence.entity;
+package com.ssafinity_b.domain.attendence.document;
 
 import com.ssafinity_b.domain.attendence.dto.UpdateRecordDto;
 import lombok.*;

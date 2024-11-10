@@ -1,6 +1,7 @@
 package com.ssafinity_b.domain.member.entity;
 
 import com.ssafinity_b.domain.board.entity.Board;
+import com.ssafinity_b.domain.member.dto.CreateMemberDto;
 import com.ssafinity_b.domain.member.dto.UpdateMemberDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,30 +16,37 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(indexes = {
+        @Index(name = "index_email", columnList = "email"),
+        @Index(name = "index_name", columnList = "name")
+})
 public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String name;
+
+    private String company;
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Board> boardList;
 
 
 
-
-    public static Member of(String email, String password, String name){
-        return Member.builder()
-                .email(email)
-                .password(password)
-                .name(name)
-                .build();
+    public Member(CreateMemberDto createMemberDto){
+        this.email = createMemberDto.getEmail();
+        this.password = createMemberDto.getPassword();
+        this.name = createMemberDto.getName();
+        this.company = createMemberDto.getCompany();
     }
 
     public void updateMember(UpdateMemberDto memberDto){

@@ -1,8 +1,8 @@
 package com.ssafinity_b.domain.attendence.service;
 
 import com.ssafinity_b.domain.attendence.dto.*;
-import com.ssafinity_b.domain.attendence.entity.Attendance;
-import com.ssafinity_b.domain.attendence.entity.Record;
+import com.ssafinity_b.domain.attendence.document.Attendance;
+import com.ssafinity_b.domain.attendence.document.Record;
 import com.ssafinity_b.domain.attendence.repository.AttendanceRepository;
 import com.ssafinity_b.domain.member.entity.Member;
 import com.ssafinity_b.domain.member.repository.MemberRepository;
@@ -14,11 +14,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @Service

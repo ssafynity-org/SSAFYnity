@@ -2,6 +2,8 @@ package com.ssafinity_b.domain.member.service;
 
 import com.ssafinity_b.domain.member.dto.*;
 
+import java.util.List;
+
 public interface MemberService {
 
     Long createMember(CreateMemberDto memberDto);
@@ -11,4 +13,6 @@ public interface MemberService {
     Long updateMember(UpdateMemberDto memberDto);
 
     void deleteMember(Long memberId);
+
+    List<GetMemberDto> getMemberByCompany(String keyword);
 }

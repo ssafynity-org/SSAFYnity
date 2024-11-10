@@ -40,6 +40,11 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	// Jsoup
 	implementation 'org.jsoup:jsoup:1.15.3'
+	// elasticsearch
+	implementation 'co.elastic.clients:elasticsearch-java:8.14.3'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'
+	// spring data elasticsearch
+	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 }
 
 tasks.named('test') {

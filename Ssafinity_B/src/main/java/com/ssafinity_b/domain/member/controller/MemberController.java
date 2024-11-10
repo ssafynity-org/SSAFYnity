@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class MemberController {
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){
         GetMemberDto memberDto = memberService.getMember(memberId);
-        return new ResponseEntity<Long>(memberId, HttpStatus.OK);
+        return new ResponseEntity<GetMemberDto>(memberDto, HttpStatus.OK);
     }
 
     @Operation(summary = "회원 수정")
@@ -42,6 +44,13 @@ public class MemberController {
     @DeleteMapping("/{memberId}")
     public ResponseEntity<?> deleteMember(@PathVariable Long memberId){
         memberService.deleteMember(memberId);
-        return new ResponseEntity<Long>(memberId, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "회사명으로 회원 검색")
+    @GetMapping("/company")
+    public ResponseEntity<?> getMemberByCompany(@RequestParam String keyword){
+        List<GetMemberDto> memberList = memberService.getMemberByCompany(keyword);
+        return new ResponseEntity<List<GetMemberDto>>(memberList, HttpStatus.OK);
     }
 }

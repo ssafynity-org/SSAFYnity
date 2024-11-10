@@ -1,10 +1,9 @@
 package com.ssafinity_b.domain.attendence.dto;
 
-import com.ssafinity_b.domain.attendence.entity.Attendance;
-import com.ssafinity_b.domain.attendence.entity.Record;
+import com.ssafinity_b.domain.attendence.document.Attendance;
+import com.ssafinity_b.domain.attendence.document.Record;
 import lombok.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Getter
