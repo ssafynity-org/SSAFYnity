@@ -1,28 +1,30 @@
 package com.ssafynity_b.domain.member.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ssafynity_b.domain.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
 
 @Getter
-@Document(indexName = "member")
+@Document(indexName = "ssafynity_member")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberDocument {
 
     @Id
     private Long memberId;
 
-    @Field(type = FieldType.Text, analyzer = "nori")
-    private String company;
-
-//    @Field(index = false)
     private String email;
 
-//    @Field(index = false)
     private String password;
 
-//    @Field(index = false)
     private String name;
+
+    private String company;
 
     public MemberDocument(Member savedMember) {
         this.memberId = savedMember.getMemberId();

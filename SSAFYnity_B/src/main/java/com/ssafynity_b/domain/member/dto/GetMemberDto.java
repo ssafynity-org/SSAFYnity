@@ -25,12 +25,4 @@ public class GetMemberDto {
         this.company = member.getCompany();
     }
 
-    public GetMemberDto(MemberDocument member){
-        this.memberId = member.getMemberId();
-        this.email = member.getEmail();
-        this.password = member.getPassword();
-        this.name = member.getName();
-        this.company = member.getCompany();
-    }
-
 }

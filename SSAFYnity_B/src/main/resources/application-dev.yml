@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ssafinity
+    url: jdbc:mysql://localhost:3306/ssafynity
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,4 +15,4 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/ssafinity
+      uri: mongodb://localhost:27017/ssafynity

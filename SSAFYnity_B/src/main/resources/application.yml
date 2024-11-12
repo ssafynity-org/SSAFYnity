@@ -3,7 +3,7 @@ spring:
     name: Ssafinity_B
 
   profiles:
-    active: mysql
+    active: dev
 
 server:
   port: 8080

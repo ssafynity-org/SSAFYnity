@@ -69,4 +69,9 @@ public class Member {
         this.name = name;
         return this;
     }
+
+    public Member updatdCompany(String company) {
+        this.company = company;
+        return this;
+    }
 }
