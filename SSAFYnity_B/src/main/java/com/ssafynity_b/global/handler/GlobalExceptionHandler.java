@@ -38,4 +38,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    /* message */
+    @ExceptionHandler(MessageNotFoundException.class)
+    public ResponseEntity<String> handleMessageNotFoundException(MessageNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
 }

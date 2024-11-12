@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "Ssafinity",
+                title = "SSAFYnity",
                 description = "SSAFY 수료생들을 위한 커뮤니티 API"
         )
 )

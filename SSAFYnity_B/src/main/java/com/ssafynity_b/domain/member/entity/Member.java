@@ -3,12 +3,14 @@ package com.ssafynity_b.domain.member.entity;
 import com.ssafynity_b.domain.board.entity.Board;
 import com.ssafynity_b.domain.member.dto.CreateMemberDto;
 import com.ssafynity_b.domain.member.dto.UpdateMemberDto;
+import com.ssafynity_b.domain.message.entity.Message;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -39,6 +41,16 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Board> boardList;
+
+    @Builder.Default()
+    @OneToMany(mappedBy = "sender", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Message> sendMessageList = new ArrayList<>();
+
+    @Builder.Default()
+    @OneToMany(mappedBy = "receiver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Message> receiveMessageList = new ArrayList<>();
+
+
 
 
 
