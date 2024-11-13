@@ -1,11 +1,10 @@
 package com.ssafynity_b.domain.message.service.impl;
 
-import com.ssafynity_b.domain.board.dto.CreateBoardDto;
-import com.ssafynity_b.domain.board.dto.GetBoardDto;
 import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.domain.message.dto.CreateMessageDto;
 import com.ssafynity_b.domain.message.dto.GetMessageDto;
+import com.ssafynity_b.domain.message.dto.MessageDto;
 import com.ssafynity_b.domain.message.entity.Message;
 import com.ssafynity_b.domain.message.repository.MessageRepository;
 import com.ssafynity_b.domain.message.service.MessageService;
@@ -72,5 +71,17 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteMessage(Long messageId) {
         messageRepository.deleteById(messageId);
+    }
+
+    @Override
+    public void save(MessageDto receivedMessage) {
+        Member sender = memberRepository.findById(receivedMessage.getSender()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findById(receivedMessage.getReceiver()).orElseThrow(MemberNotFoundException::new);
+        Message message = Message.builder()
+                .message(receivedMessage.getMessage())
+                .sender(sender)
+                .receiver(receiver)
+                .build();
+        messageRepository.save(message);
     }
 }

@@ -2,6 +2,7 @@ package com.ssafynity_b.domain.notification.service.impl;
 
 import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
+import com.ssafynity_b.domain.message.dto.MessageDto;
 import com.ssafynity_b.domain.message.entity.Message;
 import com.ssafynity_b.domain.notification.dto.GetNotificationDto;
 import com.ssafynity_b.domain.notification.entity.Notification;
@@ -43,6 +44,18 @@ public class NotificationServiceImpl implements NotificationService {
                         .receiverId(notification.getReceiver().getMemberId())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public void save(MessageDto receivedMessage) {
+        Member sender = memberRepository.findById(receivedMessage.getSender()).orElseThrow(MemberNotFoundException::new);
+        Member receiver = memberRepository.findById(receivedMessage.getReceiver()).orElseThrow(MemberNotFoundException::new);
+        Notification notification = Notification.builder()
+                .type(1)
+                .sender(sender)
+                .receiver(receiver)
+                .build();
+        notificationRepository.save(notification);
     }
 
 }
