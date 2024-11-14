@@ -22,7 +22,7 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @Operation(summary = "쪽지 보내기")
+    @Operation(summary = "쪽지 생성")
     @PostMapping
     public ResponseEntity<?> createMessage(@RequestBody CreateMessageDto createMessageDto){
         Long boardId = messageService.createMessage(createMessageDto);
