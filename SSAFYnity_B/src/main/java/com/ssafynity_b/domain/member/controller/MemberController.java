@@ -36,6 +36,13 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "회원 로그인")
+    @GetMapping("/{email}/{password}")
+    public ResponseEntity<GetMemberDto> login(@PathVariable String email, @PathVariable String password){
+        GetMemberDto memberDto = memberService.login(email,password);
+        return new ResponseEntity<GetMemberDto>(memberDto,HttpStatus.OK);
+    }
+
     @Operation(summary = "회원 조회")
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){

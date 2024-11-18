@@ -6,8 +6,11 @@ import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberDocumentRepository;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.domain.member.service.MemberService;
+import com.ssafynity_b.global.exception.LoginFailedException;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,7 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+    private final BCryptPasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MemberDocumentRepository documentRepository;
 
@@ -27,7 +31,7 @@ public class MemberServiceImpl implements MemberService {
     public Long createMember(CreateMemberDto memberDto) {
         Member member = new Member(memberDto);
         Member savedMember = memberRepository.save(member);
-        MemberDocument memberDocument = new MemberDocument(savedMember.getMemberId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany());
+        MemberDocument memberDocument = new MemberDocument(savedMember.getMemberId(), savedMember.getEmail(), passwordEncoder.encode(savedMember.getPassword()), savedMember.getName(), savedMember.getCompany());
         documentRepository.save(memberDocument);
         return savedMember.getMemberId();
     }
@@ -44,6 +48,15 @@ public class MemberServiceImpl implements MemberService {
         return StreamSupport.stream(memberDocumentList.spliterator(), false)
                 .map(member -> new GetMemberDto(member.getMemberId(), member.getEmail(), member.getPassword(), member.getName(), member.getCompany()))
                 .toList();
+    }
+
+    @Override
+    public GetMemberDto login(String email, String password) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::new);
+        if(passwordEncoder.matches(password, member.getPassword()))
+            return new GetMemberDto(member);
+        else
+            throw new LoginFailedException();
     }
 
     @Transactional
