@@ -5,7 +5,7 @@ public class LoginFailedException extends RuntimeException{
         super();
     }
 
-    public LoginFailedException(Exception ex) {
-        super(System.lineSeparator() + ex.getMessage());
+    public LoginFailedException(String errorMsg) {
+        super(System.lineSeparator() +"[예외 메세지] "+errorMsg);
     }
 }

@@ -13,7 +13,7 @@ public interface MemberService {
 
     List<GetMemberDto> getAllMember();
 
-    GetMemberDto login(String email, String password);
+    GetMemberDto login(LoginDto loginDto);
 
     Long updateMember(UpdateMemberDto memberDto);
 

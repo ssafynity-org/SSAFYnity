@@ -57,14 +57,11 @@ public class Member {
     private List<Message> receiveMessageList = new ArrayList<>();
 
 
-
-
-
-    public Member(CreateMemberDto createMemberDto){
-        this.email = createMemberDto.getEmail();
-        this.password = createMemberDto.getPassword();
-        this.name = createMemberDto.getName();
-        this.company = createMemberDto.getCompany();
+    public Member(String email, String password, String name, String company) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.company = company;
     }
 
     public void updateMember(UpdateMemberDto memberDto){
