@@ -27,7 +27,7 @@ public class MemberDocument {
     private String company;
 
     public MemberDocument(Member savedMember) {
-        this.memberId = savedMember.getMemberId();
+        this.memberId = savedMember.getId();
         this.email = savedMember.getEmail();
         this.password = savedMember.getPassword();
         this.name = savedMember.getName();

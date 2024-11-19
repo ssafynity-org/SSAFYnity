@@ -1,6 +1,5 @@
 package com.ssafynity_b.domain.member.dto;
 
-import com.ssafynity_b.domain.member.document.MemberDocument;
 import com.ssafynity_b.domain.member.entity.Member;
 import lombok.*;
 
@@ -18,7 +17,7 @@ public class GetMemberDto {
     private String company;
 
     public GetMemberDto(Member member){
-        this.memberId = member.getMemberId();
+        this.memberId = member.getId();
         this.email = member.getEmail();
         this.password = member.getPassword();
         this.name = member.getName();

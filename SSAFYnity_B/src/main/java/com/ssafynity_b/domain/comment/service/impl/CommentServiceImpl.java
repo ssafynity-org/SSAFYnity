@@ -34,8 +34,8 @@ public class CommentServiceImpl implements CommentService {
         member.getCommentList().add(comment);
         board.getCommentList().add(comment);
         return CommentDto.builder()
-                .memberId(comment.getMember().getMemberId())
-                .boardId(comment.getBoard().getBoardId())
+                .memberId(comment.getMember().getId())
+                .boardId(comment.getBoard().getId())
                 .content(comment.getContent())
                 .build();
     }
@@ -44,8 +44,8 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         return CommentDto.builder()
-                .memberId(comment.getMember().getMemberId())
-                .boardId(comment.getBoard().getBoardId())
+                .memberId(comment.getMember().getId())
+                .boardId(comment.getBoard().getId())
                 .commentId(comment.getId())
                 .content(comment.getContent())
                 .build();
@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.updateContent(content);
         return CommentDto.builder()
-                .boardId(comment.getBoard().getBoardId())
+                .boardId(comment.getBoard().getId())
                 .commentId(comment.getId())
                 .content(comment.getContent())
                 .build();

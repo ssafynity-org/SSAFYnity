@@ -38,7 +38,7 @@ public class MessageServiceImpl implements MessageService {
                 .build();
         Message savedMessage = messageRepository.save(message);
         notificationService.createMessageNotification(message);
-        return savedMessage.getMessageId();
+        return savedMessage.getId();
     }
 
     @Override
@@ -47,11 +47,11 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messageList = messageRepository.findByReceiver(member);
         return messageList.stream()
                 .map(message -> GetMessageDto.builder()
-                        .messageId(message.getMessageId())
+                        .messageId(message.getId())
                         .message(message.getMessage())
                         .isRead(message.isRead())
-                        .senderId(message.getSender().getMemberId())
-                        .receiverId(message.getReceiver().getMemberId())
+                        .senderId(message.getSender().getId())
+                        .receiverId(message.getReceiver().getId())
                         .build())
                 .toList();
     }
@@ -60,11 +60,11 @@ public class MessageServiceImpl implements MessageService {
     public GetMessageDto getMessage(Long messageId) {
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
         return GetMessageDto.builder()
-                .messageId(message.getMessageId())
+                .messageId(message.getId())
                 .message(message.getMessage())
                 .isRead(message.isRead())
-                .senderId(message.getSender().getMemberId())
-                .receiverId(message.getReceiver().getMemberId())
+                .senderId(message.getSender().getId())
+                .receiverId(message.getReceiver().getId())
                 .build();
     }
 

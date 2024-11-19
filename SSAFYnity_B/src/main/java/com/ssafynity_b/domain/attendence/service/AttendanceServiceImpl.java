@@ -40,7 +40,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         List<Member> memberList = memberRepository.findAll();
         for(int i = 0;i<memberList.size();i++){
-            Long memberId = memberList.get(i).getMemberId();
+            Long memberId = memberList.get(i).getId();
             Attendance attendance = new Attendance(memberId, year, month);
             Attendance savedAttendance = attendanceRepository.save(attendance);
         }
