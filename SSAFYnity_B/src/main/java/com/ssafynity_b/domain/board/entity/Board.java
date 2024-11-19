@@ -1,12 +1,16 @@
 package com.ssafynity_b.domain.board.entity;
 
 import com.ssafynity_b.domain.board.dto.CreateBoardDto;
+import com.ssafynity_b.domain.comment.entity.Comment;
 import com.ssafynity_b.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +31,10 @@ public class Board {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    List<Comment> commentList = new ArrayList<>();
 
     public Board(CreateBoardDto createBoardDto) {
         this.title = createBoardDto.getTitle();

@@ -1,6 +1,7 @@
 package com.ssafynity_b.domain.member.entity;
 
 import com.ssafynity_b.domain.board.entity.Board;
+import com.ssafynity_b.domain.comment.entity.Comment;
 import com.ssafynity_b.domain.member.dto.CreateMemberDto;
 import com.ssafynity_b.domain.member.dto.UpdateMemberDto;
 import com.ssafynity_b.domain.message.entity.Message;
@@ -39,8 +40,13 @@ public class Member {
 
     private String company;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Board> boardList;
+    private List<Board> boardList = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Comment> commentList = new ArrayList<>();
 
     @Builder.Default()
     @OneToMany(mappedBy = "sender", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
