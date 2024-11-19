@@ -1,14 +1,18 @@
 package com.ssafynity_b.domain.comment.service;
 
-import com.ssafynity_b.domain.comment.dto.CommentDto;
+import com.ssafynity_b.domain.comment.dto.GetCommentDto;
+
+import java.util.List;
 
 public interface CommentService {
 
-    public CommentDto createComment(Long memberId ,Long boardId, String content);
+    public GetCommentDto createComment(Long memberId , Long boardId, String content);
 
-    public CommentDto getComment(Long commentId);
+    public GetCommentDto getComment(Long commentId);
 
-    public CommentDto updateComment(Long commentId, String content);
+    public List<GetCommentDto> getAllComment();
+
+    public GetCommentDto updateComment(Long commentId, String content);
 
     public void deleteComment(Long commentId);
 }

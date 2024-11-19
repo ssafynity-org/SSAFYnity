@@ -2,7 +2,7 @@ package com.ssafynity_b.domain.comment.service.impl;
 
 import com.ssafynity_b.domain.board.entity.Board;
 import com.ssafynity_b.domain.board.repository.BoardRepository;
-import com.ssafynity_b.domain.comment.dto.CommentDto;
+import com.ssafynity_b.domain.comment.dto.GetCommentDto;
 import com.ssafynity_b.domain.comment.entity.Comment;
 import com.ssafynity_b.domain.comment.repository.CommentRepository;
 import com.ssafynity_b.domain.comment.service.CommentService;
@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -25,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public CommentDto createComment(Long memberId, Long boardId, String content) {
+    public GetCommentDto createComment(Long memberId, Long boardId, String content) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         Comment comment = new Comment(content);
@@ -33,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setBoard(board);
         member.getCommentList().add(comment);
         board.getCommentList().add(comment);
-        return CommentDto.builder()
+        return GetCommentDto.builder()
                 .memberId(comment.getMember().getId())
                 .boardId(comment.getBoard().getId())
                 .content(comment.getContent())
@@ -41,9 +43,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getComment(Long commentId) {
+    public GetCommentDto getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-        return CommentDto.builder()
+        return GetCommentDto.builder()
                 .memberId(comment.getMember().getId())
                 .boardId(comment.getBoard().getId())
                 .commentId(comment.getId())
@@ -51,12 +53,25 @@ public class CommentServiceImpl implements CommentService {
                 .build();
     }
 
+    @Override
+    public List<GetCommentDto> getAllComment() {
+        List<Comment> commentList = commentRepository.findAll();
+        List<GetCommentDto> commentDtoList = commentList.stream().map(comment -> GetCommentDto.builder()
+                        .memberId(comment.getMember().getId())
+                        .boardId(comment.getBoard().getId())
+                        .commentId(comment.getId())
+                        .content(comment.getContent())
+                        .build())
+                .toList();
+        return commentDtoList;
+    }
+
     @Transactional
     @Override
-    public CommentDto updateComment(Long commentId, String content) {
+    public GetCommentDto updateComment(Long commentId, String content) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
         comment.updateContent(content);
-        return CommentDto.builder()
+        return GetCommentDto.builder()
                 .boardId(comment.getBoard().getId())
                 .commentId(comment.getId())
                 .content(comment.getContent())

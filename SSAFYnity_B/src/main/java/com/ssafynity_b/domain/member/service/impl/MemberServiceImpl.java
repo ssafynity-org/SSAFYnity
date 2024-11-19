@@ -31,9 +31,9 @@ public class MemberServiceImpl implements MemberService {
     public Long createMember(CreateMemberDto memberDto) {
         Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany());
         Member savedMember = memberRepository.save(member);
-        MemberDocument memberDocument = new MemberDocument(savedMember.getMemberId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany());
+        MemberDocument memberDocument = new MemberDocument(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany());
         documentRepository.save(memberDocument);
-        return savedMember.getMemberId();
+        return savedMember.getId();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MemberServiceImpl implements MemberService {
                 .updatePassword(memberDto.getPassword())
                 .updateName(memberDto.getName())
                 .updatdCompany(memberDto.getCompany());
-        return member.getMemberId();
+        return member.getId();
     }
 
     @Override

@@ -1,22 +1,16 @@
 package com.ssafynity_b.domain.comment.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Builder
-@AllArgsConstructor
 @Getter
 @Setter
-public class CommentDto {
-
+public class CreateCommentDto {
     private Long memberId;
 
     private Long boardId;
 
-    private Long commentId;
-
     private String content;
-
 }
