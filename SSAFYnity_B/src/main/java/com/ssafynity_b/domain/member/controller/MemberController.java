@@ -37,9 +37,9 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 로그인")
-    @GetMapping("/{email}/{password}")
-    public ResponseEntity<GetMemberDto> login(@PathVariable String email, @PathVariable String password){
-        GetMemberDto memberDto = memberService.login(email,password);
+    @PostMapping("/login")
+    public ResponseEntity<GetMemberDto> login(@RequestBody LoginDto loginDto){
+        GetMemberDto memberDto = memberService.login(loginDto);
         return new ResponseEntity<GetMemberDto>(memberDto,HttpStatus.OK);
     }
 

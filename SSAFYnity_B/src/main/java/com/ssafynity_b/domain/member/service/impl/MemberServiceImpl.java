@@ -29,9 +29,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Long createMember(CreateMemberDto memberDto) {
-        Member member = new Member(memberDto);
+        Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany());
         Member savedMember = memberRepository.save(member);
-        MemberDocument memberDocument = new MemberDocument(savedMember.getMemberId(), savedMember.getEmail(), passwordEncoder.encode(savedMember.getPassword()), savedMember.getName(), savedMember.getCompany());
+        MemberDocument memberDocument = new MemberDocument(savedMember.getMemberId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany());
         documentRepository.save(memberDocument);
         return savedMember.getMemberId();
     }
@@ -51,12 +51,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public GetMemberDto login(String email, String password) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::new);
-        if(passwordEncoder.matches(password, member.getPassword()))
-            return new GetMemberDto(member);
+    public GetMemberDto login(LoginDto loginDto) {
+        Member member = memberRepository.findByEmail(loginDto.getEmail()).orElseThrow(LoginFailedException::new);
+        if(!passwordEncoder.matches(loginDto.getPassword(), member.getPassword()))
+            throw new LoginFailedException("비밀번호가 잘못되었습니다");
         else
-            throw new LoginFailedException();
+            return new GetMemberDto(member);
     }
 
     @Transactional
