@@ -15,7 +15,7 @@ public class GetBoardDto {
     private String content;
 
     public GetBoardDto(Board board) {
-        this.boardId = board.getBoardId();
+        this.boardId = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
     }

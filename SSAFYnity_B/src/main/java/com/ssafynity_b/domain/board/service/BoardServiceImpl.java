@@ -41,14 +41,14 @@ public class BoardServiceImpl implements BoardService{
         Board board = new Board(createBoardDto, filteredHtml);
         board.updateMember(member);
         Board savedBoard = boardRepository.save(board);
-        return savedBoard.getBoardId();
+        return savedBoard.getId();
     }
 
     @Override
     public List<GetBoardDto> getAllBoard() {
         List<Board> boardList = boardRepository.findAll();
         return boardList.stream()
-                .map(board -> new GetBoardDto(board.getBoardId(), board.getTitle(), board.getContent()))
+                .map(board -> new GetBoardDto(board.getId(), board.getTitle(), board.getContent()))
                 .toList();
     }
 
@@ -64,7 +64,7 @@ public class BoardServiceImpl implements BoardService{
         Board board = boardRepository.findById(updateBoardDto.getBoardId()).orElseThrow(BoardNotFoundException::new);
         board.updateTitle(updateBoardDto.getTitle());
         board.updateContent(updateBoardDto.getContent());
-        return board.getBoardId();
+        return board.getId();
     }
 
     @Override

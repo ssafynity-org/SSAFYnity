@@ -37,11 +37,11 @@ public class NotificationServiceImpl implements NotificationService {
         List<Notification> notificationList = notificationRepository.findAllBySender(sender);
         return notificationList.stream()
                 .map(notification -> GetNotificationDto.builder()
-                        .notificationId(notification.getNotificationId())
+                        .notificationId(notification.getId())
                         .type(notification.getType())
                         .isRead(notification.isRead())
-                        .senderId(notification.getSender().getMemberId())
-                        .receiverId(notification.getReceiver().getMemberId())
+                        .senderId(notification.getSender().getId())
+                        .receiverId(notification.getReceiver().getId())
                         .build())
                 .toList();
     }
