@@ -19,6 +19,10 @@ services:
       - "8080:8080"
     networks:
       - ssafynity-network
+    depends_on:
+      - mysql
+      - mongodb
+      - elasticsearch
 
   nginx:
     build:
