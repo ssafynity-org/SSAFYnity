@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 @RequiredArgsConstructor
 @Tag(name = "Board 컨트롤러")
 public class BoardController {

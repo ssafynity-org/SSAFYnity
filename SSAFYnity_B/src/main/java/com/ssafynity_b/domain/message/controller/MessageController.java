@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/message")
+@RequestMapping("/api/message")
 @RequiredArgsConstructor
 @Tag(name = "Message 컨트롤러")
 public class MessageController {
