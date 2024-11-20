@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/attendance")
+@RequestMapping("/api/attendance")
 @RequiredArgsConstructor
 @Tag(name = "Attendance 컨트롤러")
 public class AttendanceController {

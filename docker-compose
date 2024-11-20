@@ -33,6 +33,33 @@ services:
     networks:
       - ssafynity-network
 
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - ssafynity-network
+    volumes:
+      - mongodb_data:/data/db
+
+  elasticsearch:
+    image: elasticsearch:8.13.4
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    networks:
+      - ssafynity-network
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
 networks:
   ssafynity-network:
     driver: bridge
+
+volumes:
+  mongodb_data:
+  es_data:
