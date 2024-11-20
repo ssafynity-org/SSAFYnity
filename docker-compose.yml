@@ -33,6 +33,19 @@ services:
     networks:
       - ssafynity-network
 
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - ssafynity-network
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ssafynity
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   mongodb:
     image: mongo:6.0
     container_name: mongodb
@@ -63,3 +76,4 @@ networks:
 volumes:
   mongodb_data:
   es_data:
+  mysql_data:
