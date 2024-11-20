@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  react:
+    build:
+      context: ./ssafynity-f
+      dockerfile: Dockerfile
+    container_name: react
+    ports:
+      - "3000:80"
+    networks:
+      - ssafynity-network
+
+  springboot:
+    build:
+      context: ./SSAFYnity_B
+      dockerfile: Dockerfile
+    container_name: springboot
+    ports:
+      - "8080:8080"
+    networks:
+      - ssafynity-network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - react
+      - springboot
+    networks:
+      - ssafynity-network
+
+networks:
+  ssafynity-network:
+    driver: bridge
