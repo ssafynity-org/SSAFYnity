@@ -67,7 +67,8 @@ services:
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true       # 보안 활성화
+      - ELASTIC_PASSWORD=elastic   # elastic 사용자 비밀번호 설정
     ports:
       - "9200:9200"
     networks:
