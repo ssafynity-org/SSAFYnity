@@ -15,7 +15,7 @@ function Login() {
     console.log("Password:", password);
 
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/member/login`, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/member/login`, {
           email,
           password,
         });
