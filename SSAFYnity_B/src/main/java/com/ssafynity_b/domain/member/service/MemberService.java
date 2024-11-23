@@ -13,8 +13,6 @@ public interface MemberService {
 
     List<GetMemberDto> getAllMember();
 
-    GetMemberDto login(LoginDto loginDto);
-
     Long updateMember(UpdateMemberDto memberDto);
 
     void deleteMember(Long memberId);

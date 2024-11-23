@@ -10,11 +10,12 @@ function Main() {
       <h1>User Profile</h1>
       {userData ? (
         <div>
-          <p>MemberId: {userData.memberId}</p>
+          {/* <p>MemberId: {userData.memberId}</p>
           <p>Email: {userData.email}</p>
           <p>Password: {userData.password}</p>
           <p>Name: {userData.name}</p>
-          <p>Company: {userData.company}</p>
+          <p>Company: {userData.company}</p> */
+          <p>JwtToken: {userData.jwtToken}</p>}
         </div>
       ) : (
         <p>No user data available.</p>

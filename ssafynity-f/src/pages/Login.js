@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios"; // Axios import
+import axiosInstance from "../api/axiosInstance"; // 설정한 Axios 인스턴스 불러오기
 import { useNavigate } from "react-router-dom"; // useNavigate import
 import "../styles/Login.css"; // 스타일 파일
 
@@ -15,10 +15,17 @@ function Login() {
     console.log("Password:", password);
 
     try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/member/login`, {
+        const response = await axiosInstance.post(`/api/auth/login`, {
           email,
           password,
         });
+
+        // LoginResponse 객체에서 jwtToken 추출
+        const jwtToken = response.data.jwtToken;
+
+        // JWT 토큰을 localStorage에 저장
+        localStorage.setItem("jwtToken", jwtToken);
+
 
         // 상태로 다른 페이지로 이동
         navigate("/main", { state: response.data }); // 데이터 전달
@@ -61,11 +68,11 @@ function Login() {
         </div>
         <button type="submit">Login</button>
         {/* 결과 메시지 출력 */}
-        {userData && userData.memberId && <p>MemberId: {userData.memberId}</p>}
+        {/* {userData && userData.memberId && <p>MemberId: {userData.memberId}</p>}
         {userData && userData.email && <p>Email: {userData.email}</p>}
         {userData && userData.password && <p>Password: {userData.password}</p>}
         {userData && userData.name && <p>Name: {userData.name}</p>}
-        {userData && userData.company && <p>Company: {userData.company}</p>}
+        {userData && userData.company && <p>Company: {userData.company}</p>} */}
       </form>
     </div>
   );

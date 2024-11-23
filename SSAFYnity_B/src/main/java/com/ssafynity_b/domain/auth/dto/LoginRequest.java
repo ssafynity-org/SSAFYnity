@@ -1,11 +1,11 @@
-package com.ssafynity_b.domain.member.dto;
+package com.ssafynity_b.domain.auth.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginDto {
+public class LoginRequest {
 
     private String email;
 
