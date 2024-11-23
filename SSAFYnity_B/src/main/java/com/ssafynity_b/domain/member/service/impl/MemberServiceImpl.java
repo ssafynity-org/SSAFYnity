@@ -50,15 +50,6 @@ public class MemberServiceImpl implements MemberService {
                 .toList();
     }
 
-    @Override
-    public GetMemberDto login(LoginDto loginDto) {
-        Member member = memberRepository.findByEmail(loginDto.getEmail()).orElseThrow(LoginFailedException::new);
-        if(!passwordEncoder.matches(loginDto.getPassword(), member.getPassword()))
-            throw new LoginFailedException("비밀번호가 잘못되었습니다");
-        else
-            return new GetMemberDto(member);
-    }
-
     @Transactional
     @Override
     public Long updateMember(UpdateMemberDto memberDto) {

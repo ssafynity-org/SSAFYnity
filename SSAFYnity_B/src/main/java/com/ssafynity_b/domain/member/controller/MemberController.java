@@ -36,13 +36,6 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Operation(summary = "회원 로그인")
-    @PostMapping("/login")
-    public ResponseEntity<GetMemberDto> login(@RequestBody LoginDto loginDto){
-        GetMemberDto memberDto = memberService.login(loginDto);
-        return new ResponseEntity<GetMemberDto>(memberDto,HttpStatus.OK);
-    }
-
     @Operation(summary = "회원 조회")
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){
