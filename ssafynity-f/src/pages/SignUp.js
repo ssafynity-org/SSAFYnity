@@ -3,7 +3,7 @@ import axiosInstance from "../api/axiosInstance"; // 설정한 Axios 인스턴�
 import { useNavigate } from "react-router-dom"; // useNavigate import
 import "../styles/Login.css"; // 스타일 파일
 
-function SignUp() {
+function Signup() {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
@@ -90,4 +90,4 @@ function SignUp() {
       );
 }
 
-export default SignUp;
+export default Signup;

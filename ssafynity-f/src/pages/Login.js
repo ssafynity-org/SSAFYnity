@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axiosInstance from "../api/axiosInstance"; // 설정한 Axios 인스턴스 불러오기
+import { useAuth } from '../components/AuthContext';
 import { useNavigate } from "react-router-dom"; // useNavigate import
 import "../styles/Login.css"; // 스타일 파일
 
@@ -7,6 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userData, setUserData] = useState(""); // 로그인 결과 메시지 저장
+  const { login } = useAuth(); // useAuth 훅에서 login 메서드 가져오기
   const navigate = useNavigate(); // useNavigate 생성
 
   const handleSubmit = async (e) => {
@@ -25,6 +27,9 @@ function Login() {
 
         // JWT 토큰을 localStorage에 저장
         localStorage.setItem("jwtToken", jwtToken);
+
+        // 인증 상태를 업데이트 (AuthContext의 login 메서드 호출)
+        login();
 
 
         // 상태로 다른 페이지로 이동
