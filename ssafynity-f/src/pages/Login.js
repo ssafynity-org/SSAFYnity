@@ -67,13 +67,7 @@ function Login() {
           />
         </div>
         <button type="submit">Login</button>
-        {/* 결과 메시지 출력 */}
-        {/* {userData && userData.memberId && <p>MemberId: {userData.memberId}</p>}
-        {userData && userData.email && <p>Email: {userData.email}</p>}
-        {userData && userData.password && <p>Password: {userData.password}</p>}
-        {userData && userData.name && <p>Name: {userData.name}</p>}
-        {userData && userData.company && <p>Company: {userData.company}</p>} */}
-      </form>
+        </form>
     </div>
   );
 }

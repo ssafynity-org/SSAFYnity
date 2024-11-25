@@ -26,8 +26,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String requestPath = request.getRequestURI();
 
-        // Swagger 관련 경로, 로그인 경로는 필터링하지 않음
-        if (requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/api/auth/login")) {
+        // Swagger 관련 경로, 회원가입,로그인 경로는 필터링하지 않음
+        if (requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/api/auth/login") || requestPath.startsWith("/api/member") && "POST".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response); // 다음 필터로 이동
             return;
         }
@@ -38,19 +38,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String jwt = authHeader.substring(7);
             try {
-                String email = Jwts.parserBuilder()
+                String memberId = Jwts.parserBuilder()
                         .setSigningKey(key)
                         .build()
                         .parseClaimsJws(jwt)
                         .getBody()
                         .getSubject();
 
-                System.out.println("JWT 검증 성공. 사용자: " + email);
+                System.out.println("JWT 검증 성공. 사용자: " + memberId);
 
-                if (email != null) {
+                if (memberId != null) {
                     // 인증 컨텍스트 설정 (필요 시 권한 추가)
                     SecurityContextHolder.getContext().setAuthentication(
-                            new UsernamePasswordAuthenticationToken(email, null, List.of())
+                            new UsernamePasswordAuthenticationToken(memberId, null, List.of())
                     );
                 }
             } catch (Exception e) {
