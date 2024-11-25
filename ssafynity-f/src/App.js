@@ -3,12 +3,15 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import './App.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import SignUp from "./pages/SignUp";
+import { AuthProvider } from "./components/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import SignUp from "./pages/Signup";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
     <div className="App">
       <Header />
@@ -16,7 +19,14 @@ function App() {
         <Routes>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/main" element={<Main />} />
+            <Route
+                        path="/main"
+                        element={
+                            <PrivateRoute>
+                                <Main />
+                            </PrivateRoute>
+                        }
+                    />
             <Route
               path="/"
               element={<h2>Welcome to the React App! Start here.</h2>}
@@ -26,6 +36,7 @@ function App() {
       <Footer />      
     </div>
     </Router>
+    </AuthProvider>
   );
 }
 
