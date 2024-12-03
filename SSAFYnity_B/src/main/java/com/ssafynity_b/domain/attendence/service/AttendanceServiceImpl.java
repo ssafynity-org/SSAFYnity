@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -47,19 +49,19 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public void checkIn(CheckDto check) {
+    public String checkIn(CheckDto check) {
 
-        LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
         // 입실시간 이전이면 실패 응답
-        if(localDateTime.toLocalTime().isBefore(CHECK_IN_START)){
+        if(serverTime.toLocalTime().isBefore(CHECK_IN_START)){
             throw new CheckInException();
         }
 
         Long memberId = check.getMemberId();
-        int year = localDateTime.getYear();
-        int month = localDateTime.getMonthValue();
-        int day = localDateTime.getDayOfMonth();
+        int year = serverTime.getYear();
+        int month = serverTime.getMonthValue();
+        int day = serverTime.getDayOfMonth();
         String id = memberId + "-" + year + "-" + month;
 
         // 현재 멤버의 이번달 도큐먼트 조회
@@ -67,38 +69,40 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 입실시간
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String time = localDateTime.format(format);
+        String time = serverTime.format(format);
 
         // 지각인지 아닌지 판별
-        if(localDateTime.toLocalTime().isAfter(CHECK_IN_END) || localDateTime.toLocalTime().equals(CHECK_IN_END)){
+        if(serverTime.toLocalTime().isAfter(CHECK_IN_END) || serverTime.toLocalTime().equals(CHECK_IN_END)){
             Record record = Record.builder()
                     .checkInTime(time)
                     .status("지각")
                     .build();
             attendance.getRecords().put(day, record);
+            return "지각";
         } else{
             Record record = Record.builder()
                     .checkInTime(time)
                     .build();
             attendance.getRecords().put(day, record);
+            return "정상 출결";
         }
 
     }
 
     @Override
-    public void checkOut(CheckDto check) {
+    public String checkOut(CheckDto check) {
 
-        LocalDateTime localDateTime = LocalDateTime.parse(check.getDate(), DateTimeFormatter.ISO_DATE_TIME);
+        ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
         // 퇴실시간 이전이면 실패 응답
-        if(localDateTime.toLocalTime().isBefore(CHECK_OUT_START)){
+        if(serverTime.toLocalTime().isBefore(CHECK_OUT_START)){
             throw new CheckOutException();
         }
 
         Long memberId = check.getMemberId();
-        int year = localDateTime.getYear();
-        int month = localDateTime.getMonthValue();
-        int day = localDateTime.getDayOfMonth();
+        int year = serverTime.getYear();
+        int month = serverTime.getMonthValue();
+        int day = serverTime.getDayOfMonth();
         String id = memberId + "-" + year + "-" + month;
 
         // 현재 멤버의 이번달 도큐먼트 조회
@@ -106,14 +110,16 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 퇴실시간
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String time = localDateTime.format(format);
+        String time = serverTime.format(format);
 
         // 늦었는지 아닌지 판별
-        if(localDateTime.toLocalTime().isAfter(CHECK_OUT_END) || localDateTime.toLocalTime().equals(CHECK_OUT_END)){
+        if(serverTime.toLocalTime().isAfter(CHECK_OUT_END) || serverTime.toLocalTime().equals(CHECK_OUT_END)){
             attendance.getRecords().get(day).updateCheckOutTime(time);
             attendance.getRecords().get(day).updateStatus("조퇴");
+            return "조퇴";
         } else{
             attendance.getRecords().get(day).updateCheckOutTime(time);
+            return "퇴실";
         }
 
     }

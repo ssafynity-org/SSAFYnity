@@ -4,9 +4,9 @@ import com.ssafynity_b.domain.attendence.dto.*;
 
 public interface AttendanceService {
 
-    void checkIn(CheckDto check);
+    String checkIn(CheckDto check);
 
-    void checkOut(CheckDto check);
+    String checkOut(CheckDto check);
 
     String create(CreateAttendanceDto createAttendanceDto);
 
