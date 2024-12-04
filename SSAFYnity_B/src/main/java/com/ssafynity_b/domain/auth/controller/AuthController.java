@@ -40,10 +40,8 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
-            System.out.println("뭐냐이거 : "+ authentication);
             return ResponseEntity.ok("Token is valid");
         } else {
-            System.out.println("왜터지냐??? : "+ authentication);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
     }

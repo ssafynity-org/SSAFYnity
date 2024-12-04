@@ -20,15 +20,15 @@ public class AttendanceController {
     @Operation(summary = "입실체크")
     @PostMapping("/in")
     public ResponseEntity<?> checkIn(@RequestBody CheckDto check){
-        attendanceService.checkIn(check);
-        return new ResponseEntity<>(HttpStatus.OK);
+        String response = attendanceService.checkIn(check);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @Operation(summary = "퇴실체크")
     @PostMapping("/out")
     public ResponseEntity<?> checkOut(@RequestBody CheckDto check){
-        attendanceService.checkOut(check);
-        return new ResponseEntity<>(HttpStatus.OK);
+        String response = attendanceService.checkOut(check);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @Operation(summary = "월별 출결 기록 조회")

@@ -29,9 +29,9 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     public Long createMember(CreateMemberDto memberDto) {
-        Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany());
+        Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany(), "ROLE_MEMBER");
         Member savedMember = memberRepository.save(member);
-        MemberDocument memberDocument = new MemberDocument(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany());
+        MemberDocument memberDocument = new MemberDocument(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany(), savedMember.getRole());
         documentRepository.save(memberDocument);
         return savedMember.getId();
     }
