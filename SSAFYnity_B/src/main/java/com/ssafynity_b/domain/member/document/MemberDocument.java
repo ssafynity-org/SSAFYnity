@@ -26,11 +26,14 @@ public class MemberDocument {
 
     private String company;
 
+    private String role;
+
     public MemberDocument(Member savedMember) {
         this.memberId = savedMember.getId();
         this.email = savedMember.getEmail();
         this.password = savedMember.getPassword();
         this.name = savedMember.getName();
         this.company = savedMember.getCompany();
+        this.role = savedMember.getRole();
     }
 }

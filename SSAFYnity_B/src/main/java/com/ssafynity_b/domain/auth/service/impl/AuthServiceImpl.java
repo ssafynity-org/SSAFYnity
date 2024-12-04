@@ -6,20 +6,19 @@ import com.ssafynity_b.domain.auth.service.AuthService;
 import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
-import com.ssafynity_b.global.jwt.JwtUtil;
+import com.ssafynity_b.global.jwt.JwtProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final JwtUtil jwtUtil;
+    private final JwtProvider jwtProvider;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(JwtUtil jwtUtil, MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.jwtUtil = jwtUtil;
+    public AuthServiceImpl(JwtProvider jwtProvider, MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.jwtProvider = jwtProvider;
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
         //ID,비밀번호 검증 로직
         if (passwordEncoder.matches(rawPassword,encodedPassword)) { //비밀번호가 일치하면 진입
             // 토큰 생성
-            String jwtToken = jwtUtil.generateToken(String.valueOf(member.getId())); //MemberId를 토큰에 저장
+            String jwtToken = jwtProvider.generateToken(String.valueOf(member.getId())); //MemberId를 토큰에 저장
             return LoginResponse.builder()
                     .jwtToken(jwtToken)
                     .build();

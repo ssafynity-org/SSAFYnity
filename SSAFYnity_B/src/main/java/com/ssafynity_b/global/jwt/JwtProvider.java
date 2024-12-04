@@ -2,22 +2,16 @@ package com.ssafynity_b.global.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+@RequiredArgsConstructor
+public class JwtProvider {
 
     private final JwtConfig jwtConfig;
-
-    public JwtUtil(JwtConfig jwtConfig){
-        this.jwtConfig = jwtConfig;
-    }
 
     //JWT 생성
     public String generateToken(String email){
@@ -29,15 +23,15 @@ public class JwtUtil {
                 .compact();
     }
 
-    //JWT 검증 및 사용자명 추출
-    public String extractUsername(String token){
+    //JWT 검증 및 MemberId 추출
+    public String extractMemberId(String token){
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtConfig.getSecretKey()) //새로운 방식
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject(); //사용자 명 추출
+        return claims.getSubject(); //MemberId 추출
     }
 
     //토큰 유효성 검사

@@ -40,6 +40,9 @@ public class Member {
 
     private String company;
 
+    @Column(nullable = false)
+    private String role;
+
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Board> boardList = new ArrayList<>();
@@ -57,11 +60,12 @@ public class Member {
     private List<Message> receiveMessageList = new ArrayList<>();
 
 
-    public Member(String email, String password, String name, String company) {
+    public Member(String email, String password, String name, String company, String role) {
         this.email = email;
         this.password = password;
         this.name = name;
         this.company = company;
+        this.role = role;
     }
 
     public void updateMember(UpdateMemberDto memberDto){

@@ -1,25 +1,35 @@
 package com.ssafynity_b.global.jwt;
 
-import io.jsonwebtoken.Jwts;
+import com.ssafynity_b.domain.member.entity.Member;
+import com.ssafynity_b.domain.member.repository.MemberRepository;
+import com.ssafynity_b.global.exception.MemberNotFoundException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.security.Key;
+import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final Key key;
-
-    public JwtAuthenticationFilter(Key key) {
-        this.key = key;
-    }
+    private final MemberRepository memberRepository;
+    private final JwtProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,37 +42,72 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String authHeader = request.getHeader("Authorization");
+        try{
 
-        System.out.println("[authHeader] : "+authHeader);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String jwt = authHeader.substring(7);
-            try {
-                String memberId = Jwts.parserBuilder()
-                        .setSigningKey(key)
-                        .build()
-                        .parseClaimsJws(jwt)
-                        .getBody()
-                        .getSubject();
-
-                System.out.println("JWT 검증 성공. 사용자: " + memberId);
-
-                if (memberId != null) {
-                    // 인증 컨텍스트 설정 (필요 시 권한 추가)
-                    SecurityContextHolder.getContext().setAuthentication(
-                            new UsernamePasswordAuthenticationToken(memberId, null, List.of())
-                    );
-                }
-            } catch (Exception e) {
-                System.out.println("JWT 검증 실패: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 유효하지 않은 토큰 처리
+            String token = parseBearerToken(request);
+            if(token==null){
                 return;
             }
-        } else {
-            System.out.println("Authorization 헤더가 없거나 올바르지 않음.");
+
+            String memberId = jwtProvider.extractMemberId(token);
+            if(memberId==null){
+                return;
+            }
+
+            System.out.println("jwt토큰 검증 성공 : " + token);
+            System.out.println("memberId : " + memberId);
+
+            Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow(MemberNotFoundException::new);
+            String role = member.getRole(); //role : ROLE_USER, ROLE_ADMIN
+
+            System.out.println("role : " + role);
+
+            //권한 정보 설정
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority(role));
+
+            //권한정보를 담을 비어있는 SecurityContext를 생성
+            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+
+            //권한정보를 담은 토큰을 발행
+            AbstractAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(memberId, null, authorities);
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            //SecurityContext에 권한정보 토큰을 담아줌
+            securityContext.setAuthentication(authenticationToken);
+
+            //SecurityContextHolder에 권한정보 토큰을 담은 SecurityContext를 저장
+            SecurityContextHolder.setContext(securityContext);
+
+        }catch(Exception e){
+            e.printStackTrace();
         }
+
 
         // 필터 체인 계속 진행
         filterChain.doFilter(request, response);
+    }
+
+    //request객체로부터 토큰값을 가져오는 메소드
+    private String parseBearerToken(HttpServletRequest request){
+
+        String authorization = request.getHeader("Authorization");
+
+        //Authorization Header에 실제로 값이 존재하는지 판단
+        boolean hasAuthorization = StringUtils.hasText(authorization);
+
+        //Authorization이 존재하지않으면 null반환
+        if(!hasAuthorization)
+            return null;
+
+        //Authorization이 'Bearer '로 시작하지않는다면 null반환
+        boolean isBearer = authorization.startsWith("Bearer ");
+        if(!isBearer)
+            return null;
+
+        //토큰값 반환
+        String token = authorization.substring(7);
+        return token;
     }
 }
