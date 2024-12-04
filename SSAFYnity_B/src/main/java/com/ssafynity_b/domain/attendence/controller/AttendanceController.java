@@ -2,11 +2,14 @@ package com.ssafynity_b.domain.attendence.controller;
 
 import com.ssafynity_b.domain.attendence.dto.*;
 import com.ssafynity_b.domain.attendence.service.AttendanceService;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +22,9 @@ public class AttendanceController {
 
     @Operation(summary = "입실체크")
     @PostMapping("/in")
-    public ResponseEntity<?> checkIn(@RequestBody CheckDto check){
-        String response = attendanceService.checkIn(check);
+    public ResponseEntity<?> checkIn(@AuthenticationPrincipal CustomUserDetails userDetails){
+        System.out.println(userDetails);
+        String response = attendanceService.checkIn(userDetails);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

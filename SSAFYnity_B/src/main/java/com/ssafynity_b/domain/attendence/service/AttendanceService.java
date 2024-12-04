@@ -1,10 +1,13 @@
 package com.ssafynity_b.domain.attendence.service;
 
 import com.ssafynity_b.domain.attendence.dto.*;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 
 public interface AttendanceService {
 
-    String checkIn(CheckDto check);
+    void createDocument();
+
+    String checkIn(CustomUserDetails userDetails);
 
     String checkOut(CheckDto check);
 
