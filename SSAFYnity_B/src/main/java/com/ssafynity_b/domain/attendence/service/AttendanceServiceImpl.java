@@ -9,6 +9,7 @@ import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.AttendanceNotFoundException;
 import com.ssafynity_b.global.exception.CheckInException;
 import com.ssafynity_b.global.exception.CheckOutException;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public String checkIn(CheckDto check) {
+    public void createDocument() {
+        createAttendanceDocument();
+    }
+
+    @Override
+    public String checkIn(CustomUserDetails userDetails) {
+
+        Long memberId = userDetails.getMemberId();
 
         ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
@@ -58,11 +66,11 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new CheckInException();
         }
 
-        Long memberId = check.getMemberId();
         int year = serverTime.getYear();
         int month = serverTime.getMonthValue();
         int day = serverTime.getDayOfMonth();
         String id = memberId + "-" + year + "-" + month;
+        System.out.println("id뭐라찍히냐?: " + id);
 
         // 현재 멤버의 이번달 도큐먼트 조회
         Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
