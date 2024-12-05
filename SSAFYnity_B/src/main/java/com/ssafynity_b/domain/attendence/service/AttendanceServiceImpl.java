@@ -55,6 +55,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         createAttendanceDocument();
     }
 
+    @Transactional
     @Override
     public String checkIn(CustomUserDetails userDetails) {
 
@@ -73,7 +74,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         int month = serverTime.getMonthValue();
         int day = serverTime.getDayOfMonth();
         String id = memberId + "-" + year + "-" + month;
-        System.out.println("id뭐라찍히냐?: " + id);
 
         // 현재 멤버의 이번달 도큐먼트 조회
         Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
@@ -83,19 +83,21 @@ public class AttendanceServiceImpl implements AttendanceService {
         String time = serverTime.format(format);
 
         // 지각인지 아닌지 판별
-        if(serverTime.toLocalTime().isAfter(CHECK_IN_END) || serverTime.toLocalTime().equals(CHECK_IN_END)){
+        if(serverTime.toLocalTime().isAfter(CHECK_IN_START) && serverTime.toLocalTime().equals(CHECK_IN_END)){
             Record record = Record.builder()
                     .checkInTime(time)
-                    .status("지각")
+                    .status("출석 완료")
                     .build();
             attendance.getRecords().put(day, record);
-            return "지각";
+            attendanceRepository.save(attendance);
+            return "출석 완료";
         } else{
             Record record = Record.builder()
                     .checkInTime(time)
                     .build();
             attendance.getRecords().put(day, record);
-            return "정상 출결";
+            attendanceRepository.save(attendance);
+            return "입실 시간이 아니거나, 지났습니다.";
         }
 
     }
@@ -127,14 +129,18 @@ public class AttendanceServiceImpl implements AttendanceService {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
         String time = serverTime.format(format);
 
+        System.out.println("왜 퇴실 시간이 null 이나와 : " + time);
+        System.out.println("퇴실 day : " + day);
         // 늦었는지 아닌지 판별
-        if(serverTime.toLocalTime().isAfter(CHECK_OUT_END) || serverTime.toLocalTime().equals(CHECK_OUT_END)){
+        if(serverTime.toLocalTime().isAfter(CHECK_OUT_START) && serverTime.toLocalTime().isBefore(CHECK_OUT_END)){
+            System.out.println("이게 왜 null ? : " +attendance.getRecords().get(day));
             attendance.getRecords().get(day).updateCheckOutTime(time);
-            attendance.getRecords().get(day).updateStatus("조퇴");
-            return "조퇴";
+            attendance.getRecords().get(day).updateStatus("퇴실");
+            attendanceRepository.save(attendance);
+            return "퇴실";
         } else{
             attendance.getRecords().get(day).updateCheckOutTime(time);
-            return "퇴실";
+            return "아직 퇴실시간이 아니거나, 지났습니다.";
         }
 
     }
