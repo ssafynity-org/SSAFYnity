@@ -2,6 +2,7 @@ package com.ssafynity_b.domain.attendence.service;
 
 import com.ssafynity_b.domain.attendence.dto.*;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 public interface AttendanceService {
 
@@ -9,13 +10,13 @@ public interface AttendanceService {
 
     String checkIn(CustomUserDetails userDetails);
 
-    String checkOut(CheckDto check);
+    String checkOut(CustomUserDetails userDetails);
 
-    String create(CreateAttendanceDto createAttendanceDto);
+    String create(CustomUserDetails userDetails, CreateAttendanceDto createAttendanceDto);
 
-    GetAttendanceDto getAttendance(Long memberId, int year, int month);
+    GetAttendanceDto getAttendance(CustomUserDetails userDetails, int year, int month);
 
-    String update(UpdateRecordDto updateRecord);
+    String update(CustomUserDetails userDetails, UpdateRecordDto updateRecord);
 
-    void delete(Long memberId, int year, int month);
+    void delete(CustomUserDetails userDetails, int year, int month);
 }

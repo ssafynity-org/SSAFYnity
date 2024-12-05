@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 public class CreateAttendanceDto {
 
-    private Long memberId;
     private int year;
     private int month;
 

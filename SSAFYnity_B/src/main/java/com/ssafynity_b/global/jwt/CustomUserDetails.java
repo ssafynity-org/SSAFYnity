@@ -1,5 +1,6 @@
 package com.ssafynity_b.global.jwt;
 
+import com.ssafynity_b.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,11 +11,11 @@ import java.util.Collection;
 @Getter
 @Setter
 public class CustomUserDetails implements UserDetails {
-    private Long memberId;
+    private Member member;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(Long memberId, Collection<? extends GrantedAuthority> authorities) {
-        this.memberId = memberId;
+    public CustomUserDetails(Member member, Collection<? extends GrantedAuthority> authorities) {
+        this.member = member;
         this.authorities = authorities;
     }
 

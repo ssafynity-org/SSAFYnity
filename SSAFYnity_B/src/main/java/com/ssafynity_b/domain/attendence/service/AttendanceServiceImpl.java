@@ -12,6 +12,7 @@ import com.ssafynity_b.global.exception.CheckOutException;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,8 +58,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public String checkIn(CustomUserDetails userDetails) {
 
-        Long memberId = userDetails.getMemberId();
-
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
         ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
         // 입실시간 이전이면 실패 응답
@@ -66,6 +68,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new CheckInException();
         }
 
+        //현재 서버 시간, 월, 일, 도큐먼트ID
         int year = serverTime.getYear();
         int month = serverTime.getMonthValue();
         int day = serverTime.getDayOfMonth();
@@ -98,7 +101,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public String checkOut(CheckDto check) {
+    public String checkOut(CustomUserDetails userDetails) {
+
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
 
         ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
@@ -107,7 +114,7 @@ public class AttendanceServiceImpl implements AttendanceService {
             throw new CheckOutException();
         }
 
-        Long memberId = check.getMemberId();
+        //현재 서버 시간, 월, 일, 도큐먼트ID
         int year = serverTime.getYear();
         int month = serverTime.getMonthValue();
         int day = serverTime.getDayOfMonth();
@@ -133,29 +140,59 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public String create(CreateAttendanceDto createAttendanceDto) {
-        Attendance attendance = new Attendance(createAttendanceDto.getMemberId(), createAttendanceDto.getYear(), createAttendanceDto.getMonth());
+    public String create(CustomUserDetails userDetails, CreateAttendanceDto createAttendanceDto) {
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
+
+        //생성하고자하는 출결문서의 년, 월
+        int year = createAttendanceDto.getYear();
+        int month = createAttendanceDto.getMonth();
+
+        //출결 문서 생성 및 저장
+        Attendance attendance = new Attendance(memberId, year, month);
         Attendance savedAttendance = attendanceRepository.save(attendance);
         return savedAttendance.getId();
     }
 
     @Override
-    public GetAttendanceDto getAttendance(Long memberId, int year, int month) {
+    public GetAttendanceDto getAttendance(CustomUserDetails userDetails, int year, int month) {
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
+
+        //출결문서 조회
         Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(AttendanceNotFoundException::new);
         return new GetAttendanceDto(attendance);
     }
 
     @Transactional
     @Override
-    public String update(UpdateRecordDto updateRecord) {
-        Attendance attendance = attendanceRepository.findById(updateRecord.getId()).orElseThrow(AttendanceNotFoundException::new);
+    public String update(CustomUserDetails userDetails, UpdateRecordDto updateRecord) {
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
+
+        //수정할 년도, 수정할 달
+        int year = updateRecord.getYear();
+        int month = updateRecord.getMonth();
+
+        //출결문서 수정
+        Attendance attendance = attendanceRepository.findById(memberId+"-"+year+"-"+month).orElseThrow(AttendanceNotFoundException::new);
         attendance.getRecords().put(updateRecord.getDay(), new Record(updateRecord));
+
+        //이 아래부분은 영속성 컨텍스트때문에 지워도 되지않나..? 나중에 혜선이가 발견하게되면 알아봐줘
         Attendance updatedAttendance = attendanceRepository.save(attendance);
         return updatedAttendance.getId();
     }
 
     @Override
-    public void delete(Long memberId, int year, int month) {
+    public void delete(CustomUserDetails userDetails, int year, int month) {
+        //Jwt토큰에서 발견한 멤버
+        Member member = userDetails.getMember();
+        Long memberId = member.getId();
+
+        //출결문서 삭제
         attendanceRepository.deleteById(memberId+"-"+year+"-"+month);
     }
 

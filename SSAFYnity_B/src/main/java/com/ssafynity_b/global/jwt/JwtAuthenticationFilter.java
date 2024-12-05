@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             //권한정보를 담을 비어있는 SecurityContext를 생성
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            CustomUserDetails userDetails = new CustomUserDetails(member.getId(), authorities);
+            CustomUserDetails userDetails = new CustomUserDetails(member, authorities);
 
             //권한정보를 담은 토큰을 발행
             AbstractAuthenticationToken authenticationToken =

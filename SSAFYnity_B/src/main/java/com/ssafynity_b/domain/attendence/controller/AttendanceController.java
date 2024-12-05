@@ -30,15 +30,15 @@ public class AttendanceController {
 
     @Operation(summary = "퇴실체크")
     @PostMapping("/out")
-    public ResponseEntity<?> checkOut(@RequestBody CheckDto check){
-        String response = attendanceService.checkOut(check);
+    public ResponseEntity<?> checkOut(@AuthenticationPrincipal CustomUserDetails userDetails){
+        String response = attendanceService.checkOut(userDetails);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @Operation(summary = "월별 출결 기록 조회")
-    @GetMapping("/{memberId}/{year}/{month}")
-    public ResponseEntity<?> get(@PathVariable Long memberId, @PathVariable int year, @PathVariable int month){
-        GetAttendanceDto attendance = attendanceService.getAttendance(memberId, year, month);
+    @GetMapping("/{year}/{month}")
+    public ResponseEntity<?> get(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable int year, @PathVariable int month){
+        GetAttendanceDto attendance = attendanceService.getAttendance(userDetails, year, month);
         return new ResponseEntity<GetAttendanceDto>(attendance, HttpStatus.OK);
     }
 
@@ -49,22 +49,22 @@ public class AttendanceController {
 
     @Operation(summary = "출결문서 생성")
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateAttendanceDto createAttendanceDto){
-        String id = attendanceService.create(createAttendanceDto);
+    public ResponseEntity<?> create(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CreateAttendanceDto createAttendanceDto){
+        String id = attendanceService.create(userDetails ,createAttendanceDto);
         return new ResponseEntity<String>(id, HttpStatus.OK);
     }
 
     @Operation(summary = "출결문서 수정")
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody UpdateRecordDto updateRecord){
-        String id = attendanceService.update(updateRecord);
+    public ResponseEntity<?> update(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UpdateRecordDto updateRecord){
+        String id = attendanceService.update(userDetails ,updateRecord);
         return new ResponseEntity<String>(id, HttpStatus.OK);
     }
 
     @Operation(summary = "출결문서 삭제")
-    @DeleteMapping("/{memberId}/{year}/{month}")
-    public ResponseEntity<?> delete(@PathVariable Long memberId, @PathVariable int year, @PathVariable int month) {
-        attendanceService.delete(memberId, year, month);
+    @DeleteMapping("/{year}/{month}")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable int year, @PathVariable int month) {
+        attendanceService.delete(userDetails, year, month);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
