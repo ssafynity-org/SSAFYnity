@@ -8,6 +8,7 @@ import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.AttendanceNotFoundException;
 import com.ssafynity_b.global.exception.CheckInException;
+import com.ssafynity_b.global.exception.CheckInNotFoundException;
 import com.ssafynity_b.global.exception.CheckOutException;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +28,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceServiceImpl implements AttendanceService {
 
+    //출석문서 레포지토리, 멤버 레포지토리
     private final AttendanceRepository attendanceRepository;
+    private final MemberRepository memberRepository;
 
+    //서울 기준 서버시간, 입실 시작 시간, 입실 종료 시간, 퇴실 시작 시간, 퇴실 종료 시간, 멤버가 입실 또는 퇴실버튼 누른 시간
+    private static final ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
     private static final LocalTime CHECK_IN_START = LocalTime.of(8, 30);
     private static final LocalTime CHECK_IN_END = LocalTime.of(9, 0);
     private static final LocalTime CHECK_OUT_START = LocalTime.of(18, 0);
     private static final LocalTime CHECK_OUT_END = LocalTime.of(18, 30);
-    private final MemberRepository memberRepository;
 
+    // 입실하거나, 퇴실할때 출결 기록문서가 없으면 생성하는 로직을 포함시켰습니다.
+    // 따라서 아래의 스케쥴러 로직이 필요없어졌습니다. 나중에 삭제해주세요.
     /* 매월 1일 새벽 4시에 회원마다 그 월의 출결기록 문서 생성 */
     @Scheduled(cron = "0 0 4 1 * *")
     public void createAttendanceDocument() {
@@ -62,25 +68,18 @@ public class AttendanceServiceImpl implements AttendanceService {
         //Jwt토큰에서 발견한 멤버
         Member member = userDetails.getMember();
         Long memberId = member.getId();
-        ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
         // 입실시간 이전이면 실패 응답
         if(serverTime.toLocalTime().isBefore(CHECK_IN_START)){
             throw new CheckInException();
         }
 
-        //현재 서버 시간, 월, 일, 도큐먼트ID
-        int year = serverTime.getYear();
-        int month = serverTime.getMonthValue();
+        // 현재 멤버의 이번달 도큐먼트 조회 없으면 생성
+        Attendance attendance = findAttendance(memberId);
+
+        //입실 버튼 누른 시간, 오늘 날짜
+        String time = serverTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         int day = serverTime.getDayOfMonth();
-        String id = memberId + "-" + year + "-" + month;
-
-        // 현재 멤버의 이번달 도큐먼트 조회
-        Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
-
-        // 입실시간
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String time = serverTime.format(format);
 
         // 지각인지 아닌지 판별
         if(serverTime.toLocalTime().isAfter(CHECK_IN_START) && serverTime.toLocalTime().equals(CHECK_IN_END)){
@@ -97,7 +96,7 @@ public class AttendanceServiceImpl implements AttendanceService {
                     .build();
             attendance.getRecords().put(day, record);
             attendanceRepository.save(attendance);
-            return "입실 시간이 아니거나, 지났습니다.";
+            return "아직 입실 시간이 아니거나, 지났습니다.";
         }
 
     }
@@ -109,25 +108,22 @@ public class AttendanceServiceImpl implements AttendanceService {
         Member member = userDetails.getMember();
         Long memberId = member.getId();
 
-        ZonedDateTime serverTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
-
         // 퇴실시간 이전이면 실패 응답
         if(serverTime.toLocalTime().isBefore(CHECK_OUT_START)){
             throw new CheckOutException();
         }
 
-        //현재 서버 시간, 월, 일, 도큐먼트ID
-        int year = serverTime.getYear();
-        int month = serverTime.getMonthValue();
+        // 현재 멤버의 이번달 도큐먼트 조회 없으면 생성
+        Attendance attendance = findAttendance(memberId);
+
+
+        //퇴실 버튼 누른 시간, 오늘 날짜
+        String time = serverTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         int day = serverTime.getDayOfMonth();
-        String id = memberId + "-" + year + "-" + month;
 
-        // 현재 멤버의 이번달 도큐먼트 조회
-        Attendance attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
-
-        // 퇴실시간
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String time = serverTime.format(format);
+        //입실 버튼을 누른적이 없는데, 퇴실 버튼을 눌렀으면 예외발생
+        if(attendance.getRecords().get(day)==null)
+            throw new CheckInNotFoundException();
 
         // 늦었는지 아닌지 판별
         if(serverTime.toLocalTime().isAfter(CHECK_OUT_START) && serverTime.toLocalTime().isBefore(CHECK_OUT_END)){
@@ -199,5 +195,25 @@ public class AttendanceServiceImpl implements AttendanceService {
         attendanceRepository.deleteById(memberId+"-"+year+"-"+month);
     }
 
+    private Attendance findAttendance(Long memberId) {
+
+        //서울기준 년,월 추출
+        int year = serverTime.getYear();
+        int month = serverTime.getMonthValue();
+
+        //출석 문서의 Id조합(멤버아이디 + 년 + 월)
+        String id = memberId + "-" + year + "-" + month;
+
+        //출석 문서 조회 없으면 생성
+        Attendance attendance;
+        try {
+            attendance = attendanceRepository.findById(id).orElseThrow(AttendanceNotFoundException::new);
+        }catch(Exception e){
+            e.printStackTrace();
+            attendance = new Attendance(memberId, year, month);
+            attendanceRepository.save(attendance);
+        }
+        return attendance;
+    }
 
 }
