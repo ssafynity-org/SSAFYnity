@@ -1,11 +1,13 @@
 import React from "react";
 import { useLocation } from "react-router-dom"; // useLocation import
 import axiosInstance from "../api/axiosInstance";
+import { useNavigate } from "react-router-dom"; // useNavigate import
 
 function Main() {
   const location = useLocation();
   const userData = location.state; // 전달된 데이터 수신
-
+  const navigate = useNavigate(); // useNavigate 생성
+  
   //입실체크 핸들러
   const handleCheckIn = async () => {
     try {
@@ -40,6 +42,11 @@ function Main() {
       } 
   }
 
+  // message 이동 핸들러
+  const handleNavigateToMessagePage = () => {
+    navigate("/message"); // "/message" 경로로 이동
+  };
+
   return (
     <div className="profile-container">
       <h1>User Profile</h1>
@@ -48,6 +55,7 @@ function Main() {
           <p>JwtToken: {userData.jwtToken}</p>
           <button onClick={handleCheckIn}>입실체크</button>
           <button onClick={handleCheckOut}>퇴실체크</button>
+          <button onClick={handleNavigateToMessagePage}>메시지 페이지 이동</button>
         </div>
       ) : (
         <p>No user data available.</p>

@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class GetMessageDto {
 
-    private Long messageId;
+    private Long id;
     private String content;
     private Long senderId;
     private Long receiverId;
