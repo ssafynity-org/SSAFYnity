@@ -10,8 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 public class CreateMessageDto {
 
-    private String message;
-    private Long senderId;
+    //보낼 메세지 내용
+    private String content;
+
+    //수신자Id
     private Long receiverId;
 
 }

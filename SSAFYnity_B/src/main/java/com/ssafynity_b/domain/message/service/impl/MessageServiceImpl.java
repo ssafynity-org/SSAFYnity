@@ -9,8 +9,10 @@ import com.ssafynity_b.domain.message.entity.Message;
 import com.ssafynity_b.domain.message.repository.MessageRepository;
 import com.ssafynity_b.domain.message.service.MessageService;
 import com.ssafynity_b.domain.notification.service.NotificationService;
+import com.ssafynity_b.global.exception.MemberNotEqualReceiverException;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
 import com.ssafynity_b.global.exception.MessageNotFoundException;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +30,15 @@ public class MessageServiceImpl implements MessageService {
 
     @Transactional
     @Override
-    public Long createMessage(CreateMessageDto createMessageDto) {
-        Member sender = memberRepository.findById(createMessageDto.getSenderId()).orElseThrow(MemberNotFoundException::new);
+    public Long createMessage(CustomUserDetails userDetails, CreateMessageDto createMessageDto) {
+        //현재 접속한 멤버(발신자), 메세지를 받을 멤버(수신자), 메세지 내용
+        Member sender = userDetails.getMember();
         Member receiver = memberRepository.findById(createMessageDto.getReceiverId()).orElseThrow(MemberNotFoundException::new);
+        String content = createMessageDto.getContent();
+
+        //메세지 전송
         Message message = Message.builder()
-                .message(createMessageDto.getMessage())
+                .content(content)
                 .sender(sender)
                 .receiver(receiver)
                 .build();
@@ -42,13 +48,17 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<GetMessageDto> getAllMessage(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+    public List<GetMessageDto> getAllMessage(CustomUserDetails userDetails) {
+
+        //현재 접속한 멤버, 해당 멤버가 수신자로 설정되어있는 전체 메세지 리스트
+        Member member = userDetails.getMember();
         List<Message> messageList = messageRepository.findByReceiver(member);
+
+
         return messageList.stream()
                 .map(message -> GetMessageDto.builder()
                         .messageId(message.getId())
-                        .message(message.getMessage())
+                        .content(message.getContent())
                         .isRead(message.isRead())
                         .senderId(message.getSender().getId())
                         .receiverId(message.getReceiver().getId())
@@ -57,11 +67,20 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public GetMessageDto getMessage(Long messageId) {
+    public GetMessageDto getMessage(CustomUserDetails userDetails, Long messageId) {
+
+        //현재 접속한 멤버, 조회할 메세지, 메세지 수신자
+        Member member = userDetails.getMember();
         Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        Member receiver = message.getReceiver();
+
+        //현재 접속한 멤버과 메세지 수신자가 다르다면 조회 불가
+        if(member.getId() != receiver.getId())
+            throw new MemberNotEqualReceiverException();
+
         return GetMessageDto.builder()
                 .messageId(message.getId())
-                .message(message.getMessage())
+                .content(message.getContent())
                 .isRead(message.isRead())
                 .senderId(message.getSender().getId())
                 .receiverId(message.getReceiver().getId())
@@ -69,7 +88,18 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void deleteMessage(Long messageId) {
+    public void deleteMessage(CustomUserDetails userDetails, Long messageId) {
+
+        //현재 접속한 멤버, 삭제할 메세지, 메세지 수신자
+        Member member = userDetails.getMember();
+        Message message = messageRepository.findById(messageId).orElseThrow(MessageNotFoundException::new);
+        Member receiver = message.getReceiver();
+
+        //현재 접속한 멤버가 메세지 수신자가 아니라면 삭제 불가
+        if(member.getId() != receiver.getId())
+            throw new MemberNotEqualReceiverException();
+
+        //메세지 삭제
         messageRepository.deleteById(messageId);
     }
 
@@ -78,7 +108,7 @@ public class MessageServiceImpl implements MessageService {
         Member sender = memberRepository.findById(receivedMessage.getSender()).orElseThrow(MemberNotFoundException::new);
         Member receiver = memberRepository.findById(receivedMessage.getReceiver()).orElseThrow(MemberNotFoundException::new);
         Message message = Message.builder()
-                .message(receivedMessage.getMessage())
+                .content(receivedMessage.getMessage())
                 .sender(sender)
                 .receiver(receiver)
                 .build();

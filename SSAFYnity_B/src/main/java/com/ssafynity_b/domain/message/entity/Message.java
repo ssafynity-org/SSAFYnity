@@ -19,7 +19,7 @@ public class Message {
     private Long id;
 
     @Column(nullable = false)
-    private String message;
+    private String content;
 
     @Builder.Default()
     @Column(nullable = false)
