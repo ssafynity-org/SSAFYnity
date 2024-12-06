@@ -57,7 +57,7 @@ public class MessageServiceImpl implements MessageService {
 
         return messageList.stream()
                 .map(message -> GetMessageDto.builder()
-                        .messageId(message.getId())
+                        .id(message.getId())
                         .content(message.getContent())
                         .isRead(message.isRead())
                         .senderId(message.getSender().getId())
@@ -79,7 +79,7 @@ public class MessageServiceImpl implements MessageService {
             throw new MemberNotEqualReceiverException();
 
         return GetMessageDto.builder()
-                .messageId(message.getId())
+                .id(message.getId())
                 .content(message.getContent())
                 .isRead(message.isRead())
                 .senderId(message.getSender().getId())
