@@ -129,11 +129,8 @@ public class AttendanceServiceImpl implements AttendanceService {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm:ss");
         String time = serverTime.format(format);
 
-        System.out.println("왜 퇴실 시간이 null 이나와 : " + time);
-        System.out.println("퇴실 day : " + day);
         // 늦었는지 아닌지 판별
         if(serverTime.toLocalTime().isAfter(CHECK_OUT_START) && serverTime.toLocalTime().isBefore(CHECK_OUT_END)){
-            System.out.println("이게 왜 null ? : " +attendance.getRecords().get(day));
             attendance.getRecords().get(day).updateCheckOutTime(time);
             attendance.getRecords().get(day).updateStatus("퇴실");
             attendanceRepository.save(attendance);

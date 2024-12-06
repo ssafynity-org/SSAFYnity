@@ -41,8 +41,8 @@ public class Board {
         this.content = createBoardDto.getContent();
     }
 
-    public Board(CreateBoardDto createBoardDto, String filteredHtml) {
-        this.title = createBoardDto.getTitle();
+    public Board(String title, String filteredHtml) {
+        this.title = title;
         this.content = filteredHtml;
     }
 

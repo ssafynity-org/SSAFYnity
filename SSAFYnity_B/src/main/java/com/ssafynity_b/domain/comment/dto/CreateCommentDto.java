@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Getter
 @Setter
 public class CreateCommentDto {
-    private Long memberId;
 
     private Long boardId;
 
     private String content;
+
 }
