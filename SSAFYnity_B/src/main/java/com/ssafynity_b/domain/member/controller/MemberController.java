@@ -28,7 +28,7 @@ public class MemberController {
     private final MinIoUploadService minioUploadService;
 
     @Operation(summary = "회원 생성")
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto){
         Long memberId = memberService.createMember(memberDto);
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
@@ -92,7 +92,7 @@ public class MemberController {
             String fileName = file.getOriginalFilename();
             long contentLength = file.getSize();
 
-            minioUploadService.uploadFileToMinio(fileName, inputStream, contentLength);
+            minioUploadService.uploadFileToMinio(userDetails, fileName, inputStream, contentLength);
             return "업로드 완료";
         } catch(IOException e){
             return "업로드 실패 : " + e.getMessage();

@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestPath = request.getRequestURI();
 
         // Swagger 관련 경로, 회원가입,로그인 경로는 필터링하지 않음
-        if (requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/api/auth/login") || requestPath.startsWith("/api/member") && "POST".equalsIgnoreCase(request.getMethod())) {
+        if (requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/api/auth/login") || requestPath.startsWith("/api/member/signup")) {
             filterChain.doFilter(request, response); // 다음 필터로 이동
             return;
         }
