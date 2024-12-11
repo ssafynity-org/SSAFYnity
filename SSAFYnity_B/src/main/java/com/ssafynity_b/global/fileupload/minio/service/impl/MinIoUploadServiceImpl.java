@@ -27,13 +27,13 @@ public class MinIoUploadServiceImpl implements MinIoUploadService {
     String DIRECTORY_PATH;
 
     @Override
-    public void uploadFileToMinio(CustomUserDetails userDetails, String fileName, InputStream inputStream, long contentLength) {
+    public void uploadFileToMinIO(CustomUserDetails userDetails, String fileName, InputStream inputStream, long contentLength) {
         //멤버 이름
         Long memberId = userDetails.getMember().getId();
 
         try {
             //MinIO버킷에 저장할 객체 생성
-            //경로(-> user/멤버 이름/fileName)에 이미지 저장
+            //경로(-> user/멤버 이름/profile)에 이미지 저장
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(BUCKET_NAME)
                     .object(DIRECTORY_PATH + memberId + "/profile")

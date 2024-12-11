@@ -6,6 +6,8 @@ import com.ssafynity_b.global.fileupload.minio.service.MinIoUploadService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -86,13 +88,37 @@ public class MemberController {
     }
 
     @Operation(summary = "프로필이미지 저장(MinIO,Multipartfile방식)")
-    @PostMapping(value = "/upload/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveProfileImageByMinIO(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart("file")MultipartFile file){
+    @PostMapping(value = "/upload/profileImage/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String saveMultipartToMinIO(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart("file")MultipartFile file){
         try(InputStream inputStream = file.getInputStream()){
             String fileName = file.getOriginalFilename();
             long contentLength = file.getSize();
 
-            minioUploadService.uploadFileToMinio(userDetails, fileName, inputStream, contentLength);
+            System.out.println("userDetails : " + userDetails);
+            System.out.println("fileName : " + fileName);
+            System.out.println("inputStream : " + inputStream);
+            System.out.println("contentLength : " + contentLength);
+
+            minioUploadService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
+            return "업로드 완료";
+        } catch(IOException e){
+            return "업로드 실패 : " + e.getMessage();
+        }
+    }
+
+    @Operation(summary = "프로필이미지 저장(MinIO,Stream방식)")
+    @PostMapping(value = "/upload/profileImage/stream", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String saveStreamToMinIO(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletRequest request){
+        try(InputStream inputStream = request.getInputStream()){
+            String fileName = request.getHeader("file-name");
+            long contentLength = request.getContentLengthLong();
+
+            System.out.println("userDetails : " + userDetails);
+            System.out.println("fileName : " + fileName);
+            System.out.println("inputStream : " + inputStream);
+            System.out.println("contentLength : " + contentLength);
+
+            minioUploadService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
             return "업로드 완료";
         } catch(IOException e){
             return "업로드 실패 : " + e.getMessage();
