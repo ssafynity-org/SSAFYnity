@@ -1,6 +1,7 @@
 package com.ssafynity_b.global.fileupload.minio.service.impl;
 
 import com.ssafynity_b.global.fileupload.minio.service.MinIoUploadService;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -27,21 +27,30 @@ public class MinIoUploadServiceImpl implements MinIoUploadService {
     String DIRECTORY_PATH;
 
     @Override
-    public void uploadFileToMinio(String fileName, InputStream inputStream, long contentLength) {
+    public void uploadFileToMinio(CustomUserDetails userDetails, String fileName, InputStream inputStream, long contentLength) {
+        //멤버 이름
+        Long memberId = userDetails.getMember().getId();
+
         try {
+            //MinIO버킷에 저장할 객체 생성
+            //경로(-> user/멤버 이름/fileName)에 이미지 저장
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .bucket(BUCKET_NAME)
-                    .object(DIRECTORY_PATH + UUID.randomUUID() + fileName)
+                    .object(DIRECTORY_PATH + memberId + "/profile")
                     .stream(inputStream, contentLength, -1)
                     .contentType(getContentType(fileName))
                     .build();
 
+            //MinIO버킷에 객체 저장
             minioClient.putObject(putObjectArgs);
+
+        //오류 발생시 예외처리
         }catch (Exception e) {
             System.err.println("Other errors: " + e.getMessage());
         }
     }
 
+    //파일 타입 추출(ex.jpg,webp,png,jpeg...)
     private String getContentType(String fileName){
         Path path = Paths.get(fileName);
         String contentType = null;
