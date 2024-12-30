@@ -87,6 +87,8 @@ public class MemberController {
         return new ResponseEntity<List<GetMemberDto>>(memberList, HttpStatus.OK);
     }
 
+    //localhost:9000으로 접속해서 확인 가능
+    //아이디 : dldnwls009 비밀번호 : dldnwls009
     @Operation(summary = "프로필이미지 저장(MinIO,Multipartfile방식)")
     @PostMapping(value = "/upload/profileImage/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveMultipartToMinIO(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestPart("file")MultipartFile file){
