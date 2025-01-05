@@ -1,44 +1,53 @@
+.login-page { 
+  display: flex; /* Flexbox 레이아웃 활성화 */
+  align-items: center; /* 수직 방향 중앙 정렬 */
+  justify-content: flex-end; /* 수평 방향 오른쪽 정렬 */
+  height: 100vh; /* 전체 화면 높이 */
+  padding-right: 15%; /* 오른쪽 패딩을 주어 조금 더 깔끔하게 정렬 */
+  background-image: url('/public/images/background.png'); /* 배경 이미지 설정 */
+  background-size: cover; /* 배경 이미지를 화면에 꽉 채우도록 */
+  background-position: center; /* 배경 이미지 중앙에 위치 */
+}
+
 .login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+  width: 400px; /* 최대 너비 설정 */
+  min-height: 300px; /* 최소 높이 설정 */
+  padding: 10px;
+  background-color: #ffffff; /* 배경색 설정 */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex; /* Flexbox를 사용하여 내부 요소 정렬 */
+  flex-direction: column; /* 요소들을 세로로 배열 */
+  justify-content: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}

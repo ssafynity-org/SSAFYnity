@@ -7,7 +7,7 @@ import "../styles/Login.css"; // 스타일 파일
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userData, setUserData] = useState(""); // 로그인 결과 메시지 저장
+  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지를 위한 상태
   const { login } = useAuth(); // useAuth 훅에서 login 메서드 가져오기
   const navigate = useNavigate(); // useNavigate 생성
 
@@ -32,47 +32,52 @@ function Login() {
         login();
 
 
-        // 상태로 다른 페이지로 이동
+        // 메인 페이지로 이동하면서 서버 응답 데이터 전달
         navigate("/main", { state: response.data }); // 데이터 전달
   
-        // 성공 메시지 설정
-        setUserData(response.data);
       } catch (error) {
         // 에러 처리
         if (error.response && error.response.status === 401) {
-          setUserData("Invalid credentials. Please try again.");
+          setErrorMessage("Invalid credentials. Please try again.");
         } else {
-          setUserData("An error occurred. Please try again later.");
+          setErrorMessage("An error occurred. Please try again later.");
         }
       }
     };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-        </form>
+    <div className="login-page">
+      <div className="login-container">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">아이디</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="ID"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">비밀번호</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="PASSWORD"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <button type="submit">로그인</button>
+          </div>
+          {/* 에러메세지 출력 */}
+          {errorMessage && <p>{errorMessage}</p>} 
+          </form>
+      </div>
     </div>
   );
 }
