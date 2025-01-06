@@ -1,13 +1,18 @@
 import React from "react";
-import { useLocation } from "react-router-dom"; // useLocation import
+import { useLocation, useNavigate } from "react-router-dom"; // useLocation import
 import axiosInstance from "../api/axiosInstance";
-import { useNavigate } from "react-router-dom"; // useNavigate import
+import "../styles/Main.css";
 
 function Main() {
   const location = useLocation();
   const userData = location.state; // 전달된 데이터 수신
   const navigate = useNavigate(); // useNavigate 생성
   
+  // 현재 날짜를 구하여 문자열로 변환
+  const currentDate = new Date().toLocaleDateString('ko-KR', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
   //입실체크 핸들러
   const handleCheckIn = async () => {
     try {
@@ -49,17 +54,12 @@ function Main() {
 
   return (
     <div className="profile-container">
-      <h1>User Profile</h1>
-      {userData ? (
-        <div>
-          <p>JwtToken: {userData.jwtToken}</p>
-          <button onClick={handleCheckIn}>입실체크</button>
-          <button onClick={handleCheckOut}>퇴실체크</button>
-          <button onClick={handleNavigateToMessagePage}>메시지 페이지 이동</button>
-        </div>
-      ) : (
-        <p>No user data available.</p>
-      )}
+      <div>
+        {currentDate}
+        <button className="small-gray-button" onClick={handleCheckIn}>입실체크</button>
+        <button className="small-gray-button" onClick={handleCheckOut}>퇴실체크</button>
+        <button className="small-gray-button" onClick={handleNavigateToMessagePage}>메시지 페이지 이동</button>
+      </div>
     </div>
   );
 }
