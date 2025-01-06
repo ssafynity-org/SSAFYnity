@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../api/axiosInstance"; // 설정한 Axios 인스턴스 불러오기
 import { useNavigate } from "react-router-dom"; // useNavigate import
-import "../styles/Login.css"; // 스타일 파일
+import "../styles/SignUp.css";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -20,15 +20,15 @@ function Signup() {
     console.log("Password:", password);
 
     try {
-        const response = await axiosInstance.post(`/api/member`, {
+        const response = await axiosInstance.post(`/api/member/signup`, {
           name,
           company,
           email,
           password,
         });
 
-        // 상태로 다른 페이지로 이동
-        navigate("/main"); // 데이터 전달
+        //다른 페이지로 이동
+        navigate("/login");
   
       } catch (error) {
         // 에러 처리
@@ -42,7 +42,7 @@ function Signup() {
 
     return (
         <div className="signup-container">
-          <h1>SignUp</h1>
+          <img src="/images/bigLogo.png" alt="Logo" className="logo" /> 
           <form onSubmit={handleSubmit}>
           <div className="form-group">
               <label htmlFor="name">Name</label>
