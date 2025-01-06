@@ -45,6 +45,11 @@ function Login() {
       }
     };
 
+    // message 이동 핸들러
+    const handleNavigateToSignUpPage = () => {
+      navigate("/signup"); // "/signup" 경로로 이동
+    };
+
   return (
     <div className="login-page">
       <div className="login-container">
@@ -73,6 +78,9 @@ function Login() {
           </div>
           <div className="form-group">
             <button type="submit">로그인</button>
+          </div>
+          <div className="form-group">
+            <button onClick={handleNavigateToSignUpPage}>회원가입</button>
           </div>
           {/* 에러메세지 출력 */}
           {errorMessage && <p>{errorMessage}</p>} 
