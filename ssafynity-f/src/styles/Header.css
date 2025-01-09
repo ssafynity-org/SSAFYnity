@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
+
+.header {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  height: 13vh; /* 화면 높이의 10% */
+  border-bottom: 1px solid #ccc; /* 구분선 추가 */
+}
+
+.header-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* 높이를 내용물에 맞춤 */
+  overflow: hidden; /* 자식 요소가 부모를 넘지 않도록 강제 */
+}
+
+.header-logo {
+  display: inline-block; /* 이미지 크기만큼만 공간 차지 */
+  height: auto;
+}
+
+.header-logo img {
+  display: block; /* 인라인 요소 특성 제거 */
+  width: 250px; /* 로고 너비를 고정 */
+  height: auto;
+}
+
+.header-navigation ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  height: auto;
+  padding: 0;
+}
+
+.header-navigation li {
+  margin: 0 1rem;
+  font-family: "IBM Plex Sans KR", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.2rem; /* 16px * 1.2 = 19.2px */
+}
+
+.header-navigation li a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 100%; /* 브라우저 너비의 1.5% */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
