@@ -31,8 +31,21 @@ public class BoardController {
     @Operation(summary = "게시물 전체 조회")
     @GetMapping
     public ResponseEntity<?> getAllBoard(){
+        long startTime = System.currentTimeMillis();
         List<GetBoardDto> boardList = boardService.getAllBoard();
+        long duration = System.currentTimeMillis() - startTime;
+        System.out.println("API 실행 시간(내용까지 다 가져옴): " + duration + "ms");
         return new ResponseEntity<List<GetBoardDto>>(boardList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "게시물 제목 조회")
+    @GetMapping("/title")
+    public ResponseEntity<?> getAllTitle(){
+        long startTime = System.currentTimeMillis();
+        List<GetBoardDto> boardList = boardService.getAllTitle();
+        long duration = System.currentTimeMillis() - startTime;
+        System.out.println("API 실행 시간(지연로딩이라 내용 안가져옴): " + duration + "ms");
+        return new ResponseEntity<>(boardList,HttpStatus.OK);
     }
 
     @Operation(summary = "게시물 조회")

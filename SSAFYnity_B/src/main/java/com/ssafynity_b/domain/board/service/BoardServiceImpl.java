@@ -60,6 +60,14 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public List<GetBoardDto> getAllTitle() {
+        List<Board> boardList = boardRepository.findAll();
+        return boardList.stream()
+                .map(board -> new GetBoardDto(board.getId(), board.getTitle()))
+                .toList();
+    }
+
+    @Override
     public GetBoardDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
         return new GetBoardDto(board);
