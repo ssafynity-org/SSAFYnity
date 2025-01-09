@@ -42,7 +42,7 @@ function Signup() {
 
     return (
         <div className="signup-container">
-          <img src="/images/bigLogo.png" alt="Logo" className="logo" /> 
+          <img src="/images/bigLogo.png" alt="Logo" className="signup-logo" /> 
           <form onSubmit={handleSubmit}>
           <div className="form-group">
               <label htmlFor="name">Name</label>

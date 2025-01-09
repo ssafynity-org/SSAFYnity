@@ -1,5 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
+import "../styles/Header.css";
 
 function Header() {
   const location = useLocation(); // 현재 위치 정보를 가져옵니다.
@@ -10,8 +11,23 @@ function Header() {
   }
   
   return (
-    <header>
-      <h1>SSAFYnity Project</h1>
+    <header className="header">
+      <div className="header-container">
+        <div className="header-logo">
+          <Link to="/main">
+            <img src="/images/bigLogo.png" alt="Logo" />
+          </Link>
+        </div>
+        <nav className="header-navigation">
+          <ul>
+            <li><Link to="/mycampus">마이캠퍼스</Link></li>
+            <li><Link to="/education">강의실</Link></li>
+            <li><Link to="/community">커뮤니티</Link></li>
+            <li><Link to="/helpdesk">Help Desk</Link></li>
+            <li><Link to="/mentoring">멘토링 게시판</Link></li>
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }
