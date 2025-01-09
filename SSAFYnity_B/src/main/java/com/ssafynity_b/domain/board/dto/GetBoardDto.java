@@ -19,4 +19,9 @@ public class GetBoardDto {
         this.title = board.getTitle();
         this.content = board.getContent();
     }
+
+    public GetBoardDto(Long boardId, String title) {
+        this.boardId = boardId;
+        this.title = title;
+    }
 }

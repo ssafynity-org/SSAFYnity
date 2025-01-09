@@ -25,7 +25,8 @@ public class Board {
 
     private String title;
 
-    @Lob
+    @Basic(fetch = FetchType.LAZY) //단일 필드를 지연로딩으로 설정하기위한 어노테이션
+    @Lob //대규모 문자열이기때문에 Lob어노테이션 사용
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
