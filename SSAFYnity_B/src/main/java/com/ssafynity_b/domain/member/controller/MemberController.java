@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,13 @@ public class MemberController {
     public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto){
         Long memberId = memberService.createMember(memberDto);
         return new ResponseEntity<Long>(memberId, HttpStatus.OK);
+    }
+
+    @Operation(summary = "회원정보 및 프로필사진 저장")
+    @PostMapping(value = "/signup/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createMemberAndProfileImage(@RequestPart("member")CreateMemberDto memberDto, @RequestPart("file")MultipartFile profileImage) throws FileUploadException {
+        memberService.createMemberAndProfileImage(memberDto, profileImage);
+        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
 
     @Operation(summary = "회원 여러명 생성")
