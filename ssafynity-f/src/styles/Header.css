@@ -40,7 +40,7 @@
   font-family: "IBM Plex Sans KR", serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 1.2rem; /* 16px * 1.2 = 19.2px */
+  font-size: 1rem; /* 16px * 1.2 = 19.2px */
 }
 
 .header-navigation li a {

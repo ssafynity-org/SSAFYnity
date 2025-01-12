@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "../api/axiosInstance"; // 가정된 axios 인스턴스 경로
 import { useNavigate } from "react-router-dom";
+import LottieAnimation from "../components/LottieAnimation"; // LottieAnimation 컴포넌트 불러오기
 import "../styles/SignUp.css";
 
 function Signup() {
@@ -10,6 +11,8 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [userData, setUserData] = useState("");
+  const [showModal, setShowModal] = useState(false); // 모달 표시 상태
+  const [loading, setLoading] = useState(true); // 애니메이션 상태
 
   const navigate = useNavigate();
 
@@ -33,14 +36,12 @@ function Signup() {
 
 
     try {
-      const response = await axios.post("/api/member/signup/multipart", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log(response.data);
-      setUserData("Signup successful!");
-      navigate("/login");
+      const response = await axios.post("/api/member/signup/multipart", formData);
+      setShowModal(true); // 모달 표시
+      setTimeout(() => {
+        setShowModal(false); // 3초 후 모달 숨김
+        navigate("/login"); // 로그인 페이지로 이동
+      }, 3000);
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setUserData("Invalid credentials. Please try again.");
@@ -109,6 +110,18 @@ function Signup() {
         <button type="submit">SignUp</button>
         {userData && <p>{userData}</p>}
       </form>
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h4>회원가입 성공!</h4>
+            {loading ?
+              <LottieAnimation lottiePath="/path/to/your/loading-animation.json" height={200} width={200} /> :
+              <LottieAnimation lottiePath="/path/to/your/check-animation.json" height={200} width={200} />
+            }
+            <p>잠시 후 로그인 페이지로 이동합니다.</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
