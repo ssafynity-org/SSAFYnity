@@ -1,12 +1,16 @@
 package com.ssafynity_b.global.fileupload.minio.service.impl;
 
+import com.ssafynity_b.domain.member.dto.CreateMemberDto;
 import com.ssafynity_b.global.fileupload.minio.service.MinIoUploadService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +51,31 @@ public class MinIoUploadServiceImpl implements MinIoUploadService {
         //오류 발생시 예외처리
         }catch (Exception e) {
             System.err.println("Other errors: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void uploadFileToMinIoBySignUp(Long memberId, MultipartFile file) throws FileUploadException {
+
+        try(InputStream inputStream = file.getInputStream()) {
+            String fileName = file.getOriginalFilename();
+            long contentLength = file.getSize();
+
+            //MinIO버킷에 저장할 객체 생성
+            //경로(-> user/멤버 이름/profile)에 이미지 저장
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .bucket(BUCKET_NAME)
+                    .object(DIRECTORY_PATH + memberId + "/profile")
+                    .stream(inputStream, contentLength, -1)
+                    .contentType(getContentType(fileName))
+                    .build();
+
+            //MinIO버킷에 객체 저장
+            minioClient.putObject(putObjectArgs);
+
+            //오류 발생시 예외처리
+        }catch (Exception e) {
+            throw new FileUploadException("파일 업로드 중 오류 발생",e);
         }
     }
 
