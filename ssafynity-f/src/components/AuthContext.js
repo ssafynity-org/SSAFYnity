@@ -6,8 +6,13 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(null); // 초기값을 null로 설정
     const [loading, setLoading] = useState(true); // 로딩 상태 추가
+    const [user, setUser] = useState(null); // 사용자 데이터를 위한 상태
 
-    const login = () => setIsAuthenticated(true);
+    const login = (userData) => {
+        setIsAuthenticated(true)
+        setUser(userData); // 사용자 데이터 설정
+    };
+    
     const logout = () => {
         setIsAuthenticated(false);
         localStorage.removeItem("jwtToken");

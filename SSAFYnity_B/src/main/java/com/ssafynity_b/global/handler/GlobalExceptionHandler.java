@@ -1,6 +1,7 @@
 package com.ssafynity_b.global.handler;
 
 import com.ssafynity_b.global.exception.*;
+import io.minio.errors.MinioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,6 +26,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<?> handleFileUploadException(FileUploadException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("파일 업로드 실패", e.getMessage()));
+    }
+
+    @ExceptionHandler(MinioException.class)
+    public ResponseEntity<?> handleMinioException(MinioException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("프로필 사진을 찾지못했습니다",e.getMessage()));
     }
 
     /* attendance */
