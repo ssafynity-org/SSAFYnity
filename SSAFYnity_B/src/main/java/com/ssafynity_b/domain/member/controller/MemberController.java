@@ -2,11 +2,10 @@ package com.ssafynity_b.domain.member.controller;
 
 import com.ssafynity_b.domain.member.dto.*;
 import com.ssafynity_b.domain.member.service.MemberService;
-import com.ssafynity_b.global.fileupload.minio.service.MinIoUploadService;
+import com.ssafynity_b.global.fileupload.minio.service.MinIoService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -28,7 +27,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final MinIoUploadService minioUploadService;
+    private final MinIoService minioService;
 
     @Operation(summary = "회원 생성")
     @PostMapping("/signup")
@@ -109,7 +108,7 @@ public class MemberController {
             System.out.println("inputStream : " + inputStream);
             System.out.println("contentLength : " + contentLength);
 
-            minioUploadService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
+            minioService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
             return "업로드 완료";
         } catch(IOException e){
             return "업로드 실패 : " + e.getMessage();
@@ -128,7 +127,7 @@ public class MemberController {
             System.out.println("inputStream : " + inputStream);
             System.out.println("contentLength : " + contentLength);
 
-            minioUploadService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
+            minioService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
             return "업로드 완료";
         } catch(IOException e){
             return "업로드 실패 : " + e.getMessage();
