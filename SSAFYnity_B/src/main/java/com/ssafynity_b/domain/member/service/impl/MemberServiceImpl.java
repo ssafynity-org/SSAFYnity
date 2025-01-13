@@ -9,6 +9,7 @@ import com.ssafynity_b.domain.member.service.MemberService;
 import com.ssafynity_b.global.exception.MemberCreationException;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
 import com.ssafynity_b.global.fileupload.minio.service.MinIoService;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -70,6 +71,17 @@ public class MemberServiceImpl implements MemberService {
     public GetMemberDto getMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return new GetMemberDto(member);
+    }
+
+    @Override
+    public GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException {
+
+        Long memberId = userDetails.getMember().getId();
+
+        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
+        String profileImage = minIoService.getFileToMinIO(userDetails);
+
+        return new GetLoginDto(member,profileImage);
     }
 
     @Override

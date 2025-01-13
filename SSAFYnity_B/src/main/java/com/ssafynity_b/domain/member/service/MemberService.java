@@ -1,6 +1,7 @@
 package com.ssafynity_b.domain.member.service;
 
 import com.ssafynity_b.domain.member.dto.*;
+import com.ssafynity_b.global.jwt.CustomUserDetails;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,8 @@ public interface MemberService {
     void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) throws FileUploadException;
 
     GetMemberDto getMember(Long memberId);
+
+    GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException;
 
     List<GetMemberDto> getAllMember();
 
