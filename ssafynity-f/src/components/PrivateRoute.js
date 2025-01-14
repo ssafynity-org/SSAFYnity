@@ -1,9 +1,9 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = ({ children }) => {
-    const { isAuthenticated, loading } = useAuth();
+    const { isAuthenticated, loading } = useSelector((state) => state.user);
 
     // 로딩 중일 때 아무것도 렌더링하지 않음
     if (loading) {
