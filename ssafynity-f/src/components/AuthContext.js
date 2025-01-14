@@ -11,10 +11,12 @@ export const AuthProvider = ({ children }) => {
     const login = (userData) => {
         setIsAuthenticated(true)
         setUser(userData); // 사용자 데이터 설정
+        console.log(userData);
     };
     
     const logout = () => {
         setIsAuthenticated(false);
+        setUser(null); // 사용자 데이터 클리어
         localStorage.removeItem("jwtToken");
     };
 
@@ -47,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, loading }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
