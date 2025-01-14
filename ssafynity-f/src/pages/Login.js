@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../features/userSlice"; // 수정: setUser -> login
+import { login } from "../features/userSlice";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
