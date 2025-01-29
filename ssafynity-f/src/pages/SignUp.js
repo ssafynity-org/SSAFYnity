@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "../api/axiosInstance"; // 가정된 axios 인스턴스 경로
 import { useNavigate } from "react-router-dom";
+import ImageCropper from "../components/ImageCropper"; // 크롭 컴포넌트 추가
 import LottieAnimation from "../components/LottieAnimation"; // LottieAnimation 컴포넌트 불러오기
 import "../styles/SignUp.css";
 
@@ -13,6 +14,10 @@ function Signup() {
   const [userData, setUserData] = useState("");
   const [showModal, setShowModal] = useState(false); // 모달 표시 상태
   const [loading, setLoading] = useState(true); // 애니메이션 상태
+  const [imageSrc, setImageSrc] = useState(null); // 원본 이미지 소스
+  const [croppedImage, setCroppedImage] = useState(null); // 크롭된 이미지
+  const [showCropper, setShowCropper] = useState(false); // 크롭 UI 표시 상태
+  const imgInput = useRef(null);
 
   const navigate = useNavigate();
 
@@ -30,9 +35,15 @@ function Signup() {
 
     formData.append("member", jsonBlob);
 
-    if (profileImage) {
-      formData.append("file", profileImage);
+    if (croppedImage) {
+      console.log("서버로 전송할 크롭된 이미지:", croppedImage);
+      const croppedBlob = dataURLToBlob(croppedImage);
+      formData.append("file", croppedBlob, "profile.jpg");
     }
+
+    // if (profileImage) {
+    //   formData.append("file", profileImage);
+    // }
 
 
     try {
@@ -52,7 +63,35 @@ function Signup() {
   };
 
   const handleFileChange = (e) => {
-    setProfileImage(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setImageSrc(reader.result); // 크롭할 원본 이미지 저장
+        setShowCropper(true); // 크롭 UI 표시
+        console.log("뭐지 왜 안뜸");  
+      };
+    }
+  };
+
+  const handleCropComplete = (croppedImg) => {
+    setCroppedImage(croppedImg);
+    setShowCropper(false);
+  };
+
+  const dataURLToBlob = (dataURL) => {
+    const byteString = atob(dataURL.split(",")[1]); // Base64 데이터 디코딩
+    const mimeString = dataURL.split(",")[0].split(":")[1].split(";")[0]; // MIME 타입 추출
+  
+    const arrayBuffer = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(arrayBuffer);
+  
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+  
+    return new Blob([arrayBuffer], { type: mimeString }); // Blob 객체 생성
   };
 
   return (
@@ -104,9 +143,19 @@ function Signup() {
           <input
             type="file"
             id="file"
+            ref={imgInput} // ✅ useRef 연결
             onChange={handleFileChange}
           />
         </div>
+        {croppedImage && <img src={croppedImage} alt="Cropped Profile" className="cropped-preview" />}
+        <button onClick={() => imgInput.current.click()}>Upload Image</button>
+        {showCropper && (
+          <ImageCropper
+            imageSrc={imageSrc}
+            onCropComplete={handleCropComplete}
+            onCancel={() => setShowCropper(false)}
+          />
+        )}
         <button type="submit">SignUp</button>
         {userData && <p>{userData}</p>}
       </form>
