@@ -60,7 +60,7 @@ public class MemberController {
     }
 
     @Operation(summary = "로그인 회원 정보 및 프로필이미지 조회")
-    @GetMapping("/login/member")
+    @GetMapping("/login")
     public ResponseEntity<GetLoginDto> getLoginInformation(@AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         GetLoginDto loginDto = memberService.getLoginInformation(userDetails);
         return new ResponseEntity<>(loginDto,HttpStatus.OK);
