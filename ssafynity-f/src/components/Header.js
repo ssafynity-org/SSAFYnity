@@ -27,6 +27,9 @@ function Header() {
             <li><Link to="/mentoring">멘토링 게시판</Link></li>
           </ul>
         </nav>
+        <div className="header-bell">
+          <img src="/images/bell.png" alt="bell" />
+        </div>
       </div>
     </header>
   );
