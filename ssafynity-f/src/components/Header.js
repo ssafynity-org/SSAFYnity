@@ -1,8 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux"; // useSelector import
 import { useLocation, Link } from "react-router-dom";
 import "../styles/Header.css";
 
 function Header() {
+  const user = useSelector(state => state.user.userInfo); // Redux store에서 user 데이터 가져오기
   const location = useLocation(); // 현재 위치 정보를 가져옵니다.
 
   // 로그인 페이지에서는 헤더를 숨깁니다.
@@ -29,6 +31,22 @@ function Header() {
         </nav>
         <div className="header-bell">
           <img src="/images/bell.png" alt="bell" />
+        </div>
+        <div className="profile-image">
+          {user && (
+          <>
+            <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 40, height: 40 }} />
+            <p>{user.name}님</p>
+          </>
+          )}
+        </div>
+        <div className="header-link">
+          <div className="header-support">
+            <img src="/images/아이들과미래재단후원하기.png" alt="아이들과미래재단후원하기" />
+            </div>
+          <div className="header-discord">
+            <img src="/images/디스코드참여하기.png" alt="디스코드참여하기" />
+          </div>
         </div>
       </div>
     </header>
