@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux"; // useSelector import
 import { useLocation, Link } from "react-router-dom";
 import "../styles/Header.css";
@@ -7,6 +7,17 @@ function Header() {
   const user = useSelector(state => state.user.userInfo); // Redux store에서 user 데이터 가져오기
   const location = useLocation(); // 현재 위치 정보를 가져옵니다.
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const navRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (navRef.current && dropdownRef.current) {
+      const navRect = navRef.current.getBoundingClientRect();
+      dropdownRef.current.style.width = `${navRect.width}px`;
+      dropdownRef.current.style.left = `${navRect.left}px`;
+    }
+  }, [dropdownVisible]);
+
 
   // 로그인 페이지에서는 헤더를 숨깁니다.
   if (location.pathname === "/login" || location.pathname === "/signup") {
@@ -14,11 +25,10 @@ function Header() {
   }
   
   return (
-    <header className="header"
-    onMouseEnter={() => {console.log("Dropdown Open"); // 상태 확인; 
-                        setDropdownVisible(true);}}
-    onMouseLeave={() => {console.log("Dropdown Open"); // 상태 확인;
-                         setDropdownVisible(false)}}
+    <header
+      className="header"
+      onMouseEnter={() => setDropdownVisible(true)}
+      onMouseLeave={() => setDropdownVisible(false)}
     >
       <div className="header-container">
         <div className="header-logo">
@@ -26,7 +36,7 @@ function Header() {
             <img src="/images/bigLogo.png" alt="Logo" />
           </Link>
         </div>
-        <nav className="header-navigation">
+        <nav className="header-navigation" ref={navRef}>
           <ul>
             <li><Link to="/mycampus">싸피니티 소개</Link></li>
             <li><Link to="/education">컨퍼런스</Link></li>
@@ -38,13 +48,17 @@ function Header() {
         <div className="header-link">
           <div className="header-support">
             <img src="/images/아이들과미래재단후원하기.png" alt="아이들과미래재단후원하기" />
-            </div>
+          </div>
           <div className="header-discord">
             <img src="/images/디스코드참여하기.png" alt="디스코드참여하기" />
           </div>
         </div>
-          {/* ✅ 전체 드롭다운 메뉴 */}
-        <div className={`dropdown-container ${dropdownVisible ? "visible" : ""}`}>
+
+        {/* ✅ 동적으로 크기 및 위치 조절된 드롭다운 메뉴 */}
+        <div
+          ref={dropdownRef}
+          className={`dropdown-container ${dropdownVisible ? "visible" : ""}`}
+        >
           <div className="dropdown-content">
             <div className="dropdown-section">
               <ul>
