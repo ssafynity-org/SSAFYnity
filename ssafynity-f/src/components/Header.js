@@ -22,24 +22,13 @@ function Header() {
         </div>
         <nav className="header-navigation">
           <ul>
-            <li><Link to="/mycampus">마이캠퍼스</Link></li>
-            <li><Link to="/education">강의실</Link></li>
+            <li><Link to="/mycampus">싸피니티 소개</Link></li>
+            <li><Link to="/education">컨퍼런스</Link></li>
             <li><Link to="/community">커뮤니티</Link></li>
+            <li><Link to="/mentoring">멘토링</Link></li>
             <li><Link to="/helpdesk">Help Desk</Link></li>
-            <li><Link to="/mentoring">멘토링 게시판</Link></li>
           </ul>
         </nav>
-        <div className="header-bell">
-          <img src="/images/bell.png" alt="bell" />
-        </div>
-        <div className="profile-image">
-          {user && (
-          <>
-            <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 40, height: 40 }} />
-            <p>{user.name}님</p>
-          </>
-          )}
-        </div>
         <div className="header-link">
           <div className="header-support">
             <img src="/images/아이들과미래재단후원하기.png" alt="아이들과미래재단후원하기" />
