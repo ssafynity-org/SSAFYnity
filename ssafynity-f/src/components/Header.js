@@ -19,7 +19,6 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="header-container">
         <div className="header-logo">
           <Link to="/main">
             <img src="/images/bigLogo.png" alt="Logo" />
@@ -100,7 +99,6 @@ function Header() {
             <img src="/images/디스코드참여하기.png" alt="디스코드참여하기" />
           </div>
         </div>
-      </div>
     </header>
   );
 }
