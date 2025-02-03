@@ -31,7 +31,6 @@ html, body {
 .header-logo {
   display: inline-block; /* 이미지 크기만큼만 공간 차지 */
   height: auto;
-  margin: 0 1.5rem 0;
 }
 
 .header-logo img {
@@ -40,22 +39,16 @@ html, body {
   height: auto;
 }
 
-.header-navigation {
-  display: flex; 
-  justify-content: space-between;
-}
-
 .header-navigation ul {
   display: flex; /* 가로 정렬 */
   justify-content: center; /* 중앙 정렬 */
   align-items: center; /* 세로 중앙 정렬 */
   list-style: none;
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
   padding: 0;
 }
 
 .header-navigation li {
-  margin: 0 1.5rem 0;
+  margin: 0 1.5rem;
   font-family: "IBM Plex Sans KR", serif;
   font-weight: 400;
   font-style: normal;
@@ -118,7 +111,9 @@ html, body {
   border-top: 1px solid #ddd;
   opacity: 0;
   visibility: hidden;
+  transform: translateY(-10px);
   transition: all 0.3s ease-in-out;
+  padding: 20px;
 }
 
 /* ✅ 드롭다운이 활성화될 때 */
@@ -138,20 +133,17 @@ html, body {
 
 .dropdown-section {
   flex: 1;
-  /* padding: 10px; */
+  padding: 10px;
 }
 
 .dropdown-section ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .dropdown-section ul li {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  font-size: 0.8rem; /* 16px * 1.2 = 19.2px */
+  padding: 5px 0;
 }
 
 .dropdown-section ul li a {
