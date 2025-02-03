@@ -47,22 +47,34 @@ function Main() {
   };
 
   return (
-    <div className="profile-container">
-      <div>
-        <p>Today's date: {currentDate}</p>
-        {user && (
-          <>
-            <div>
-              <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 100, height: 100 }} />
-              <h3>Welcome, {user.name}!</h3>
+    <div className="main">
+      <div className="profile-container">
+          {/* <p>Today's date: {currentDate}</p> */}
+          {user && (
+            <div className="profile-section">
+              <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 80, height: 80 }} />
+              <div className="profile-info">
+                <div className="profile-nameAndStatus">
+                  <p className="user-name">{user.name}님</p>
+                  {/* <img className="contour" src="/images/세로구분선.png" alt="세로구분선" /> */}
+                  <div class='v-line'></div>
+                    <p className="user-status">정회원</p>
+                </div>  
+                <div className="profile-email">
+                  <p>dldnwls009@naver.com</p>
+                </div>
+              </div>
             </div>
-          </>
-        )}
-        <button className="small-gray-button" onClick={handleCheckIn}>입실체크</button>
-        <button className="small-gray-button" onClick={handleCheckOut}>퇴실체크</button>
-        <button className="small-gray-button" onClick={handleNavigateToMessagePage}>메시지 페이지 이동</button>
+          )}
+          <div className="button-container">
+            <button className="small-gray-button" onClick={handleCheckIn}>입실체크</button>
+            <button className="small-gray-button" onClick={handleCheckOut}>퇴실체크</button>
+          </div>
       </div>
-    </div>
+      <div className="main-view">
+        <p>안녕</p>
+      </div>
+    </div>    
   );
 }
 

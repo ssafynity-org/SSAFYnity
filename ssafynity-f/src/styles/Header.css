@@ -21,10 +21,9 @@ html, body {
   display: flex;
   justify-content: center; /* 요소들을 동일한 간격으로 배치 */
   align-items: center;
-  width: 100%; /* 높이를 내용물에 맞춤 */
+  width: 100%;
   height: 100%; /* 높이를 내용물에 맞춤 */
-  overflow: hidden; /* 자식 요소가 부모를 넘지 않도록 강제 */
-  gap: 20px; /* 요소들 간의 일정한 간격 */
+  gap: 3.5rem; /* 요소들 간의 일정한 간격 */
 }
 
 .header-logo {
@@ -38,80 +37,105 @@ html, body {
   height: auto;
 }
 
-.header-navigation ul {
+.header-navigation {
+  position: relative; /* 드롭다운 위치를 조정할 기준이 되는 부모 요소 */
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 수직 중앙 정렬 */
+  padding: 0 2rem;
+}
+
+.nav-menu {
+  height: 100%;
   list-style: none;
   display: flex;
   justify-content: center;
-  height: auto;
+  align-items: center;
   padding: 0;
+  margin: 0;
+  gap: 2.8rem;
+  
 }
 
-.header-navigation li {
-  margin: 0 1.4rem;
-  font-family: "IBM Plex Sans KR", serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1rem; /* 16px * 1.2 = 19.2px */
-}
-
-.header-navigation li a {
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-  font-size: 100%; /* 브라우저 너비의 1.5% */
-  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-}
-
-.header-bell {
-  display: inline-block; /* 이미지 크기만큼만 공간 차지 */
-  height: auto;
-}
-
-.header-bell img {
-  display: block; /* 인라인 요소 특성 제거 */
-  width: 30px; /* 로고 너비를 고정 */
-  height: auto;
-}
-
-.profile-image {
+.menu-item {
+  height: 100%;
+  /* position: relative; */
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: "IBM Plex Sans KR", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1rem;
+  color: black;
+  font-weight: bold;
+  
 }
 
 .header-link {
   display: flex;
-  justify-content: center; /* 가로 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
-  height: 100%; /* 부모 요소의 높이를 기준으로 정렬 */
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   }
 
 .header-support {
   background-color: darkseagreen;
-  display: flex; /* 이미지 크기만큼만 공간 차지 */
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
 .header-support img {
-  display: block; /* 인라인 요소 특성 제거 */
-  width: 150px; /* 로고 너비를 고정 */
-  height: auto;
-  margin: 0 0.8rem; /* 좌우 여백 추가 */
+  display: block;
+  width: 130px; /* 로고 너비를 고정 */
+  margin: 0 1rem; /* 좌우 여백 추가 */
 }
 
 .header-discord {
   background-color: blueviolet;
-  display: flex; /* 이미지 크기만큼만 공간 차지 */
+  display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
 }
 
 .header-discord img {
-  display: block; /* 인라인 요소 특성 제거 */
-  width: 150px; /* 로고 너비를 고정 */
+  display: block;
+  width: 130px;
   height: auto;
-  margin: 0 0.8rem; /* 좌우 여백 추가 */
+  margin: 0 1rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 2rem 0;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
+  min-height: 30vh; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
+  max-height: 30vh;/* 최대 높이 설정 */
+  
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  text-align: left;
+}
+
+.dropdown-menu li:hover {
+  background-color: #f1f1f1;
 }
