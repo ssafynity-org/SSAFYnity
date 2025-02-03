@@ -11,11 +11,10 @@ html, body {
 .header {
   background-color: #ffffff;
   justify-content: center;
-  width: 100%; /* 뷰포트 전체 너비 */
+  width: 100vw; /* 뷰포트 전체 너비 */
   height: 11.3vh; /* 화면 높이의 10% */
   border-bottom: 1px solid #ccc; /* 구분선 추가 */
   box-sizing: border-box; /* border가 너비에 포함되도록 설정 */
-  position: relative;
 }
 
 .header-container {
@@ -40,10 +39,10 @@ html, body {
 }
 
 .header-navigation ul {
-  display: flex; /* 가로 정렬 */
-  justify-content: center; /* 중앙 정렬 */
-  align-items: center; /* 세로 중앙 정렬 */
   list-style: none;
+  display: flex;
+  justify-content: center;
+  height: auto;
   padding: 0;
 }
 
@@ -60,6 +59,7 @@ html, body {
   color: black;
   font-weight: bold;
   font-size: 100%; /* 브라우저 너비의 1.5% */
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
 
@@ -98,60 +98,4 @@ html, body {
   width: 130px; /* 로고 너비를 고정 */
   height: auto;
   margin: 0 1rem; /* 좌우 여백 추가 */
-}
-
-/* ✅ 전체 드롭다운 스타일 */
-.dropdown-container {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-top: 1px solid #ddd;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.3s ease-in-out;
-  padding: 20px;
-}
-
-/* ✅ 드롭다운이 활성화될 때 */
-.dropdown-container.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-/* ✅ 드롭다운 내부 스타일 */
-.dropdown-content {
-  display: flex;
-  justify-content: space-around;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dropdown-section {
-  flex: 1;
-  padding: 10px;
-}
-
-.dropdown-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.dropdown-section ul li {
-  padding: 5px 0;
-}
-
-.dropdown-section ul li a {
-  text-decoration: none;
-  color: #333;
-  transition: color 0.3s;
-}
-
-.dropdown-section ul li a:hover {
-  color: #007bff;
 }
