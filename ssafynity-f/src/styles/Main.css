@@ -22,7 +22,7 @@
   justify-content: safe center;
   align-items: safe center;
   width: 100%;
-  height: 80%;
+  height: 100%;
   gap: 35px;
   margin-top: 5vh; /* 원하는 만큼 위쪽 여백 추가 */
 }
@@ -31,12 +31,10 @@
   display:flex;
   justify-content: center;
   align-items: center;
-  min-height: 250px;
-  max-height: 250px;
+  min-height: 200px;
+  max-height: 200px;
   min-width: 420px;
   max-width: 420px;
-  width: 420px;
-  height: 250px;
   border: 1px solid thistle;
   border-radius: 10px;
   gap: 20px;

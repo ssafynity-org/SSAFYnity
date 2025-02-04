@@ -55,7 +55,7 @@ function Main() {
               <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 80, height: 80 }} />
               <div className="profile-info">
                 <div className="profile-nameAndStatus">
-                  <p className="user-name">{user.name}님</p>
+                  <p className="user-name">{user.name} 님</p>
                   <div class='v-line'></div>
                     <p className="user-status">정회원</p>
                 </div>  
