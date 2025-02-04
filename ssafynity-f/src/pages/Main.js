@@ -63,15 +63,17 @@ function Main() {
                   <p>dldnwls009@naver.com</p>
                 </div>
               </div>
+              <div className="profile-logout">
+                <p>로그아웃</p>
+                <img src="/images/로그아웃.png"/>
+              </div>
             </div>
           )}
-          {/* <div className="button-container">
-            <button className="small-gray-button" onClick={handleCheckIn}>입실체크</button>
-            <button className="small-gray-button" onClick={handleCheckOut}>퇴실체크</button>
-          </div> */}
-          <div className="profile-logout">
-            <p>로그아웃</p>
-            <img src="/images/로그아웃.png"/>
+          <div className="profile-footer">
+            <p>알림</p>
+            <p>메세지</p>
+            <p>구독</p>
+            <p>마이페이지</p>
           </div>
       </div>
       <div className="main-view">

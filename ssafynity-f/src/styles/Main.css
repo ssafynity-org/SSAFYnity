@@ -31,13 +31,13 @@
   display:flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-height: 200px;
   max-height: 200px;
   min-width: 420px;
   max-width: 420px;
   border: 1px solid thistle;
   border-radius: 10px;
-  gap: 20px;
 }
 
 .profile-section {
@@ -69,7 +69,7 @@
 }
 
 .user-name {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: bold;
   font-family: "Noto Sans KR", serif;
   color: #333;
@@ -81,13 +81,13 @@
 }
 
 .user-status {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: normal;
   color: gray;
 }
 
 .profile-email{
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: normal;
   color: gray;
 }
@@ -135,4 +135,16 @@
   min-width: 750px;
   max-width: 750px;
   overflow: hidden; /* 내용이 넘칠 경우 숨김 */
+}
+
+.profile-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.profile-footer p {
+  margin: 0 7% 0 7%;
 }
