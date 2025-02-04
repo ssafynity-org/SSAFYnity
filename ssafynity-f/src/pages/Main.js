@@ -48,12 +48,14 @@ function Main() {
 
   return (
     <div className="main">
+      <div className="profile-container-wrap">
       <div className="profile-container">
           {/* <p>Today's date: {currentDate}</p> */}
           {user && (
             <div className="profile-section">
               <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 80, height: 80 }} />
               <div className="profile-info">
+                <p className="profile-campus">🏫대전 캠퍼스 10기</p>
                 <div className="profile-nameAndStatus">
                   <p className="user-name">{user.name} 님</p>
                   <div class='v-line'></div>
@@ -69,12 +71,16 @@ function Main() {
               </div>
             </div>
           )}
-          <div className="profile-footer">
-            <p>알림</p>
-            <p>메세지</p>
-            <p>구독</p>
-            <p>마이페이지</p>
-          </div>
+      </div>
+      <div className="profile-container-footer">
+        <p>알림</p>
+        <div class='v-line'></div>
+        <p>메세지</p>
+        <div class='v-line'></div>
+        <p>구독</p>
+        <div class='v-line'></div>
+        <p>마이페이지</p>
+      </div>
       </div>
       <div className="main-view">
         <p>안녕</p>
