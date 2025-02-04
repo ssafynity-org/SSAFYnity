@@ -38,7 +38,7 @@ function Header() {
                     <Link to="/introduction/structure">소개5</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
-                  <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
+                  <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="test"/>
                 </div>
               )}
             </div>

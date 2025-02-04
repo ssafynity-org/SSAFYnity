@@ -65,9 +65,13 @@ function Main() {
               </div>
             </div>
           )}
-          <div className="button-container">
+          {/* <div className="button-container">
             <button className="small-gray-button" onClick={handleCheckIn}>입실체크</button>
             <button className="small-gray-button" onClick={handleCheckOut}>퇴실체크</button>
+          </div> */}
+          <div className="profile-logout">
+            <p>로그아웃</p>
+            <img src="/images/로그아웃.png"/>
           </div>
       </div>
       <div className="main-view">
