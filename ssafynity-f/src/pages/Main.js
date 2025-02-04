@@ -56,7 +56,6 @@ function Main() {
               <div className="profile-info">
                 <div className="profile-nameAndStatus">
                   <p className="user-name">{user.name}님</p>
-                  {/* <img className="contour" src="/images/세로구분선.png" alt="세로구분선" /> */}
                   <div class='v-line'></div>
                     <p className="user-status">정회원</p>
                 </div>  

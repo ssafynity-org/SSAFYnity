@@ -34,7 +34,7 @@
   align-items: center;
   height: 32vh;
   width: 28vw;
-  border: 1px solid thistle; /* 검정색 3px 두께의 외곽선 추가 */
+  border: 1px solid thistle;
   border-radius: 10px;
 }
 
