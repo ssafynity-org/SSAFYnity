@@ -5,20 +5,18 @@
   border-bottom: 1px solid #ccc; /* 구분선 추가 */
   box-sizing: border-box; /* border가 너비에 포함되도록 설정 */
   display: flex;
-  justify-content: center; /* 요소들을 동일한 간격으로 배치 */
-  align-items: center;
+  justify-content: safe center;
+  align-items: safe center;
   max-height: 80px;
 }
 
 .header-logo {
   display: inline-block; /* 이미지 크기만큼만 공간 차지 */
-  height: auto;
 }
 
 .header-logo img {
   display: block; /* 인라인 요소 특성 제거 */
   width: 200px; /* 로고 너비를 고정 */
-  height: auto;
 }
 
 .header-navigation {
@@ -27,28 +25,19 @@
   display: flex;
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
-  padding: 0 2.5rem;
-  margin: 0 2.2rem;
+  padding: 0 50px 0 55px;
+  margin: 0 43px 0 43px;
 }
 
 .nav-menu  {
-  height: 100%;
-  list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
   margin: 0;
-  gap: 2rem;
-  
+  gap: 35px;
 }
 
 .menu-item {
-  height: 100%;
-  /* position: relative; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
   white-space: nowrap;
   font-family: "IBM Plex Sans KR", serif;
@@ -57,7 +46,7 @@
   font-size: 1rem;
   color: black;
   font-weight: bold;
-  
+  padding: 30px 0;
 }
 
 .header-link {
@@ -68,16 +57,17 @@
   }
 
 .header-support {
+  position: relative;
   background-color: darkseagreen;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 80px;
+  height: 80px ;
 }
 
 .header-support img {
   width: 150px; /* 로고 너비를 고정 */;
-  margin: 0 0.8rem;
+  margin: 0 13px;
 }
 
 .header-discord {
@@ -90,26 +80,24 @@
 
 .header-discord img {
   width: 150px;
-  margin: 0 0.8rem;
+  margin: 0 13px;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 98%;
   left: 0;
   background-color: white;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   list-style: none;
-  padding: 1px 0;
-  margin: 0;
+  /* padding: 1px 0; */
   width: 100%;
-  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap:1rem;
-  min-height: 30vh; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
-  max-height: 30vh;/* 최대 높이 설정 */
+  gap:20px;
+  min-height: 280px; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
+  max-height: 280px;/* 최대 높이 설정 */
   
 }
