@@ -31,9 +31,9 @@ function Header() {
               {openDropdown === "introduction" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/introduction/shareholders">SSAFYnity</Link>
-                    <Link to="/introduction/meetings">개발 연사님</Link>
-                    <Link to="/introduction/meetings">운영진</Link>
+                    <Link to="/introduction">SSAFYnity</Link>
+                    <Link to="/introduction/mento">개발 연사님</Link>
+                    <Link to="/introduction/maneger">운영진</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
                   <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="test"/>
@@ -46,10 +46,10 @@ function Header() {
               {openDropdown === "conference" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/conference/shareholders">SSAFY-nale</Link>
-                    <Link to="/conference/meetings">SSAFYnity-Seminar</Link>
-                    <Link to="/conference/structure">외부 컨퍼런스</Link>
-                    <Link to="/conference/structure">해커톤</Link>
+                    <Link to="/conference/ssafynale">SSAFY-nale</Link>
+                    <Link to="/conference/seminar">SSAFYnity-Seminar</Link>
+                    <Link to="/conference/external">외부 컨퍼런스</Link>
+                    <Link to="/conference/hackerton">해커톤</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
                   <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -62,11 +62,11 @@ function Header() {
               {openDropdown === "community" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/community/shareholders">자유 게시판</Link>
-                    <Link to="/community/meetings">그룹 활동</Link>
-                    <Link to="/community/board">마이 캠퍼스</Link>
-                    <Link to="/community/rules">SSAFYcial</Link>
-                    <Link to="/community/structure">드림 레터</Link>
+                    <Link to="/community/board">자유 게시판</Link>
+                    <Link to="/community/group">그룹 활동</Link>
+                    <Link to="/community/mycampus">마이 캠퍼스</Link>
+                    <Link to="/community/ssafycial">SSAFYcial</Link>
+                    <Link to="/community/letter">드림 레터</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -80,9 +80,9 @@ function Header() {
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
                       
-                      <Link to="/mentoring/shareholders">이직 상담</Link>
-                      <Link to="/mentoring/meetings">Coffee Chat</Link>
-                      <Link to="/mentoring/board">멘토링 영상</Link>
+                      <Link to="/mentoring/counsel">이직 상담</Link>
+                      <Link to="/mentoring/coffeechat">Coffee Chat</Link>
+                      <Link to="/mentoring/content">멘토링 영상</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -95,9 +95,9 @@ function Header() {
               {openDropdown === "helpdesk" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                      <Link to="/helpdesk/shareholders">건의 사항</Link>
-                      <Link to="/helpdesk/board">Q&A</Link>
-                      <Link to="/helpdesk/meetings">이용자 신고</Link>
+                      <Link to="/helpdesk/suggestion">건의 사항</Link>
+                      <Link to="/helpdesk/qna">Q&A</Link>
+                      <Link to="/helpdesk/report">이용자 신고</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
