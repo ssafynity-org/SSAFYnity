@@ -29,27 +29,11 @@ public class MemberController {
     private final MemberService memberService;
     private final MinIoService minioService;
 
-    @Operation(summary = "회원 생성")
-    @PostMapping("/signup")
-    public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto){
-        Long memberId = memberService.createMember(memberDto);
-        return new ResponseEntity<Long>(memberId, HttpStatus.OK);
-    }
-
     @Operation(summary = "회원정보 및 프로필사진 저장")
     @PostMapping(value = "/signup/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createMemberAndProfileImage(@RequestPart("member")CreateMemberDto memberDto, @RequestPart("file")MultipartFile profileImage) throws FileUploadException {
         memberService.createMemberAndProfileImage(memberDto, profileImage);
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
-    }
-
-    @Operation(summary = "회원 여러명 생성")
-    @PostMapping("/all")
-    public ResponseEntity<?> createMemberAll(@RequestBody List<CreateMemberDto> memberDto){
-        for(int i = 0;i<memberDto.size();i++){
-            memberService.createMember(memberDto.get(i));
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "회원 조회")

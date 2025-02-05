@@ -37,33 +37,31 @@ public class MemberServiceImpl implements MemberService {
     //파일 저장을 위한 MinIo서비스
     private final MinIoService minIoService;
 
-    @Transactional
-    @Override
-    public Long createMember(CreateMemberDto memberDto) {
-        try {
-            Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany(), "ROLE_MEMBER");
-            Member savedMember = memberRepository.save(member);
-            MemberDocument memberDocument = new MemberDocument(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany(), savedMember.getRole());
-            documentRepository.save(memberDocument);
-            return savedMember.getId();
-        } catch(Exception e){
-            throw new MemberCreationException("회원 생성 실패",e);
-        }
-    }
 
-    //일반 회원가입시에 사용
+    //회원가입
     @Transactional
     @Override
-    public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) throws FileUploadException {
+    public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) {
         try{
-            Long memberId = createMember(memberDto);
-            minIoService.uploadFileToMinIOBySignUp(memberId,file);
-        }catch(MemberCreationException e){
-            //회원 생성 실패 처리
-            throw e;
-        }catch(FileUploadException e){
-            //파일 저장 실패 처리
-            throw e;
+            //빈 회원 생성
+            Member member;
+
+            //생성자 주입
+            if(memberDto.isJobSearch()){ //취업 준비중일경우
+                member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), true, null, memberDto.isExistProfileImage(),true, "ROLE_MEMBER");
+            }else{
+                member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), false, memberDto.getCompany(), memberDto.isExistProfileImage(),memberDto.getCompanyBlind(), "ROLE_MEMBER");
+            }
+
+            if(!file.isEmpty()&&memberDto.isExistProfileImage()) {//프로필 이미지가 존재한다면
+                minIoService.uploadFileToMinIOBySignUp(member.getId(),file);
+            }
+
+            //멤버 저장
+            memberRepository.save(member);
+
+        } catch(Exception e){
+            throw new MemberCreationException(e.getMessage(),e);
         }
     }
 
