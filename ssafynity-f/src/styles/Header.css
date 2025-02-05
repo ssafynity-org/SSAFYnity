@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
 
 .header {
   background-color: #ffffff;
@@ -41,12 +42,12 @@
 .menu-item {
   cursor: pointer;
   white-space: nowrap;
-  font-family: "IBM Plex Sans KR", serif;
-  font-weight: 400;
+  /* font-family: "IBM Plex Sans KR", serif; */
+  font-family: "42dot Sans", serif;
+  font-weight: 500;
   font-style: normal;
-  font-size: 1.02rem;
+  font-size: 1.1rem;
   color: black;
-  font-weight: bold;
   padding: 28.8px 0;
 }
 
@@ -86,7 +87,7 @@
 
 .dropdown-menu {
   position: absolute;
-  top: 98%;
+  top: 102%;
   left: 0;
   background-color: white;
   border-radius: 0 0 30px 30px;
@@ -102,12 +103,19 @@
 .dropdown-link {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
-  min-width: 80px;
-  max-width: 80px;
-  margin: 35px 70px 0px 70px;
+  min-width: 200px;
+  max-width: 200px;
+  margin: 35px 0px 0px 0px;
 }
 
+.dropdown-link a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  width: fit-content;
+}
 
 .dropdown-v-line {
   border-left : 1px solid gray;

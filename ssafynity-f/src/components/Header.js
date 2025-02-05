@@ -31,11 +31,9 @@ function Header() {
               {openDropdown === "introduction" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/introduction/shareholders">소개1</Link>
-                    <Link to="/introduction/meetings">소개2</Link>
-                    <Link to="/introduction/board">소개3</Link>
-                    <Link to="/introduction/rules">소개4</Link>
-                    <Link to="/introduction/structure">소개5</Link>
+                    <Link to="/introduction/shareholders">SSAFYnity</Link>
+                    <Link to="/introduction/meetings">개발 연사님</Link>
+                    <Link to="/introduction/meetings">운영진</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
                   <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="test"/>
@@ -48,11 +46,10 @@ function Header() {
               {openDropdown === "conference" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/conference/shareholders">Seminar</Link>
-                    <Link to="/conference/meetings">외부 컨퍼런스</Link>
-                    <Link to="/conference/board">컨퍼런스3</Link>
-                    <Link to="/conference/rules">컨퍼런스4</Link>
-                    <Link to="/conference/structure">컨퍼런스5</Link>
+                    <Link to="/conference/shareholders">SSAFY-nale</Link>
+                    <Link to="/conference/meetings">SSAFYnity-Seminar</Link>
+                    <Link to="/conference/structure">외부 컨퍼런스</Link>
+                    <Link to="/conference/structure">해커톤</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
                   <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -65,11 +62,11 @@ function Header() {
               {openDropdown === "community" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                    <Link to="/community/shareholders">커뮤니티1</Link>
-                    <Link to="/community/meetings">커뮤니티2</Link>
-                    <Link to="/community/board">커뮤니티3</Link>
-                    <Link to="/community/rules">커뮤니티4</Link>
-                    <Link to="/community/structure">커뮤니티5</Link>
+                    <Link to="/community/shareholders">자유 게시판</Link>
+                    <Link to="/community/meetings">그룹 활동</Link>
+                    <Link to="/community/board">마이 캠퍼스</Link>
+                    <Link to="/community/rules">SSAFYcial</Link>
+                    <Link to="/community/structure">드림 레터</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -82,11 +79,10 @@ function Header() {
               {openDropdown === "mentoring" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                      <Link to="/mentoring/shareholders">멘토링1</Link>
-                      <Link to="/mentoring/meetings">멘토링2</Link>
-                      <Link to="/mentoring/board">멘토링3</Link>
-                      <Link to="/mentoring/rules">멘토링4</Link>
-                      <Link to="/mentoring/structure">멘토링5</Link>
+                      
+                      <Link to="/mentoring/shareholders">이직 상담</Link>
+                      <Link to="/mentoring/meetings">Coffee Chat</Link>
+                      <Link to="/mentoring/board">멘토링 영상</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
@@ -99,10 +95,9 @@ function Header() {
               {openDropdown === "helpdesk" && (
                 <div className="dropdown-menu">
                   <div className="dropdown-link">
-                      <Link to="/helpdesk/shareholders">헬프데스크1</Link>
-                      <Link to="/helpdesk/meetings">헬프데스크2</Link>
-                      <Link to="/helpdesk/board">헬프데스크3</Link>
-                      <Link to="/helpdesk/rules">헬프데스크4</Link>
+                      <Link to="/helpdesk/shareholders">건의 사항</Link>
+                      <Link to="/helpdesk/board">Q&A</Link>
+                      <Link to="/helpdesk/meetings">이용자 신고</Link>
                     </div>
                     <div class='dropdown-v-line'></div>
                     <img className="test-image" src="/images/상세헤더예시이미지.jpg" alt="Logo"/>
