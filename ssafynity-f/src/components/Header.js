@@ -49,6 +49,7 @@ function Header() {
                     <Link to="/conference/ssafynale">SSAFY-nale</Link>
                     <Link to="/conference/seminar">SSAFYnity-Seminar</Link>
                     <Link to="/conference/external">외부 컨퍼런스</Link>
+                    <Link to="/conference/external">기술 블로그</Link>
                     <Link to="/conference/hackerton">해커톤</Link>
                   </div>
                   <div class='dropdown-v-line'></div>
