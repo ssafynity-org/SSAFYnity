@@ -1,40 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
-
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden; /* 가로 스크롤 방지 */
-}
+@import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
 
 .header {
   background-color: #ffffff;
-  justify-content: center;
-  width: 100vw; /* 뷰포트 전체 너비 */
-  height: 11.3vh; /* 화면 높이의 10% */
   border-bottom: 1px solid #ccc; /* 구분선 추가 */
   box-sizing: border-box; /* border가 너비에 포함되도록 설정 */
-}
-
-.header-container {
   display: flex;
-  justify-content: center; /* 요소들을 동일한 간격으로 배치 */
-  align-items: center;
-  width: 100%;
-  height: 100%; /* 높이를 내용물에 맞춤 */
-  gap: 0.8rem;
+  justify-content: safe center;
+  align-items: safe center;
+  min-width: 1000px;
+  max-height: 80px;
 }
 
 .header-logo {
   display: inline-block; /* 이미지 크기만큼만 공간 차지 */
-  height: auto;
 }
 
 .header-logo img {
   display: block; /* 인라인 요소 특성 제거 */
   width: 200px; /* 로고 너비를 고정 */
-  height: auto;
 }
 
 .header-navigation {
@@ -43,36 +27,28 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center; /* 수직 중앙 정렬 */
-  padding: 0 3.15rem;
+  padding: 0 50px 0 55px;
+  margin: 0 43px 0 43px;
 }
 
 .nav-menu  {
-  height: 100%;
-  list-style: none;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
   margin: 0;
-  gap: 2.8rem;
-  
+  gap: 35px;
 }
 
 .menu-item {
-  height: 100%;
-  /* position: relative; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   cursor: pointer;
   white-space: nowrap;
-  font-family: "IBM Plex Sans KR", serif;
-  font-weight: 400;
+  /* font-family: "IBM Plex Sans KR", serif; */
+  font-family: "42dot Sans", serif;
+  font-weight: 500;
   font-style: normal;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: black;
-  font-weight: bold;
-  
+  padding: 28.8px 0;
 }
 
 .header-link {
@@ -83,17 +59,17 @@ html, body {
   }
 
 .header-support {
+  position: relative;
   background-color: darkseagreen;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 80px ;
 }
 
 .header-support img {
-  display: block;
-  width: 130px; /* 로고 너비를 고정 */
-  margin: 0 1rem; /* 좌우 여백 추가 */
+  width: 150px; /* 로고 너비를 고정 */;
+  margin: 0 13px;
 }
 
 .header-discord {
@@ -101,33 +77,54 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 80px;
 }
 
 .header-discord img {
-  display: block;
-  width: 130px;
-  height: auto;
-  margin: 0 1rem;
+  width: 150px;
+  margin: 0 13px;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 102%;
   left: 0;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 0 0 30px 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   list-style: none;
-  padding: 2rem 0;
-  margin: 0;
   width: 100%;
-  height: auto;
+  display: flex;
+  justify-content: center;
+  min-height: 280px; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
+  max-height: 280px;/* 최대 높이 설정 */
+}
+
+.dropdown-link {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap:1rem;
-  min-height: 30vh; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
-  max-height: 30vh;/* 최대 높이 설정 */
-  
+  align-items: center;
+  gap: 20px;
+  min-width: 200px;
+  max-width: 200px;
+  margin: 35px 0px 0px 0px;
+}
+
+.dropdown-link a {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  width: fit-content;
+}
+
+.dropdown-v-line {
+  border-left : 1px solid gray;
+  height : 240px;
+  margin: 20px 0px 0px 0px;
+}
+
+.test-image {
+  width: 400px;
+  height: 250px;
+  margin: 15px 40px 0px 40px;
 }
