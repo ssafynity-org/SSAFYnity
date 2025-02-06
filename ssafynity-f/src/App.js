@@ -13,6 +13,7 @@ import Main from "./pages/Main";
 import Message from "./pages/Message";
 import MessageWrite from "./pages/MessageWrite";
 import MessageDetail from "./pages/MessageDetail";
+import Conference from "./pages/Conference.js";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/message" element={<PrivateRoute><Message /></PrivateRoute>} />
                 <Route path="/message/write" element={<PrivateRoute><MessageWrite /></PrivateRoute>} />
                 <Route path="/message/detail/:id" element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
+                <Route path="/conference" element={<PrivateRoute><Conference /></PrivateRoute>} />
                 <Route path="/" element={<h2>Welcome to the React App! Start here.</h2>} />
               </Routes>
             </main>
