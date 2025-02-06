@@ -33,13 +33,19 @@ public class Member {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; //이메일
 
     @Column(nullable = false)
-    private String password;
+    private String password; //패스워드
 
     @Column(nullable = false)
-    private String name;
+    private String name; //이름
+
+    @Column(nullable = false)
+    private int cohort; //기수
+
+    @Column(nullable = false)
+    private String campus; //캠퍼스
 
     @Column(nullable = false)
     private boolean jobSearch; //취준중이면 true 아니면 false
@@ -53,7 +59,7 @@ public class Member {
     private boolean companyBlind; //직장명 공개를 원하면 true 아니면 false
 
     @Column(nullable = false)
-    private String role;
+    private String role; //역할
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -70,17 +76,6 @@ public class Member {
     @Builder.Default()
     @OneToMany(mappedBy = "receiver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> receiveMessageList = new ArrayList<>();
-
-    public Member(String email, String password, String name, boolean jobSearch, String company, boolean profileImage, boolean companyBlind, String role) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.jobSearch = jobSearch;
-        this.company = company;
-        this.profileImage = profileImage;
-        this.companyBlind = companyBlind;
-        this.role = role;
-    }
 
     public void updateMember(UpdateMemberDto memberDto){
         this.email = memberDto.getEmail();

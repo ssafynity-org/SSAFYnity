@@ -24,6 +24,12 @@ public class CreateMemberDto {
     @NotBlank(message = "이름이 공백입니다")
     private String name;
 
+    @NotBlank(message = "기수가 공백입니다")
+    private int cohort;
+
+    @NotBlank(message = "캠퍼스가 공백입니다")
+    private String campus;
+
     @NotBlank
     private boolean jobSearch; //취준 중이면 true 아니면 false
 
@@ -32,6 +38,6 @@ public class CreateMemberDto {
     private Boolean companyBlind; //직장명 공개를 원하면 true 아니면 false
 
     @NotBlank
-    private boolean existProfileImage;
+    private boolean existProfileImage; //프로필이미지 존재여부
 
 }

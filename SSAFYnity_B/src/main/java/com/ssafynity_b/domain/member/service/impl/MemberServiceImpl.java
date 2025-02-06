@@ -11,7 +11,6 @@ import com.ssafynity_b.global.exception.MemberNotFoundException;
 import com.ssafynity_b.global.fileupload.minio.service.MinIoService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,14 +42,32 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) {
         try{
-            //빈 회원 생성
+            //비어있는 회원 생성
             Member member;
 
             //생성자 주입
-            if(memberDto.isJobSearch()){ //취업 준비중일경우
-                member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), true, null, memberDto.isExistProfileImage(),true, "ROLE_MEMBER");
-            }else{
-                member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), false, memberDto.getCompany(), memberDto.isExistProfileImage(),memberDto.getCompanyBlind(), "ROLE_MEMBER");
+            if(memberDto.isJobSearch()){ //취업준비중일경우
+                member = Member.builder()
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company("취준")
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(true)
+                        .build();
+            }else{ //재직중일경우
+                member = Member.builder()
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company(memberDto.getCompany())
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(memberDto.getCompanyBlind())
+                        .build();
             }
 
             if(!file.isEmpty()&&memberDto.isExistProfileImage()) {//프로필 이미지가 존재한다면
