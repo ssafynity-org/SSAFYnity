@@ -11,7 +11,6 @@ import com.ssafynity_b.global.exception.MemberNotFoundException;
 import com.ssafynity_b.global.fileupload.minio.service.MinIoService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,33 +36,49 @@ public class MemberServiceImpl implements MemberService {
     //파일 저장을 위한 MinIo서비스
     private final MinIoService minIoService;
 
-    @Transactional
-    @Override
-    public Long createMember(CreateMemberDto memberDto) {
-        try {
-            Member member = new Member(memberDto.getEmail(), passwordEncoder.encode(memberDto.getPassword()), memberDto.getName(), memberDto.getCompany(), "ROLE_MEMBER");
-            Member savedMember = memberRepository.save(member);
-            MemberDocument memberDocument = new MemberDocument(savedMember.getId(), savedMember.getEmail(), savedMember.getPassword(), savedMember.getName(), savedMember.getCompany(), savedMember.getRole());
-            documentRepository.save(memberDocument);
-            return savedMember.getId();
-        } catch(Exception e){
-            throw new MemberCreationException("회원 생성 실패",e);
-        }
-    }
 
-    //일반 회원가입시에 사용
+    //회원가입
     @Transactional
     @Override
-    public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) throws FileUploadException {
+    public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) {
         try{
-            Long memberId = createMember(memberDto);
-            minIoService.uploadFileToMinIOBySignUp(memberId,file);
-        }catch(MemberCreationException e){
-            //회원 생성 실패 처리
-            throw e;
-        }catch(FileUploadException e){
-            //파일 저장 실패 처리
-            throw e;
+            //비어있는 회원 생성
+            Member member;
+
+            //생성자 주입
+            if(memberDto.isJobSearch()){ //취업준비중일경우
+                member = Member.builder()
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company("취준")
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(true)
+                        .build();
+            }else{ //재직중일경우
+                member = Member.builder()
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company(memberDto.getCompany())
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(memberDto.getCompanyBlind())
+                        .build();
+            }
+
+            if(!file.isEmpty()&&memberDto.isExistProfileImage()) {//프로필 이미지가 존재한다면
+                minIoService.uploadFileToMinIOBySignUp(member.getId(),file);
+            }
+
+            //멤버 저장
+            memberRepository.save(member);
+
+        } catch(Exception e){
+            throw new MemberCreationException(e.getMessage(),e);
         }
     }
 

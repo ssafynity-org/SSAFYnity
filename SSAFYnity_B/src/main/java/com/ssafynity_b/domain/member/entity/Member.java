@@ -6,6 +6,9 @@ import com.ssafynity_b.domain.member.dto.CreateMemberDto;
 import com.ssafynity_b.domain.member.dto.UpdateMemberDto;
 import com.ssafynity_b.domain.message.entity.Message;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,18 +33,33 @@ public class Member {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; //이메일
 
     @Column(nullable = false)
-    private String password;
+    private String password; //패스워드
 
     @Column(nullable = false)
-    private String name;
-
-    private String company;
+    private String name; //이름
 
     @Column(nullable = false)
-    private String role;
+    private int cohort; //기수
+
+    @Column(nullable = false)
+    private String campus; //캠퍼스
+
+    @Column(nullable = false)
+    private boolean jobSearch; //취준중이면 true 아니면 false
+
+    private String company; //기재하고싶을 경우에만 값이 존재함, 취준중이거나 회사명을 기재하고싶지 않을경우 -> null
+
+    @NotBlank
+    private boolean profileImage; //프로필이미지 사용여부
+
+    @Column(nullable = false)
+    private boolean companyBlind; //직장명 공개를 원하면 true 아니면 false
+
+    @Column(nullable = false)
+    private String role; //역할
 
     @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -58,15 +76,6 @@ public class Member {
     @Builder.Default()
     @OneToMany(mappedBy = "receiver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> receiveMessageList = new ArrayList<>();
-
-
-    public Member(String email, String password, String name, String company, String role) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.company = company;
-        this.role = role;
-    }
 
     public void updateMember(UpdateMemberDto memberDto){
         this.email = memberDto.getEmail();

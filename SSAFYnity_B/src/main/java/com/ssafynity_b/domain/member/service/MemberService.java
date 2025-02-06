@@ -11,9 +11,7 @@ import java.util.List;
 
 public interface MemberService {
 
-    Long createMember(CreateMemberDto memberDto);
-
-    void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) throws FileUploadException;
+    void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file);
 
     GetMemberDto getMember(Long memberId);
 
