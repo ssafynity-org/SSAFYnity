@@ -61,6 +61,10 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 처리 라이브러리
 	// minio
 	implementation 'io.minio:minio:8.3.4'
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// jsonObject
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {
