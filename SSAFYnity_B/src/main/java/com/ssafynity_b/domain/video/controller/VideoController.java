@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Tag(name = "Video 컨트롤러")
@@ -37,12 +37,12 @@ public class VideoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @GetMapping("/videolist")
-//    public ResponseEntity<List<GetVideoRes>> getVideoList(Pageable pageable) {
-//
-//        List<GetVideoRes> videoList = videoService.getVideoList(pageable);
-//        return ResponseEntity.ok(videoList);
-//    }
+    @Operation(summary = "영상 정보 페이지네이션 조회")
+    @GetMapping("/videolist")
+    public ResponseEntity<List<GetVideoRes>> getVideoList(Pageable pageable) {
+        List<GetVideoRes> videoList = videoService.getVideoList(pageable);
+        return ResponseEntity.ok(videoList);
+    }
 
 
 }

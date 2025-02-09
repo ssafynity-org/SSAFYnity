@@ -10,14 +10,19 @@ import com.ssafynity_b.domain.video.service.VideoService;
 import com.ssafynity_b.domain.youtube.service.YoutubeService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -70,8 +75,38 @@ public class VideoServiceImpl implements VideoService {
                 .build());
     }
 
-//    @Override
-//    public List<GetVideoRes> getVideoList(Pageable pageable) {
-//        return List.of();
-//    }
+    @Override
+    public List<GetVideoRes> getVideoList(Pageable pageable) {
+        Pageable sortedByDate = PageRequest.of(
+                pageable.getPageNumber(), // 기존 page 유지
+                pageable.getPageSize(), // 기존 size 유지
+                Sort.by(Sort.Direction.DESC, "postedDate") // ✅ 게시일자 기준 내림차순 정렬
+        );
+
+        Page<Video> videoPage = videoRepository.findAll(sortedByDate); // ✅ JPA 페이징 처리된 데이터 가져오기
+
+        // ✅ 각 Video 객체의 title을 fetchVideoData()에 전달
+        List<JSONObject> videoDataList = videoPage.getContent()
+                .stream()
+                .map(video -> youtubeService.fetchVideoData(video.getVideoId())) // ✅ 각 Video의 videoId를 전달하여 데이터 요청
+                .toList(); // ✅ 결과를 리스트로 변환
+
+        List<GetVideoRes> responseList = new ArrayList<>();
+
+        for(JSONObject videoData: videoDataList){
+            GetVideoRes response = GetVideoRes.builder()
+                    .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
+                    .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
+                    .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
+                    .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
+                    .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
+                    .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
+                    .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
+                    .build();
+
+            responseList.add(response);
+        }
+
+        return responseList;
+    }
 }

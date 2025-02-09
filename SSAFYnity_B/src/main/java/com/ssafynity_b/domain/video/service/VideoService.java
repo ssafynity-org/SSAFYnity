@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ssafynity_b.domain.video.dto.request.PostVideoReq;
 import com.ssafynity_b.domain.video.dto.response.GetVideoRes;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface VideoService {
@@ -13,6 +13,6 @@ public interface VideoService {
 
     public void postVideo(PostVideoReq request);
 
-//    public List<GetVideoRes> getVideoList(Pageable pageable);
+    public List<GetVideoRes> getVideoList(Pageable pageable);
 
 }
