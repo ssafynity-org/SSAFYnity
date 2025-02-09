@@ -17,6 +17,8 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public String getVideo(String videoId) {
+        System.out.println("서비스도 찍혔다.");
+
         String cacheKey = "video:" + videoId;
 
         // 1️⃣ Redis에서 영상 데이터 검색
