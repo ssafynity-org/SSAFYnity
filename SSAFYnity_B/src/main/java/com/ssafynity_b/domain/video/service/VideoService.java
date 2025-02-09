@@ -1,7 +1,10 @@
 package com.ssafynity_b.domain.video.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.ssafynity_b.domain.video.dto.response.GetVideoRes;
+
 public interface VideoService {
 
-    public String getVideo(String videoId);
+    public GetVideoRes getVideo(String videoId) throws JsonProcessingException;
 
 }

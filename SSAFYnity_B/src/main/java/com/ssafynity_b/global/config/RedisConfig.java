@@ -1,5 +1,6 @@
 package com.ssafynity_b.global.config;
 
+import com.ssafynity_b.domain.video.dto.response.GetVideoRes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
