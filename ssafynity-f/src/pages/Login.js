@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { login } from "../features/userSlice";
+import { login } from "../redux/userSlice";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
@@ -21,7 +21,7 @@ function Login() {
       localStorage.setItem("jwtToken", jwtToken);
 
       const userDataResponse = await axiosInstance.get(`/api/member/login`);
-      dispatch(login(userDataResponse.data)); // 수정: setUser -> login
+      dispatch(login(userDataResponse.data)); // Redux Store에 저장
 
       navigate("/main");
     } catch (error) {
