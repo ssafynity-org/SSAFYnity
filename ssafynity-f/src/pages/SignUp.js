@@ -3,7 +3,7 @@ import axios from "../api/axiosInstance"; // 가정된 axios 인스턴스 경로
 import { useNavigate } from "react-router-dom";
 import ImageCropper from "../components/ImageCropper"; // 크롭 컴포넌트 추가
 import LottieAnimation from "../components/LottieAnimation"; // LottieAnimation 컴포넌트 불러오기
-import "../styles/SignUp.css";
+import "../styles/SignUp.module.css";
 
 function Signup() {
   const [name, setName] = useState("");

@@ -13,7 +13,7 @@ function Header() {
     setOpenDropdown((prev) => (prev === menu ? null : menu));
   };
 
-  if (location.pathname === "/login" || location.pathname === "/signup") {
+  if (location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/newsignup") {
     return null;
   }
 

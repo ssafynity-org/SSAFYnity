@@ -14,6 +14,7 @@ import Message from "./pages/Message";
 import MessageWrite from "./pages/MessageWrite";
 import MessageDetail from "./pages/MessageDetail";
 import Conference from "./pages/Conference.js";
+import NewSignup from "./pages/NewSignUp.js";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <main>
               <Routes>
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/newsignup" element={<NewSignup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/main" element={<PrivateRoute><Main /></PrivateRoute>} />
                 <Route path="/message" element={<PrivateRoute><Message /></PrivateRoute>} />
