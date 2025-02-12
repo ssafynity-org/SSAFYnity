@@ -1,6 +1,5 @@
 package com.ssafynity_b.domain.video.entity;
 
-import com.ssafynity_b.domain.company.entity.Company;
 import com.ssafynity_b.domain.videoTag.entity.VideoTag;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,9 +27,10 @@ public class Video {
     @Column(name = "posted_date", nullable = false)
     private LocalDateTime postedDate;
 
+    @Column(name = "company", nullable = false)
+    private String company;
+
     @OneToMany(mappedBy = "video")
     List<VideoTag> videoTags;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    Company company;
 }

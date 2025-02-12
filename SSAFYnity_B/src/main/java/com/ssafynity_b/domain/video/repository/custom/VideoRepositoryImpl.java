@@ -3,7 +3,6 @@ package com.ssafynity_b.domain.video.repository.custom;
 import static com.ssafynity_b.domain.video.entity.QVideo.video;
 import static com.ssafynity_b.domain.videoTag.entity.QVideoTag.videoTag;
 import static com.ssafynity_b.domain.tag.entity.QTag.tag;
-import static com.ssafynity_b.domain.company.entity.QCompany.company;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,7 +27,6 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
                 .from(video)  // ✅ Video 테이블을 기준으로 조회
                 .leftJoin(video.videoTags, videoTag)  // ✅ VideoTag와 LEFT JOIN
                 .leftJoin(videoTag.tag, tag)  // ✅ Tag 테이블과 LEFT JOIN
-                .leftJoin(video.company, company)
                 .where(tagsIn(tags), companiesIn(companies))  // ✅ 태그와 기업 필터링 적용
                 .offset(pageable.getOffset())  // ✅ 페이지네이션: 시작 위치 설정
                 .limit(pageable.getPageSize())  // ✅ 페이지네이션: 페이지 크기 설정
@@ -53,6 +51,6 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
 
     // ✅ 여러 개의 기업 필터링
     private BooleanExpression companiesIn(List<String> companies) {
-        return (companies != null && !companies.isEmpty()) ? video.company.name.in(companies) : null;
+        return (companies != null && !companies.isEmpty()) ? video.company.in(companies) : null;
     }
 }

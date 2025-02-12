@@ -31,4 +31,7 @@ public class GetVideoRes {
     @Column(name = "채널 이미지", nullable = false)
     private String channelImage;
 
+    @Column(name = "회사 이름", nullable = false)
+    private String company;
+
 }

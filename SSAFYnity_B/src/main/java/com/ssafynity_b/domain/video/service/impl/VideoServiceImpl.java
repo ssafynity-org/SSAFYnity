@@ -2,8 +2,6 @@ package com.ssafynity_b.domain.video.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafynity_b.domain.company.entity.Company;
-import com.ssafynity_b.domain.company.repository.CompanyRepository;
 import com.ssafynity_b.domain.video.dto.request.PostVideoReq;
 import com.ssafynity_b.domain.video.dto.response.GetVideoRes;
 import com.ssafynity_b.domain.video.entity.Video;
@@ -36,7 +34,6 @@ public class VideoServiceImpl implements VideoService {
     private final RedisTemplate<String, String> redisTemplate;
     private final YoutubeService youtubeService;
     private final VideoRepository videoRepository;
-    private final CompanyRepository companyRepository;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
     @Override
@@ -76,18 +73,11 @@ public class VideoServiceImpl implements VideoService {
     public void postVideo(PostVideoReq request) {
         JSONObject videoData = youtubeService.fetchVideoData(request.getVideoId());
 
-        //회사 생성
-        Company company = Company.builder()
-                        .name(request.getCompany())
-                        .build();
-
-        companyRepository.save(company);
-
         //비디오 저장
         videoRepository.save(Video.builder()
                 .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
                 .postedDate(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
-                .company(company)
+                .company(request.getCompany())
                 .build());
     }
 
