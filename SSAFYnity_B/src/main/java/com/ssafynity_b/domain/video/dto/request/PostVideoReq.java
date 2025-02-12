@@ -6,7 +6,10 @@ import lombok.Data;
 @Data
 public class PostVideoReq {
 
-    @Column(name = "비디오ID", nullable = false)
+    @Column(name = "videoID", nullable = false)
     private String videoId;
+
+    @Column(name = "company", nullable = false)
+    private String company;
 
 }

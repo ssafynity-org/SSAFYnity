@@ -50,6 +50,7 @@ public class Member {
     @Column(nullable = false)
     private boolean jobSearch; //취준중이면 true 아니면 false
 
+    @Column(nullable = true)
     private String company; //기재하고싶을 경우에만 값이 존재함, 취준중이거나 회사명을 기재하고싶지 않을경우 -> null
 
     @NotBlank

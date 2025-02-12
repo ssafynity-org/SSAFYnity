@@ -1,5 +1,6 @@
 package com.ssafynity_b.domain.video.entity;
 
+import com.ssafynity_b.domain.company.entity.Company;
 import com.ssafynity_b.domain.videoTag.entity.VideoTag;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,17 +22,15 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "동영상Id", nullable = false)
+    @Column(name = "video_id", nullable = false)
     private String videoId;
 
-    @Column(name = "기업명", nullable = false)
-    private String company;
-
-    @Column(name = "게시일", nullable = false)
+    @Column(name = "posted_date", nullable = false)
     private LocalDateTime postedDate;
 
     @OneToMany(mappedBy = "video")
     List<VideoTag> videoTags;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    Company company;
 }
