@@ -17,6 +17,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -76,7 +78,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public List<GetVideoRes> getVideoList(Pageable pageable) {
+    public List<GetVideoRes> getVideoList(List<String> tags, List<String> companies, Pageable pageable) {
         Pageable sortedByDate = PageRequest.of(
                 pageable.getPageNumber(), // 기존 page 유지
                 pageable.getPageSize(), // 기존 size 유지

@@ -39,8 +39,8 @@ public class VideoController {
 
     @Operation(summary = "영상 정보 페이지네이션 조회")
     @GetMapping("/videolist")
-    public ResponseEntity<List<GetVideoRes>> getVideoList(Pageable pageable) {
-        List<GetVideoRes> videoList = videoService.getVideoList(pageable);
+    public ResponseEntity<List<GetVideoRes>> getVideoList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false) List<String> companies, Pageable pageable) {
+        List<GetVideoRes> videoList = videoService.getVideoList(tags, companies, pageable);
         return ResponseEntity.ok(videoList);
     }
 
