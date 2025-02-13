@@ -33,7 +33,20 @@ public class MemberController {
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto) throws FileUploadException {
         memberService.createMember(memberDto);
-        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Operation(summary = "이메일 중복 확인")
+    @GetMapping(value = "/signup/{email}")
+    public ResponseEntity<?> checkEmailDuplicates(@PathVariable String email) {
+        boolean response = memberService.checkEmailDuplicates(email);
+
+        //중복된 이메일이 있을경우 NOT_FOUND
+        if(response){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //없을경우 OK
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Operation(summary = "회원 조회")

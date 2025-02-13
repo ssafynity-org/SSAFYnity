@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -36,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     //파일 저장을 위한 MinIo서비스
     private final MinIoService minIoService;
 
+    //멤버생성 서비스
     @Override
     public void createMember(CreateMemberDto memberDto) {
         try {
@@ -76,12 +78,21 @@ public class MemberServiceImpl implements MemberService {
             }
         }
 
+    //이메일 중복체크 서비스
+    @Override
+    public boolean checkEmailDuplicates(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        return member.isPresent();
+    }
+
+    //회원조회 서비스
     @Override
     public GetMemberDto getMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return new GetMemberDto(member);
     }
 
+    //로그인 성공시 회원정보와 저장된 프로필이미지를 반환하는 서비스
     @Override
     public GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException {
 
@@ -93,6 +104,7 @@ public class MemberServiceImpl implements MemberService {
         return new GetLoginDto(member,profileImage);
     }
 
+    //멤버를 리스트로 조회하는 서비스
     @Override
     public List<GetMemberDto> getAllMember() {
         Iterable<MemberDocument> memberDocumentList = documentRepository.findAll();
@@ -101,6 +113,7 @@ public class MemberServiceImpl implements MemberService {
                 .toList();
     }
 
+    //멤버 정보 수정 서비스
     @Transactional
     @Override
     public Long updateMember(UpdateMemberDto memberDto) {
@@ -112,6 +125,7 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
+    //멤버 삭제 서비스
     @Override
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);

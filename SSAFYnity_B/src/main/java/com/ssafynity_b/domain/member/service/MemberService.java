@@ -13,6 +13,8 @@ public interface MemberService {
 
     void createMember(CreateMemberDto memberDto);
 
+    boolean checkEmailDuplicates(String email);
+
     GetMemberDto getMember(Long memberId);
 
     GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException;
