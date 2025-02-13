@@ -63,6 +63,8 @@ function SearchBar({selectedMenu, selectedCompany}) {
         <div className="search-menu-item" onClick={() => handleMenuClick("상세 조건")}><img src="/images/검색바조건.png" alt="" height="20px" decoding="async" />상세 조건</div>
       </div>
 
+      <div class='searchbar-v-line'></div>
+
       {menu === "기업 별" && (
         <div className="company">
         {companyList.map((company) => (
