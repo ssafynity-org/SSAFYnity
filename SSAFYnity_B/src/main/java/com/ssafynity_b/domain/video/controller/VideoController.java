@@ -41,6 +41,7 @@ public class VideoController {
     @GetMapping("/videolist")
     public ResponseEntity<List<GetVideoRes>> getVideoList(@RequestParam(required = false) List<String> tags, @RequestParam(required = false) List<String> companies, Pageable pageable) {
         List<GetVideoRes> videoList = videoService.getVideoList(tags, companies, pageable);
+        System.out.println(videoList);
         return ResponseEntity.ok(videoList);
     }
 

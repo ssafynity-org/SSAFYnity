@@ -7,42 +7,46 @@ import "../styles/Conference.css";
 function Conference() {
 
   const [menu, setMenu] = useState("전체 글");
+  const [companyList, setCompanyList] = useState([]); // ✅ 여러 개의 회사 선택 가능
+  const [videoData, setVideoData] = useState([]); // ✅ API 데이터를 저장할 상태
+  const [loading, setLoading] = useState(true); // ✅ 로딩 상태 추가
+
+  const handleCompany = (companies) => {
+    setCompanyList(companies);
+  }
 
   const handleMenu = (menu) => {
     setMenu(menu);
     if(menu === "기업 별"){
-      setCompany("")
+      setCompanyList([]); // ✅ 메뉴가 변경되면 회사 선택 초기화
     }
   }
 
-  const [company, setCompany] = useState("");
-  const handleCompany = (company) => {
-    setCompany(company);
-  }
-  
-  const videoData = [
-    {
-      id: 1,
-      thumbnail: "https://i.ytimg.com/vi/CjC5OfzjPkk/maxresdefault.jpg",
-      title: `"어느 날 고민 많은 주니어 개발자가 찾아왔다"김영한- 성장과 취업, 이직 이야기 | 인프콘 2023`,
-      views: "조회수 2.2만회",
-      time: "조회수 2년전",
-      channelImage: "/images/상세헤더예시이미지.jpg",
-      channelName: "인프런 inflearn",
-      description: `"어느 날 고민 많은 주니어 개발자가 찾아왔다"김영한- 제 이야기를 통해 한 사람의 삶이 바뀌는 것은 저에게...`,
-    },
-    {
-      id: 2,
-      thumbnail: "https://i.ytimg.com/vi/CjC5OfzjPkk/maxresdefault.jpg",
-      title: `"어느 날 고민 많은 주니어 개발자가 찾아왔다"김영한- 성장과 취업, 이직 이야기 | 인프콘 2023`,
-      views: "조회수 2.2만회",
-      time: "조회수 2년전",
-      channelImage: "/images/상세헤더예시이미지.jpg",
-      channelName: "인프런 inflearn",
-      description: `"어느 날 고민 많은 주니어 개발자가 찾아왔다"김영한- 제 이야기를 통해 한 사람의 삶이 바뀌는 것은 저에게...`,
-    },
-    // 여러 개의 데이터 추가 가능
-  ];
+  // ✅ API 호출 함수
+  useEffect(() => {
+    const fetchVideoData = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get("/videolist", {
+          params: {
+            tags: null, // 태그 필터가 있다면 추가
+            companies: companyList.length > 0 ? companyList : null, // ✅ 다중 선택된 회사 리스트 전달
+            page: 0, // 페이지네이션 (기본 첫 페이지)
+            size: 10, // 가져올 영상 개수
+          },
+        });
+
+        // ✅ API 응답을 상태에 저장
+        setVideoData(response.data);
+      } catch (error) {
+        console.error("Error fetching video data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideoData();
+  }, [companyList]); // ✅ `company` 값이 변경될 때 API 다시 호출
 
   return (
     <div className="conference-page">
