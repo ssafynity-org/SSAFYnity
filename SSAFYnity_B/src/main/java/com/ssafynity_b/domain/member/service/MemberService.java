@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface MemberService {
 
-    void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file);
-
     void createMember(CreateMemberDto memberDto);
 
     GetMemberDto getMember(Long memberId);
