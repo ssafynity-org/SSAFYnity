@@ -1,15 +1,16 @@
 package com.ssafynity_b.domain.video.entity;
 
+import com.ssafynity_b.domain.videoTag.entity.VideoTag;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Builder
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "videos")
@@ -20,25 +21,16 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "동영상Id", nullable = false)
+    @Column(name = "video_id", nullable = false)
     private String videoId;
 
-    @Column(name = "동영상 썸네일URL", nullable = false)
-    private String thumbnail;
-
-    @Column(name = "제목", nullable = false)
-    private String title;
-
-    @Column(name = "조회수", nullable = false)
-    private Long views;
-
-    @Column(name = "게시일", nullable = false)
+    @Column(name = "posted_date", nullable = false)
     private LocalDateTime postedDate;
 
-    @Column(name = "채널이미지(Base64기준)", nullable = false, columnDefinition = "TEXT")
-    private String channelImage;
+    @Column(name = "company", nullable = false)
+    private String company;
 
-    @Column(name = "채널설명", nullable = false)
-    private String description;
+    @OneToMany(mappedBy = "video")
+    List<VideoTag> videoTags;
 
 }

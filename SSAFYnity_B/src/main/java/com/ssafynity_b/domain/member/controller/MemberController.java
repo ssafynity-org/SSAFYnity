@@ -36,6 +36,12 @@ public class MemberController {
         return ResponseEntity.ok("회원 가입이 완료되었습니다.");
     }
 
+    @Operation(summary = "회원정보 저장")
+    @PostMapping(value = "/signup")
+    public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto) throws FileUploadException {
+        memberService.createMember(memberDto);
+        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
+    }
     @Operation(summary = "회원 조회")
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){

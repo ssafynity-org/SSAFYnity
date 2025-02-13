@@ -48,6 +48,7 @@ public class MemberServiceImpl implements MemberService {
             //생성자 주입
             if(memberDto.isJobSearch()){ //취업준비중일경우
                 member = Member.builder()
+                        .name(memberDto.getName())
                         .email(memberDto.getEmail())
                         .password(passwordEncoder.encode(memberDto.getPassword()))
                         .cohort(memberDto.getCohort())
@@ -56,9 +57,11 @@ public class MemberServiceImpl implements MemberService {
                         .company("취준")
                         .profileImage(memberDto.isExistProfileImage())
                         .companyBlind(true)
+                        .role("ROLE_USER")
                         .build();
             }else{ //재직중일경우
                 member = Member.builder()
+                        .name(memberDto.getName())
                         .email(memberDto.getEmail())
                         .password(passwordEncoder.encode(memberDto.getPassword()))
                         .cohort(memberDto.getCohort())
@@ -67,6 +70,7 @@ public class MemberServiceImpl implements MemberService {
                         .company(memberDto.getCompany())
                         .profileImage(memberDto.isExistProfileImage())
                         .companyBlind(memberDto.getCompanyBlind())
+                        .role("ROLE_USER")
                         .build();
             }
 
@@ -81,6 +85,46 @@ public class MemberServiceImpl implements MemberService {
             throw new MemberCreationException(e.getMessage(),e);
         }
     }
+
+    @Override
+    public void createMember(CreateMemberDto memberDto) {
+        try {
+            //비어있는 회원 생성
+            Member member;
+
+            //생성자 주입
+            if (memberDto.isJobSearch()) { //취업준비중일경우
+                member = Member.builder()
+                        .name(memberDto.getName())
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company("취준")
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(true)
+                        .role("ROLE_USER")
+                        .build();
+            } else { //재직중일경우
+                member = Member.builder()
+                        .name(memberDto.getName())
+                        .email(memberDto.getEmail())
+                        .password(passwordEncoder.encode(memberDto.getPassword()))
+                        .cohort(memberDto.getCohort())
+                        .campus(memberDto.getCampus())
+                        .jobSearch(memberDto.isJobSearch())
+                        .company(memberDto.getCompany())
+                        .profileImage(memberDto.isExistProfileImage())
+                        .companyBlind(memberDto.getCompanyBlind())
+                        .role("ROLE_USER")
+                        .build();
+            }
+                memberRepository.save(member);
+            }catch(Exception e){
+                throw new MemberCreationException(e.getMessage(),e);
+            }
+        }
 
     @Override
     public GetMemberDto getMember(Long memberId) {
