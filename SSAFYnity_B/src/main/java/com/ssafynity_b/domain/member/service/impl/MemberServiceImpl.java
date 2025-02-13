@@ -41,42 +41,32 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void createMember(CreateMemberDto memberDto) {
         try {
-            //비어있는 회원 생성
-            Member member;
+            //회원 생성
+            Member.MemberBuilder memberBuilder = Member.builder()
+                    .name(memberDto.getName())
+                    .email(memberDto.getEmail())
+                    .password(passwordEncoder.encode(memberDto.getPassword()))
+                    .cohort(memberDto.getCohort())
+                    .campus(memberDto.getCampus())
+                    .jobSearch(memberDto.isJobSearch())
+                    .profileImage(false)
+                    .role("ROLE_USER");
 
-            //생성자 주입
-            if (memberDto.isJobSearch()) { //취업준비중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company("취준")
-                        .profileImage(false)
-                        .companyBlind(true)
-                        .role("ROLE_USER")
-                        .build();
-            } else { //재직중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company(memberDto.getCompany())
-                        .profileImage(false)
-                        .companyBlind(memberDto.getCompanyBlind())
-                        .role("ROLE_USER")
-                        .build();
+            if (memberDto.isJobSearch()) { //취업준비중일경우(회사명 취준, 회사 비공개상태로 등록)
+                memberBuilder.company("취준")
+                        .companyBlind(true);
+            } else { //재직중일경우(재직중인 회사명, 회사 공개상태로 등록)
+                memberBuilder.company(memberDto.getCompany())
+                        .companyBlind(memberDto.getCompanyBlind());
             }
-                memberRepository.save(member);
-            }catch(Exception e){
-                throw new MemberCreationException(e.getMessage(),e);
-            }
+
+            Member member = memberBuilder.build();
+            memberRepository.save(member);
+
+        }catch(Exception e){
+            throw new MemberCreationException(e.getMessage(),e);
         }
+    }
 
     //이메일 중복체크 서비스
     @Override
