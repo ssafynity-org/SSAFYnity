@@ -6,7 +6,7 @@ import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
 function SearchBar({selectedMenu, selectedCompany}) {
 
-  const [menu, setMenu] = useState();
+  const [menu, setMenu] = useState("전체 글");
 
   const handleMenuClick = (menu) => {
     setMenu(menu);
@@ -65,7 +65,7 @@ function SearchBar({selectedMenu, selectedCompany}) {
 
       <div class='searchbar-v-line'></div>
 
-      {menu === "기업 별" && (
+      {(menu === "기업 별" || menu === "전체 글") && (
         <div className="company">
         {companyList.map((company) => (
           <div className="company-item" onClick={() => handleCompanyClick(company.name)}>

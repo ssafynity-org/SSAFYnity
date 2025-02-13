@@ -1,3 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
 
+.conference-page {
+  display:flex;
+  justify-content: safe center;
+  width: 100%;
+  height: 100%;
+  gap: 35px;
+}
+
+.conference-wrap {
+  min-height: 1000px;
+  max-height: 1000px;
+  min-width: 950px;
+  max-width: 950px;
+}

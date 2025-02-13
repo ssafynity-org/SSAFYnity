@@ -6,9 +6,9 @@
   border-bottom: 1px solid #ccc; /* 구분선 추가 */
   box-sizing: border-box; /* border가 너비에 포함되도록 설정 */
   display: flex;
-  justify-content: safe center;
+  justify-content:safe center;
   align-items: safe center;
-  min-width: 1000px;
+  /* gap: 80px; */
   max-height: 80px;
 }
 

@@ -23,10 +23,7 @@ function Conference() {
   return (
     <div className="conference-page">
       <SearchBar selectedMenu={handleMenu} selectedCompany={handleCompany} />
-      <h1>{menu}</h1>
-      {menu === "기업 별" && (
-        <h2>{company}</h2>
-      )}    
+      <div className="conference-wrap"></div>    
     </div>
   );
 }
