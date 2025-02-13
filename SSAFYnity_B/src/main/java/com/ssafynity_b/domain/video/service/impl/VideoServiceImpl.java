@@ -97,7 +97,11 @@ public class VideoServiceImpl implements VideoService {
         // ✅ 각 Video 객체의 title을 fetchVideoData()에 전달
         List<JSONObject> videoDataList = videoPage.getContent()
                 .stream()
-                .map(video -> youtubeService.fetchVideoData(video.getVideoId())) // ✅ 각 Video의 videoId를 전달하여 데이터 요청
+                .map(video -> {
+                    JSONObject videoData = youtubeService.fetchVideoData(video.getVideoId()); // 기존 데이터
+                    videoData.put("company", video.getCompany()); // ✅ company 값 추가
+                    return videoData;
+                })
                 .toList(); // ✅ 결과를 리스트로 변환
 
         List<GetVideoRes> responseList = new ArrayList<>();
@@ -111,6 +115,7 @@ public class VideoServiceImpl implements VideoService {
                     .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
                     .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
                     .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
+                    .company(videoData.getString("company"))
                     .build();
 
             responseList.add(response);
