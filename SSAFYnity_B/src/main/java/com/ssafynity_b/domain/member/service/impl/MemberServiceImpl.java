@@ -95,13 +95,18 @@ public class MemberServiceImpl implements MemberService {
     //로그인 성공시 회원정보와 저장된 프로필이미지를 반환하는 서비스
     @Override
     public GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException {
-
+        //멤버 정보 조회
         Long memberId = userDetails.getMember().getId();
-
+        //멤버가 존재하지않을 경우 예외발생(=>로그인 실패)
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        String profileImage = minIoService.getFileToMinIO(userDetails);
 
-        return new GetLoginDto(member,profileImage);
+        //저장된 프로필 이미지가 있을경우 해당 프로필 이미지도 같이 반환
+        if(member.isProfileImage()) {
+            String profileImage = minIoService.getFileToMinIO(userDetails);
+            return new GetLoginDto(member, profileImage);
+        }
+        //없을경우 멤버 정보만 반환
+        return new GetLoginDto(member);
     }
 
     //멤버를 리스트로 조회하는 서비스
