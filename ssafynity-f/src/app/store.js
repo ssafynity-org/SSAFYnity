@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import { persistReducer, persistStore } from 'redux-persist';
 
-import userReducer from '../features/userSlice';
+import userReducer from '../redux/userSlice';
 
 const persistConfig = {
   key: 'root',
