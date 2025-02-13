@@ -8,6 +8,8 @@ import styles from "../styles/NewSignUp.module.css";
 
 function NewSignup() {
 
+  const navigate = useNavigate(); // useNavigate 훅 사용
+
   const [profile, setProfile] = useState({
     email: "", // 백엔드에 api 요청 보낼때에는 emailDomain포함해서 전송하기
     password: "",
@@ -17,7 +19,6 @@ function NewSignup() {
     jobSearch: true,
     company: "",
     companyBuild: true,
-    profileImage: false
   });
 
   const [emailDomain, setEmailDomain] = useState("@gmail.com");
@@ -114,7 +115,34 @@ function NewSignup() {
     };
   }, []);
 
-  const submit = () => {
+  const submit = async () => {
+
+    const requestBody = {
+      email: profile.email + emailDomain,
+      password: profile.password,
+      name: profile.name,
+      cohort: profile.cohort,
+      campus: profile.campus,
+      jobSearch: profile.jobSearch,
+      company: profile.company,
+      companyBlind: profile.companyBuild
+    };
+  
+    try {
+      const response = await axios.post("/api/member/signup", requestBody, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      console.log("회원가입 성공:", response.data);
+      alert("회원가입이 완료되었습니다!");
+      navigate("/login"); // 로그인 화면으로 이동
+    } catch (error) {
+      console.error("회원가입 실패:", error.response ? error.response.data : error.message);
+      alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+    }
+
     console.log("이메일 : " + profile.email + emailDomain + "\n"
       + "비밀번호 : " + profile.password + "\n"
       + "이름 : " + profile.name + "\n"
