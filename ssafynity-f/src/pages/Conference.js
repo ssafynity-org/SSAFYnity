@@ -27,7 +27,7 @@ function Conference() {
     const fetchVideoData = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get("/videolist", {
+        const response = await axiosInstance.get("/api/video/videolist", {
           params: {
             tags: null, // 태그 필터가 있다면 추가
             companies: companyList.length > 0 ? companyList : null, // ✅ 다중 선택된 회사 리스트 전달
