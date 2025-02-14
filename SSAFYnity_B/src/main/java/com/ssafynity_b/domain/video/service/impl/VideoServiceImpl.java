@@ -124,6 +124,7 @@ public class VideoServiceImpl implements VideoService {
         return responseList;
     }
 
+    //조회수 포맷
     private String formatViewCount(long viewCount) {
         if (viewCount >= 100000000) { // 1억 이상
             return String.format("%.1f억회", viewCount / 100000000.0);
