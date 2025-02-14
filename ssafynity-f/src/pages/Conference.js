@@ -22,6 +22,15 @@ function Conference() {
     }
   }
 
+  const removeEmojis = (text) => {
+    return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "");
+  };
+
+  const truncateText = (text, maxLength) => {
+    const cleanText = removeEmojis(text);
+    return cleanText.length > maxLength ? cleanText.substring(0, maxLength) + "..." : cleanText;
+  };
+
   // ✅ API 호출 함수
   useEffect(() => {
     const fetchVideoData = async () => {
@@ -74,7 +83,7 @@ function Conference() {
               <p>{video.channelName}</p>
             </div>
             <div className="video-description">
-              <p>{video.description}</p>
+              <p>{truncateText(video.description, 100)}</p>
             </div>
           </div>
         </div>
