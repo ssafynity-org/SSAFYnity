@@ -19,6 +19,9 @@ public class GetVideoRes {
     @Column(name = "영상 설명", nullable = false)
     private String description;
 
+    @Column(name = "조회 수", nullable = false)
+    private String viewCount;
+
     @Column(name = "영상 게시일", nullable = false)
     private LocalDateTime publishedAt;
 

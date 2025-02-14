@@ -64,7 +64,7 @@ function Conference() {
                 <p>{video.title}</p>
               </div>
               <div className="video-post">
-                <p>{video.views}</p>
+                <p>조회수 {video.viewCount}</p>
                 <p>•</p>
                 <p>{video.time}</p>
               </div>

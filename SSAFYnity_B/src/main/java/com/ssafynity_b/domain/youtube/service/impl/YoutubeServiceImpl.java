@@ -21,7 +21,7 @@ public class YoutubeServiceImpl implements YoutubeService {
 
     @PostConstruct
     public void init() {
-        this.YOUTUBE_VIDEO_URL = "https://www.googleapis.com/youtube/v3/videos?part=snippet&id=%s&key=" + API_KEY;
+        this.YOUTUBE_VIDEO_URL = "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=%s&key=" + API_KEY;
     }
 
     public JSONObject fetchVideoData(String videoId) {

@@ -110,6 +110,7 @@ public class VideoServiceImpl implements VideoService {
                     .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
                     .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
                     .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
+                    .viewCount(formatViewCount(Integer.parseInt(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("statistics").getString("viewCount"))))
                     .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
                     .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
                     .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
@@ -121,5 +122,15 @@ public class VideoServiceImpl implements VideoService {
         }
 
         return responseList;
+    }
+
+    private String formatViewCount(long viewCount) {
+        if (viewCount >= 100000000) { // 1억 이상
+            return String.format("%.1f억회", viewCount / 100000000.0);
+        } else if (viewCount >= 10000) { // 1만 이상
+            return String.format("%.1f만회", viewCount / 10000.0);
+        } else {
+            return viewCount + "회"; // 1만 미만 그대로 출력
+        }
     }
 }
