@@ -39,7 +39,7 @@ function Conference() {
         // ✅ API 응답을 상태에 저장
         setVideoData(response.data);
       } catch (error) {
-        console.error("Error fetching video data:", error);
+        console.error("Error fetching video data:", error.response.data);
       } finally {
         setLoading(false);
       }

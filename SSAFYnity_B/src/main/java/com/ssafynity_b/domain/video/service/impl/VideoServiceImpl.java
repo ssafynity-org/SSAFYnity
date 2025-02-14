@@ -82,8 +82,6 @@ public class VideoServiceImpl implements VideoService {
     }
 
 
-
-
     @Override
     public List<GetVideoRes> getVideoList(List<String> tags, List<String> companies, Pageable pageable) {
         Pageable sortedByDate = PageRequest.of(
@@ -99,6 +97,7 @@ public class VideoServiceImpl implements VideoService {
                 .stream()
                 .map(video -> {
                     JSONObject videoData = youtubeService.fetchVideoData(video.getVideoId()); // 기존 데이터
+                    System.out.println("videoData : " + videoData);
                     videoData.put("company", video.getCompany()); // ✅ company 값 추가
                     return videoData;
                 })
