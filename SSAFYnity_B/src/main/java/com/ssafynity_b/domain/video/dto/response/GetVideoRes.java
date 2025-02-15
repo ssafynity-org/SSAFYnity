@@ -23,7 +23,7 @@ public class GetVideoRes {
     private String viewCount;
 
     @Column(name = "영상 게시일", nullable = false)
-    private LocalDateTime publishedAt;
+    private String publishedAt;
 
     @Column(name = "썸네일 url", nullable = false)
     private String thumbnail;

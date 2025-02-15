@@ -64,10 +64,11 @@ function Conference() {
       <div className="video-list">
       {videoData.map((video) => (
         <div key={video.id} className="video-container">
+          <div className="video-allcontent">
           <div className="video-thumbnail">
             <img src={video.thumbnail} alt="video thumbnail" />
           </div>
-          <div className="video-content">
+          <div className="video-subcontent">
           <div className="video-channelImage">
             <img src={video.channelImage} alt="channel" />
           </div>
@@ -90,6 +91,7 @@ function Conference() {
             </div>
           </div>
           </div>
+        </div>
         </div>
       ))}
     </div>

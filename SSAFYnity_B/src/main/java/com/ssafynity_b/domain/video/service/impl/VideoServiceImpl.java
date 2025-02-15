@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class VideoServiceImpl implements VideoService {
                 .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
                 .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
                 .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
-                .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
+                .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
                 .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
                 .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
                 .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
@@ -111,7 +112,7 @@ public class VideoServiceImpl implements VideoService {
                     .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
                     .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
                     .viewCount(formatViewCount(Integer.parseInt(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("statistics").getString("viewCount"))))
-                    .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
+                    .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
                     .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
                     .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
                     .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
@@ -132,6 +133,29 @@ public class VideoServiceImpl implements VideoService {
             return String.format("%.1f만회", viewCount / 10000.0);
         } else {
             return viewCount + "회"; // 1만 미만 그대로 출력
+        }
+    }
+
+    private String timeAgo(LocalDateTime pastTime) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(pastTime, now);
+
+        long minutes = duration.toMinutes();
+        long hours = duration.toHours();
+        long days = duration.toDays();
+        long months = days / 30; // 대략적인 월 계산
+        long years = days / 365; // 대략적인 년 계산
+
+        if (years > 0) {
+            return years + "년 전";
+        } else if (months > 0) {
+            return months + "개월 전";
+        } else if (days > 0) {
+            return days + "일 전";
+        } else if (hours > 0) {
+            return hours + "시간 전";
+        } else {
+            return minutes + "분 전";
         }
     }
 }
