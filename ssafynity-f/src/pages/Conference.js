@@ -67,10 +67,17 @@ function Conference() {
           <div className="video-thumbnail">
             <img src={video.thumbnail} alt="video thumbnail" />
           </div>
+          <div className="video-content">
+          <div className="video-channelImage">
+            <img src={video.channelImage} alt="channel" />
+          </div>
           <div className="video-info">
             <div className="video-titleAndPost">
               <div className="video-title">
                 <p>{video.title}</p>
+              </div>
+              <div className="video-channelName">
+                <p>{video.channelName}</p>
               </div>
               <div className="video-post">
                 <p>조회수 {video.viewCount}</p>
@@ -78,13 +85,10 @@ function Conference() {
                 <p>{video.publishedAt}</p>
               </div>
             </div>
-            <div className="video-channel">
-              <img src={video.channelImage} alt="channel" />
-              <p>{video.channelName}</p>
-            </div>
             <div className="video-description">
-              <p>{truncateText(video.description, 100)}</p>
+              {/* <p>{truncateText(video.description, 100)}</p> */}
             </div>
+          </div>
           </div>
         </div>
       ))}

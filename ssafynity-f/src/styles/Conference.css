@@ -12,22 +12,29 @@
 .conference-wrap {
   min-height: 1000px;
   max-height: 1000px;
-  min-width: 950px;
-  max-width: 950px;
+  min-width: 1000px;
+  max-width: 1000px;
 }
 
 .video-list {
     display: flex;
     justify-content: flex-start;
-    flex-direction: column;
-    gap:50px;
-    margin: 70px 0 0px 0;
+    /* flex-direction: column; */
+    gap:0px;
+    margin: 60px 0 0px 0;
 }
 
 .video-container {
   display: flex;
-  gap: 15px;
-  margin: 0 30px 0px 30px;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 15px 0px 15px;
+}
+
+.video-content {
+  display: flex;
+  align-items: center;
+  gap:10px
 }
 
 .video-info {
@@ -59,16 +66,17 @@
     border-radius: 10px;
 }
 
-.video-channel {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.video-channelName {
     font-size: 13px;
 }
 
-.video-channel img {
-    height: 25px;
-    width: 25px; /* 로고 너비를 고정 */
+.video-channelImage {
+  margin: 0 0 50px 0;
+}
+
+.video-channelImage img {
+    height: 35px;
+    width: 35px; /* 로고 너비를 고정 */
     border-radius: 50%; /* 원형으로 변환 */
 }
 
