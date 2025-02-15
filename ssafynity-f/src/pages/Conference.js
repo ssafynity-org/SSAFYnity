@@ -75,7 +75,7 @@ function Conference() {
               <div className="video-post">
                 <p>조회수 {video.viewCount}</p>
                 <p>•</p>
-                <p>{video.time}</p>
+                <p>{video.publishedAt}</p>
               </div>
             </div>
             <div className="video-channel">
