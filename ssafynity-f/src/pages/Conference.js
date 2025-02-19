@@ -41,7 +41,7 @@ function Conference() {
             tags: null, // 태그 필터가 있다면 추가
             companies: companyList.length > 0 ? companyList : null, // ✅ 다중 선택된 회사 리스트 전달
             page: 0, // 페이지네이션 (기본 첫 페이지)
-            size: 10, // 가져올 영상 개수
+            size: 24, // 가져올 영상 개수
           },
         });
 

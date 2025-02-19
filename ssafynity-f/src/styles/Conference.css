@@ -30,7 +30,7 @@
   display: flex;
   justify-content: flex-start;
   gap: 2px;
-  /* margin: 0 15px 0px 15px; */
+  margin: 0 0 15px 0;
 }
 
 .video-allcontent {
@@ -41,8 +41,6 @@
 
 .video-subcontent {
   display: flex;
-  /* flex-direction: column; */
-  align-items: center;
   gap:10px
 }
 
@@ -61,6 +59,7 @@
 
 .video-title p {
     font-size: 16px;
+    font-weight: 450;
 }
 
 .video-post {
@@ -72,7 +71,7 @@
 .video-thumbnail img{
     height: 180px;
     width: 320px; /* 로고 너비를 고정 */
-    border-radius: 10px;
+    border-radius: 13px;
 }
 
 .video-channelName {
@@ -80,7 +79,8 @@
 }
 
 .video-channelImage {
-  margin: 0 0 50px 0;
+  display: flex;
+  margin-top: 3px;
 }
 
 .video-channelImage img {
