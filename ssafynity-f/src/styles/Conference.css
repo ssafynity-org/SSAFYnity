@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
-
 .conference-page {
+  display:flex;
+  justify-content: safe center; 
+  flex-direction: column;
+}
+
+.conference-main {
   display:flex;
   justify-content: safe center;
   width: 100%;

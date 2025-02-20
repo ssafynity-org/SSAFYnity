@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import ConferenceHeader from "../components/ConferenceHeader";
 import SearchBar from "../components/SearchBar";
 import "../styles/Conference.css";
 
@@ -27,15 +28,6 @@ function Conference() {
     }
     setPage(0); // ✅ 필터 변경 시 페이지 리셋
     setVideoData([]);
-  };
-
-  const removeEmojis = (text) => {
-    return text.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "");
-  };
-
-  const truncateText = (text, maxLength) => {
-    const cleanText = removeEmojis(text);
-    return cleanText.length > maxLength ? cleanText.substring(0, maxLength) + "..." : cleanText;
   };
 
   // ✅ API 호출 함수 (페이지네이션 적용)
@@ -86,6 +78,8 @@ function Conference() {
 
   return (
     <div className="conference-page">
+        <ConferenceHeader />
+      <div className="conference-main">
       <SearchBar selectedMenu={handleMenu} selectedCompany={handleCompany} />
       <div className="conference-wrap">
         <div className="video-list">
@@ -163,6 +157,7 @@ function Conference() {
         {/* ✅ 로딩 중 표시 */}
         {loading && <p className="loading">Loading...</p>}
       </div>
+    </div>
     </div>
   );
 }
