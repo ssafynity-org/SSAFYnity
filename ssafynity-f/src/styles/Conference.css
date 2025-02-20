@@ -1,3 +1,99 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
+.conference-page {
+  display:flex;
+  justify-content: safe center; 
+  flex-direction: column;
+}
 
+.conference-main {
+  display:flex;
+  justify-content: safe center;
+  width: 100%;
+  height: 100%;
+  gap: 40px;
+}
+
+.conference-wrap {
+  /* min-height: 1800px; */
+  /* max-height: 1800px; */
+  min-width: 1000px;
+  max-width: 1000px;
+}
+
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3개씩 배치 */
+  gap: 20px; /* 간격 조정 */
+  justify-content: flex-start;
+  margin: 55px 0 0 0;
+  min-width: 280px;
+  max-width: 280px;
+}
+
+.video-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 2px;
+  margin: 0 0 15px 0;
+}
+
+.video-allcontent {
+  display: flex;
+  flex-direction: column;
+  gap:10px
+}
+
+.video-subcontent {
+  display: flex;
+  gap:10px
+}
+
+.video-info {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video-info p {
+    margin: 0; /* 기본 마진 제거 */
+    display: block;
+    text-align: left; /* 왼쪽 정렬 */
+}
+
+.video-title p {
+    font-size: 15.5px;
+    font-weight: 450;
+}
+
+.video-post {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.video-thumbnail img{
+    height: 180px;
+    width: 320px; /* 로고 너비를 고정 */
+    border-radius: 13px;
+}
+
+.video-channelName {
+    font-size: 13px;
+}
+
+.video-channelImage {
+  display: flex;
+  margin-top: 3px;
+}
+
+.video-channelImage img {
+    height: 35px;
+    width: 35px; /* 로고 너비를 고정 */
+    border-radius: 50%; /* 원형으로 변환 */
+}
+
+.video-description p {
+    font-size: 14px;
+}

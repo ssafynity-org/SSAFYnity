@@ -5,11 +5,9 @@
   font-family: "Noto Sans KR", serif;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  position: fixed;
-  left: 6%;
-  padding: 20px 30px;
-  width: 230px;
+  gap: 20px;
+  font-size: 15px;
+  margin: 80px 0px 0px 0px;
 }
 
 .search-menu{
@@ -27,21 +25,20 @@
 }
 
 .company{
-  margin-top: 13px;
-  padding: 20px 0 0 0;
-  border-top: 1px solid black;
+  /* padding: 20px 0 0 0; */
 }
 
 .company-item{
   cursor: pointer;
   display: flex;
+  align-items: center;
   gap: 15px;
   margin: 10px 0;
 }
 
 .company-item > img{
-  width: 30px; /* 원형 크기 설정 */
-  height: 30px; /* 원형 크기 설정 */
+  width: 40px; /* 원형 크기 설정 */
+  height: 40px; /* 원형 크기 설정 */
   border-radius: 50%; /* 원형으로 변환 */
   object-fit: cover; /* 이미지 비율 유지하며 꽉 채우기 */
   object-position: center; /* 중앙 정렬 (잘리지 않게) */
@@ -49,9 +46,7 @@
 
 .condition{
   justify-content: left;
-  margin-top: 13px;
-  padding: 20px 0 0 0;
-  border-top: 1px solid black;
+  margin: 10px 0px;
 }
 
 .condition-category{
@@ -86,4 +81,9 @@
   background-color: #0457BA;
   color: white;
   border: 1px solid white;
+}
+
+.searchbar-v-line {
+  border-bottom : thin solid black;
+  width: 220px;
 }

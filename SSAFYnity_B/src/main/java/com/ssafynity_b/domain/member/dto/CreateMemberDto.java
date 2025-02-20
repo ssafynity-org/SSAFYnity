@@ -37,7 +37,4 @@ public class CreateMemberDto {
 
     private Boolean companyBlind; //직장명 공개를 원하면 true 아니면 false
 
-    @NotBlank
-    private boolean existProfileImage; //프로필이미지 존재여부
-
 }

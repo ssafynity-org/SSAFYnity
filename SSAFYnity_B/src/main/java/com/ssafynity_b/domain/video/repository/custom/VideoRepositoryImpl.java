@@ -23,7 +23,7 @@ public class VideoRepositoryImpl implements VideoRepositoryCustom {
     @Override
     public Page<Video> searchVideos(List<String> tags, List<String> companies, Pageable pageable) {
         List<Video> videoList = queryFactory
-                .selectDistinct(video)  // ✅ 중복을 제거하고 Video 엔티티 선택
+                .select(video)  // ✅ 중복을 제거하고 Video 엔티티 선택
                 .from(video)  // ✅ Video 테이블을 기준으로 조회
                 .leftJoin(video.videoTags, videoTag)  // ✅ VideoTag와 LEFT JOIN
                 .leftJoin(videoTag.tag, tag)  // ✅ Tag 테이블과 LEFT JOIN

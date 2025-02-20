@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -36,113 +37,69 @@ public class MemberServiceImpl implements MemberService {
     //파일 저장을 위한 MinIo서비스
     private final MinIoService minIoService;
 
-
-    //회원가입
-    @Transactional
+    //멤버생성 서비스
     @Override
-    public void createMemberAndProfileImage(CreateMemberDto memberDto, MultipartFile file) {
-        try{
-            //비어있는 회원 생성
-            Member member;
+    public void createMember(CreateMemberDto memberDto) {
+        try {
+            //회원 생성
+            Member.MemberBuilder memberBuilder = Member.builder()
+                    .name(memberDto.getName())
+                    .email(memberDto.getEmail())
+                    .password(passwordEncoder.encode(memberDto.getPassword()))
+                    .cohort(memberDto.getCohort())
+                    .campus(memberDto.getCampus())
+                    .jobSearch(memberDto.isJobSearch())
+                    .profileImage(false)
+                    .role("ROLE_USER");
 
-            //생성자 주입
-            if(memberDto.isJobSearch()){ //취업준비중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company("취준")
-                        .profileImage(memberDto.isExistProfileImage())
-                        .companyBlind(true)
-                        .role("ROLE_USER")
-                        .build();
-            }else{ //재직중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company(memberDto.getCompany())
-                        .profileImage(memberDto.isExistProfileImage())
-                        .companyBlind(memberDto.getCompanyBlind())
-                        .role("ROLE_USER")
-                        .build();
+            if (memberDto.isJobSearch()) { //취업준비중일경우(회사명 취준, 회사 비공개상태로 등록)
+                memberBuilder.company("취준")
+                        .companyBlind(true);
+            } else { //재직중일경우(재직중인 회사명, 회사 공개상태로 등록)
+                memberBuilder.company(memberDto.getCompany())
+                        .companyBlind(memberDto.getCompanyBlind());
             }
 
-            if(!file.isEmpty()&&memberDto.isExistProfileImage()) {//프로필 이미지가 존재한다면
-                minIoService.uploadFileToMinIOBySignUp(member.getId(),file);
-            }
-
-            //멤버 저장
+            Member member = memberBuilder.build();
             memberRepository.save(member);
 
-        } catch(Exception e){
+        }catch(Exception e){
             throw new MemberCreationException(e.getMessage(),e);
         }
     }
 
+    //이메일 중복체크 서비스
     @Override
-    public void createMember(CreateMemberDto memberDto) {
-        try {
-            //비어있는 회원 생성
-            Member member;
+    public boolean checkEmailDuplicates(String email) {
+        Optional<Member> member = memberRepository.findByEmail(email);
+        return member.isPresent();
+    }
 
-            //생성자 주입
-            if (memberDto.isJobSearch()) { //취업준비중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company("취준")
-                        .profileImage(memberDto.isExistProfileImage())
-                        .companyBlind(true)
-                        .role("ROLE_USER")
-                        .build();
-            } else { //재직중일경우
-                member = Member.builder()
-                        .name(memberDto.getName())
-                        .email(memberDto.getEmail())
-                        .password(passwordEncoder.encode(memberDto.getPassword()))
-                        .cohort(memberDto.getCohort())
-                        .campus(memberDto.getCampus())
-                        .jobSearch(memberDto.isJobSearch())
-                        .company(memberDto.getCompany())
-                        .profileImage(memberDto.isExistProfileImage())
-                        .companyBlind(memberDto.getCompanyBlind())
-                        .role("ROLE_USER")
-                        .build();
-            }
-                memberRepository.save(member);
-            }catch(Exception e){
-                throw new MemberCreationException(e.getMessage(),e);
-            }
-        }
-
+    //회원조회 서비스
     @Override
     public GetMemberDto getMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return new GetMemberDto(member);
     }
 
+    //로그인 성공시 회원정보와 저장된 프로필이미지를 반환하는 서비스
     @Override
     public GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException {
-
+        //멤버 정보 조회
         Long memberId = userDetails.getMember().getId();
-
+        //멤버가 존재하지않을 경우 예외발생(=>로그인 실패)
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-        String profileImage = minIoService.getFileToMinIO(userDetails);
 
-        return new GetLoginDto(member,profileImage);
+        //저장된 프로필 이미지가 있을경우 해당 프로필 이미지도 같이 반환
+        if(member.isProfileImage()) {
+            String profileImage = minIoService.getFileToMinIO(userDetails);
+            return new GetLoginDto(member, profileImage);
+        }
+        //없을경우 멤버 정보만 반환
+        return new GetLoginDto(member);
     }
 
+    //멤버를 리스트로 조회하는 서비스
     @Override
     public List<GetMemberDto> getAllMember() {
         Iterable<MemberDocument> memberDocumentList = documentRepository.findAll();
@@ -151,6 +108,7 @@ public class MemberServiceImpl implements MemberService {
                 .toList();
     }
 
+    //멤버 정보 수정 서비스
     @Transactional
     @Override
     public Long updateMember(UpdateMemberDto memberDto) {
@@ -162,6 +120,7 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
+    //멤버 삭제 서비스
     @Override
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);

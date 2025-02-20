@@ -3,6 +3,7 @@ package com.ssafynity_b.global.jwt;
 import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,10 +82,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //SecurityContextHolder에 권한정보 토큰을 담은 SecurityContext를 저장
             SecurityContextHolder.setContext(securityContext);
 
-        }catch(Exception e){
-            e.printStackTrace();
+        }catch (ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter().write("{\"message\": \"JWT 토큰이 만료되었습니다.\", \"error\": \"Unauthorized\"}");
+            return;
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized: Invalid token");
+            return;
         }
-
 
         // 필터 체인 계속 진행
         filterChain.doFilter(request, response);

@@ -29,19 +29,26 @@ public class MemberController {
     private final MemberService memberService;
     private final MinIoService minioService;
 
-    @Operation(summary = "회원정보 및 프로필사진 저장")
-    @PostMapping(value = "/signup/multipart", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createMemberAndProfileImage(@RequestPart("member")CreateMemberDto memberDto, @RequestPart("file")MultipartFile profileImage) throws FileUploadException {
-        memberService.createMemberAndProfileImage(memberDto, profileImage);
-        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
-    }
-
     @Operation(summary = "회원정보 저장")
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto) throws FileUploadException {
         memberService.createMember(memberDto);
-        return ResponseEntity.ok("회원 가입이 완료되었습니다.");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Operation(summary = "이메일 중복 확인")
+    @GetMapping(value = "/signup/{email}")
+    public ResponseEntity<?> checkEmailDuplicates(@PathVariable String email) {
+        boolean response = memberService.checkEmailDuplicates(email);
+
+        //중복된 이메일이 있을경우 NOT_FOUND
+        if(response){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        //없을경우 OK
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @Operation(summary = "회원 조회")
     @GetMapping("/{memberId}")
     public ResponseEntity<?> getMember(@PathVariable Long memberId){
@@ -49,7 +56,7 @@ public class MemberController {
         return new ResponseEntity<GetMemberDto>(memberDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "로그인 회원 정보 및 프로필이미지 조회")
+    @Operation(summary = "로그인 성공 시 회원정보와 프로필이미지를 클라이언트에게 전달하는 API")
     @GetMapping("/login")
     public ResponseEntity<GetLoginDto> getLoginInformation(@AuthenticationPrincipal CustomUserDetails userDetails) throws IOException {
         GetLoginDto loginDto = memberService.getLoginInformation(userDetails);
@@ -112,22 +119,4 @@ public class MemberController {
         }
     }
 
-    @Operation(summary = "프로필이미지 저장(MinIO,Stream방식)")
-    @PostMapping(value = "/upload/profileImage/stream", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveStreamToMinIO(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletRequest request){
-        try(InputStream inputStream = request.getInputStream()){
-            String fileName = request.getHeader("file-name");
-            long contentLength = request.getContentLengthLong();
-
-            System.out.println("userDetails : " + userDetails);
-            System.out.println("fileName : " + fileName);
-            System.out.println("inputStream : " + inputStream);
-            System.out.println("contentLength : " + contentLength);
-
-            minioService.uploadFileToMinIO(userDetails, fileName, inputStream, contentLength);
-            return "업로드 완료";
-        } catch(IOException e){
-            return "업로드 실패 : " + e.getMessage();
-        }
-    }
 }

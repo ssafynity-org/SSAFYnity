@@ -15,17 +15,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -61,7 +59,7 @@ public class VideoServiceImpl implements VideoService {
                 .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
                 .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
                 .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
-                .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
+                .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
                 .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
                 .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
                 .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
@@ -82,45 +80,83 @@ public class VideoServiceImpl implements VideoService {
     }
 
 
-
-
     @Override
     public List<GetVideoRes> getVideoList(List<String> tags, List<String> companies, Pageable pageable) {
-        Pageable sortedByDate = PageRequest.of(
-                pageable.getPageNumber(), // 기존 page 유지
-                pageable.getPageSize(), // 기존 size 유지
-                Sort.by(Sort.Direction.DESC, "postedDate") // ✅ 게시일자 기준 내림차순 정렬
-        );
+//        Pageable sortedByDate = PageRequest.of(
+//                pageable.getPageNumber(), // 기존 page 유지
+//                pageable.getPageSize(), // 기존 size 유지
+//                Sort.by(Sort.Direction.DESC, "postedDate") // ✅ 게시일자 기준 내림차순 정렬
+//        );
 
-        Page<Video> videoPage = videoRepository.searchVideos(tags, companies, sortedByDate); // ✅ JPA 페이징 처리된 데이터 가져오기
+        Page<Video> videoPage = videoRepository.searchVideos(tags, companies, pageable); // ✅ JPA 페이징 처리된 데이터 가져오기
 
         // ✅ 각 Video 객체의 title을 fetchVideoData()에 전달
-        List<JSONObject> videoDataList = videoPage.getContent()
+        List<GetVideoRes> videoDataList = videoPage.getContent()
                 .stream()
                 .map(video -> {
-                    JSONObject videoData = youtubeService.fetchVideoData(video.getVideoId()); // 기존 데이터
-                    videoData.put("company", video.getCompany()); // ✅ company 값 추가
+                    GetVideoRes videoData = null; // 기존 데이터
+                    try {
+                        videoData = getVideo(video.getVideoId());
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+//                    videoData.put("company", video.getCompany()); // ✅ company 값 추가
                     return videoData;
                 })
                 .toList(); // ✅ 결과를 리스트로 변환
 
-        List<GetVideoRes> responseList = new ArrayList<>();
+//        List<GetVideoRes> responseList = new ArrayList<>();
+//
+//        for(JSONObject videoData: videoDataList){
+//            GetVideoRes response = GetVideoRes.builder()
+//                    .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
+//                    .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
+//                    .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
+//                    .viewCount(formatViewCount(Integer.parseInt(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("statistics").getString("viewCount"))))
+//                    .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
+//                    .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
+//                    .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
+//                    .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
+//                    .company(videoData.getString("company"))
+//                    .build();
+//
+//            responseList.add(response);
+//        }
 
-        for(JSONObject videoData: videoDataList){
-            GetVideoRes response = GetVideoRes.builder()
-                    .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
-                    .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
-                    .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
-                    .publishedAt(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter))
-                    .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
-                    .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
-                    .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
-                    .company(videoData.getString("company"))
-                    .build();
+        return videoDataList;
+    }
 
-            responseList.add(response);
+    //조회수 포맷
+    private String formatViewCount(long viewCount) {
+        if (viewCount >= 100000000) { // 1억 이상
+            return String.format("%.1f억회", viewCount / 100000000.0);
+        } else if (viewCount >= 10000) { // 1만 이상
+            return String.format("%.1f만회", viewCount / 10000.0);
+        } else {
+            return viewCount + "회"; // 1만 미만 그대로 출력
         }
+    }
 
-        return responseList;
+    private String timeAgo(LocalDateTime pastTime) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(pastTime, now);
+
+        long minutes = duration.toMinutes();
+        long hours = duration.toHours();
+        long days = duration.toDays();
+        long months = days / 30; // 대략적인 월 계산
+        long years = days / 365; // 대략적인 년 계산
+
+        if (years > 0) {
+            return years + "년 전";
+        } else if (months > 0) {
+            return months + "개월 전";
+        } else if (days > 0) {
+            return days + "일 전";
+        } else if (hours > 0) {
+            return hours + "시간 전";
+        } else {
+            return minutes + "분 전";
+        }
     }
 }

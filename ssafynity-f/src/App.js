@@ -25,14 +25,14 @@ function App() {
             <Header />
             <main>
               <Routes>
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/newsignup" element={<NewSignup />} />
+                {/* <Route path="/signup" element={<SignUp />} /> */}
+                <Route path="/signup" element={<NewSignup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/main" element={<PrivateRoute><Main /></PrivateRoute>} />
                 <Route path="/message" element={<PrivateRoute><Message /></PrivateRoute>} />
                 <Route path="/message/write" element={<PrivateRoute><MessageWrite /></PrivateRoute>} />
                 <Route path="/message/detail/:id" element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
-                <Route path="/conference" element={<PrivateRoute><Conference /></PrivateRoute>} />
+                <Route path="/conference/external" element={<PrivateRoute><Conference /></PrivateRoute>} />
                 <Route path="/" element={<h2>Welcome to the React App! Start here.</h2>} />
               </Routes>
             </main>
