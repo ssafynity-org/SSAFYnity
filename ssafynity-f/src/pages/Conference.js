@@ -41,7 +41,7 @@ function Conference() {
           tags: null,
           companies: companyList.length > 0 ? companyList : null,
           page: currentPage, // ✅ 현재 페이지 적용
-          size: 24,
+          size: 15,
         },
       });
 
