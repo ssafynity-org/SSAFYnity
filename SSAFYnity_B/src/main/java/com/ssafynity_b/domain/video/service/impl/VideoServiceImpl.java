@@ -82,44 +82,48 @@ public class VideoServiceImpl implements VideoService {
 
     @Override
     public List<GetVideoRes> getVideoList(List<String> tags, List<String> companies, Pageable pageable) {
-        Pageable sortedByDate = PageRequest.of(
-                pageable.getPageNumber(), // 기존 page 유지
-                pageable.getPageSize(), // 기존 size 유지
-                Sort.by(Sort.Direction.DESC, "postedDate") // ✅ 게시일자 기준 내림차순 정렬
-        );
+//        Pageable sortedByDate = PageRequest.of(
+//                pageable.getPageNumber(), // 기존 page 유지
+//                pageable.getPageSize(), // 기존 size 유지
+//                Sort.by(Sort.Direction.DESC, "postedDate") // ✅ 게시일자 기준 내림차순 정렬
+//        );
 
-        Page<Video> videoPage = videoRepository.searchVideos(tags, companies, sortedByDate); // ✅ JPA 페이징 처리된 데이터 가져오기
+        Page<Video> videoPage = videoRepository.searchVideos(tags, companies, pageable); // ✅ JPA 페이징 처리된 데이터 가져오기
 
         // ✅ 각 Video 객체의 title을 fetchVideoData()에 전달
-        List<JSONObject> videoDataList = videoPage.getContent()
+        List<GetVideoRes> videoDataList = videoPage.getContent()
                 .stream()
                 .map(video -> {
-                    JSONObject videoData = youtubeService.fetchVideoData(video.getVideoId()); // 기존 데이터
-                    System.out.println("videoData : " + videoData);
-                    videoData.put("company", video.getCompany()); // ✅ company 값 추가
+                    GetVideoRes videoData = null; // 기존 데이터
+                    try {
+                        videoData = getVideo(video.getVideoId());
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+//                    videoData.put("company", video.getCompany()); // ✅ company 값 추가
                     return videoData;
                 })
                 .toList(); // ✅ 결과를 리스트로 변환
 
-        List<GetVideoRes> responseList = new ArrayList<>();
+//        List<GetVideoRes> responseList = new ArrayList<>();
+//
+//        for(JSONObject videoData: videoDataList){
+//            GetVideoRes response = GetVideoRes.builder()
+//                    .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
+//                    .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
+//                    .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
+//                    .viewCount(formatViewCount(Integer.parseInt(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("statistics").getString("viewCount"))))
+//                    .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
+//                    .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
+//                    .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
+//                    .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
+//                    .company(videoData.getString("company"))
+//                    .build();
+//
+//            responseList.add(response);
+//        }
 
-        for(JSONObject videoData: videoDataList){
-            GetVideoRes response = GetVideoRes.builder()
-                    .videoId(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getString("id"))
-                    .title(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("title"))
-                    .description(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("description"))
-                    .viewCount(formatViewCount(Integer.parseInt(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("statistics").getString("viewCount"))))
-                    .publishedAt(timeAgo(LocalDateTime.parse(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("publishedAt"),formatter)))
-                    .thumbnail(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("maxres").getString("url"))
-                    .channelName(videoData.getJSONObject("video").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getString("channelTitle"))
-                    .channelImage(videoData.getJSONObject("channel").getJSONArray("items").getJSONObject(0).getJSONObject("snippet").getJSONObject("thumbnails").getJSONObject("high").getString("url"))
-                    .company(videoData.getString("company"))
-                    .build();
-
-            responseList.add(response);
-        }
-
-        return responseList;
+        return videoDataList;
     }
 
     //조회수 포맷
