@@ -63,13 +63,6 @@ public class MemberController {
         return new ResponseEntity<>(loginDto,HttpStatus.OK);
     }
 
-    @Operation(summary = "회원 전체 조회")
-    @GetMapping
-    public ResponseEntity<?> getMemberAll(){
-        List<GetMemberDto> memberList = memberService.getAllMember();
-        return new ResponseEntity<List<GetMemberDto>>(memberList, HttpStatus.OK);
-    }
-
     @Operation(summary = "회원 수정")
     @PutMapping
     public ResponseEntity<?> updateMember(@RequestBody UpdateMemberDto memberDto){
@@ -82,20 +75,6 @@ public class MemberController {
     public ResponseEntity<?> deleteMember(@PathVariable Long memberId){
         memberService.deleteMember(memberId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Operation(summary = "회사명으로 회원 검색")
-    @GetMapping("/company/{keyword}")
-    public ResponseEntity<?> getMemberByCompany(@PathVariable String keyword) throws IOException {
-        List<GetMemberDto> memberList = memberService.searchMemberByCompany(keyword);
-        return new ResponseEntity<List<GetMemberDto>>(memberList, HttpStatus.OK);
-    }
-
-    @Operation(summary = "이름으로 회원 검색")
-    @GetMapping("/name/{keyword}")
-    public ResponseEntity<?> getMemberByName(@PathVariable String keyword) throws IOException {
-        List<GetMemberDto> memberList = memberService.searchMemberByName(keyword);
-        return new ResponseEntity<List<GetMemberDto>>(memberList, HttpStatus.OK);
     }
 
     //localhost:9000으로 접속해서 확인 가능
