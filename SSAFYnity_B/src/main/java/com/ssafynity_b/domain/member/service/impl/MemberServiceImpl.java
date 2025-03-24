@@ -3,7 +3,6 @@ package com.ssafynity_b.domain.member.service.impl;
 import com.ssafynity_b.domain.member.document.MemberDocument;
 import com.ssafynity_b.domain.member.dto.*;
 import com.ssafynity_b.domain.member.entity.Member;
-import com.ssafynity_b.domain.member.repository.MemberDocumentRepository;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.domain.member.service.MemberService;
 import com.ssafynity_b.global.exception.MemberCreationException;
@@ -30,9 +29,6 @@ public class MemberServiceImpl implements MemberService {
 
     //Member객체를 저장할 MemberRepository
     private final MemberRepository memberRepository;
-
-    //출석 현황을 저장할 documentRepository
-    private final MemberDocumentRepository documentRepository;
 
     //파일 저장을 위한 MinIo서비스
     private final MinIoService minIoService;
@@ -99,15 +95,6 @@ public class MemberServiceImpl implements MemberService {
         return new GetLoginDto(member);
     }
 
-    //멤버를 리스트로 조회하는 서비스
-    @Override
-    public List<GetMemberDto> getAllMember() {
-        Iterable<MemberDocument> memberDocumentList = documentRepository.findAll();
-        return StreamSupport.stream(memberDocumentList.spliterator(), false)
-                .map(member -> new GetMemberDto(member.getMemberId(), member.getEmail(), member.getPassword(), member.getName(), member.getCompany()))
-                .toList();
-    }
-
     //멤버 정보 수정 서비스
     @Transactional
     @Override
@@ -124,22 +111,6 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long memberId) {
         memberRepository.deleteById(memberId);
-    }
-
-    @Override
-    public List<GetMemberDto> searchMemberByCompany(String keyword) throws IOException {
-        List<MemberDocument> memberList = documentRepository.searchByCompany(keyword);
-        return memberList.stream()
-                .map(member -> new GetMemberDto(member.getMemberId(), member.getEmail(), member.getPassword(), member.getName(), member.getCompany()))
-                .toList();
-    }
-
-    @Override
-    public List<GetMemberDto> searchMemberByName(String keyword) {
-        List<MemberDocument> memberList = documentRepository.findByName(keyword);
-        return memberList.stream()
-                .map(member -> new GetMemberDto(member.getMemberId(), member.getEmail(), member.getPassword(), member.getName(), member.getCompany()))
-                .toList();
     }
 
 }

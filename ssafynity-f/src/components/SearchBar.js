@@ -2,96 +2,99 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import "../styles/SearchBar.css";
-import { eventWrapper } from "@testing-library/user-event/dist/utils";
 
-function SearchBar({selectedMenu, selectedCompany}) {
+function SearchBar({ selectedMenu, selectedCompany, onCategorySelect }) {
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-  const [menu, setMenu] = useState("전체 글");
-
-  const handleMenuClick = (menu) => {
-    setMenu(menu);
-    selectedMenu(menu);
-  };
-
-  const [companyList, setCompanyList] = new useState([
+  const [companyList, setCompanyList] = useState([
     { name: "토스", img: "/images/toss.jpg" },
     { name: "카카오", img: "/images/kakao.png" },
     { name: "우아한형제들", img: "/images/woowahan.png" },
     { name: "당근마켓", img: "/images/daangn.png" },
     { name: "여기어때", img: "/images/yeogi.jpg" },
   ]);
-
-  const [company, setCompany] = new useState();
+  
+  const categories = [
+    { name: "백엔드", width:53 },
+    { name: "프론트엔드", width:70 },
+    { name: "배포", width:30 },
+    { name: "임베디드", width:63 },
+    { name: "보안", width:31 },
+    { name: "네트워크", width:60 },
+    { name: "자료구조", width:58 },
+    { name: "DB" , width:46},
+    { name: "UI/UX" , width:50},
+    { name: "운영체제", width:56 },
+    { name: "디자인패턴", width:69 },
+    { name: "취업", width:29 },
+  ];
 
   const handleCompanyClick = (company) => {
+    console.log(company);
     selectedCompany(company);
-  }
+  };
   
-  // 선택된 체크박스 상태 관리
-  const [selected, setSelected] = useState({
-    backend: false,
-    frontend: false,
-    design: false,
-    network: false,
-    os: false,
-    web: false,
-    mobile: false,
-    embedded: false
-  });
-
-  // 체크박스 상태 변경 핸들러
-  const handleCheckboxChange = (event) => {
-    const { id } = event.target;
-    if (!id) return; // ID가 없는 경우 방지
+  const handleCategoryClick = (category) => {
+    const newSelectedCategories = [...selectedCategories];
     
-    setSelected((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id] // 기존 값의 반대값으로 업데이트
-    }));
-
-    console.log(`${id}: ${!selected[id]}`); // 상태 변경 로그
-  };  
-
-
+    // 이미 선택된 카테고리면 제거, 아니면 추가
+    if (newSelectedCategories.includes(category)) {
+      const index = newSelectedCategories.indexOf(category);
+      newSelectedCategories.splice(index, 1);
+    } else {
+      newSelectedCategories.push(category);
+    }
+    
+    setSelectedCategories(newSelectedCategories);
+    if (onCategorySelect) {
+      onCategorySelect(newSelectedCategories);
+    }
+  };
   
+  const handleSearch = () => {
+    // 검색 버튼 클릭 시 필터링 로직 실행
+    console.log("검색 실행:", {
+      selectedCompany: selectedCompany,
+      selectedCategories: selectedCategories
+    });
+    // 여기에 검색 로직 추가
+  };
 
   return (
     <div className="search-bar">
-      <div className="search-menu">
-        <div className="search-menu-item" onClick={() => handleMenuClick("전체 글")}><img src="/images/검색바전체.png" alt="" height="20px" decoding="async" />전체 글</div>
-        <div className="search-menu-item" onClick={() => handleMenuClick("기업 별")}><img src="/images/검색바기업.png" alt="" height="20px" decoding="async" />기업 별</div>
-        <div className="search-menu-item" onClick={() => handleMenuClick("상세 조건")}><img src="/images/검색바조건.png" alt="" height="20px" decoding="async" />상세 조건</div>
-      </div>
-
-      <div class='searchbar-v-line'></div>
-
-      {(menu === "기업 별" || menu === "전체 글") && (
-        <div className="company">
-        {companyList.map((company) => (
-          <div className="company-item" onClick={() => handleCompanyClick(company.name)}>
-            <img src={company.img} alt={company.name} height="30px" />
-            <span>{company.name}</span>
+      {(
+        <div className="search-content">
+          <div className="company">
+            {companyList.map((company, index) => (
+              <div 
+                key={index}
+                className="company-item" 
+                onClick={() => handleCompanyClick(company.name)}
+              >
+                <img src={company.img} alt={company.name} height="30px" />
+                <span>{company.name}</span>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="job-categories">
+          {categories.map((category, index) => (
+            <div 
+              key={index}
+              className={`job-category-item ${selectedCategories.includes(category.name) ? "selected" : ""}`}
+              style={{ width: `${category.width}px` }}
+              onClick={() => handleCategoryClick(category.name)}
+            >
+              {category.name}
+            </div>
+          ))}
         </div>
-      )}
-
-      {menu === "상세 조건" && (
-        <div className="condition">
-          <div className="condition-category">
-            <div className={`${selected.backend ? "selected" : "unselected"}`} id="backend" onClick={handleCheckboxChange}>백엔드</div>
-            <div className={`${selected.frontend ? "selected" : "unselected"}`} id="frontend" onClick={handleCheckboxChange}>프론트엔드</div>
-            <div className={`${selected.design ? "selected" : "unselected"}`} id="design" onClick={handleCheckboxChange}>디자인</div>
-            <div className={`${selected.network ? "selected" : "unselected"}`} id="network" onClick={handleCheckboxChange}>네트워크</div>
-            <div className={`${selected.os ? "selected" : "unselected"}`} id="os" onClick={handleCheckboxChange}>운영체제</div>
-            <div className={`${selected.web ? "selected" : "unselected"}`} id="web" onClick={handleCheckboxChange}>웹</div>
-            <div className={`${selected.mobile ? "selected" : "unselected"}`} id="mobile" onClick={handleCheckboxChange}>모바일</div>
-            <div className={`${selected.embedded ? "selected" : "unselected"}`} id="embedded" onClick={handleCheckboxChange}>임베디드</div>
-          </div>
+          
+          <button className="search-button" onClick={handleSearch}>
+            검색
+          </button>
         </div>
       )}
     </div>
-    
   );
 }
 

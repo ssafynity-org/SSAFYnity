@@ -22,10 +22,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = {
-        @Index(name = "index_email", columnList = "email"),
-        @Index(name = "index_name", columnList = "name")
-})
 public class Member {
 
     @Id
