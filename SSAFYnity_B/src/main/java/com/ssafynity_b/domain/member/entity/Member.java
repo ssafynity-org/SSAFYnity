@@ -19,9 +19,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class Member {
 
     @Id
@@ -58,21 +56,32 @@ public class Member {
     @Column(nullable = false)
     private String role; //역할
 
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Board> boardList = new ArrayList<>();
 
-    @Builder.Default
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
 
-    @Builder.Default()
     @OneToMany(mappedBy = "sender", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> sendMessageList = new ArrayList<>();
 
-    @Builder.Default()
     @OneToMany(mappedBy = "receiver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> receiveMessageList = new ArrayList<>();
+
+    @Builder
+    public Member(Long id, String email, String password, String name, int cohort, String campus, boolean jobSearch, String company, boolean profileImage, boolean companyBlind, String role) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.cohort = cohort;
+        this.campus = campus;
+        this.jobSearch = jobSearch;
+        this.company = company;
+        this.profileImage = profileImage;
+        this.companyBlind = companyBlind;
+        this.role = role;
+    }
 
     public void updateMember(UpdateMemberDto memberDto){
         this.email = memberDto.getEmail();

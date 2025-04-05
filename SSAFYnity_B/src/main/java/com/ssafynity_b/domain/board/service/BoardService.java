@@ -13,9 +13,6 @@ public interface BoardService {
     //게시물 전체 조회
     List<GetBoardDto> getAllBoard();
 
-    //게시물 제목 조회
-    List<GetBoardDto> getAllTitle();
-
     //게시물 단건 조회
     GetBoardDto getBoard(Long boardId);
 

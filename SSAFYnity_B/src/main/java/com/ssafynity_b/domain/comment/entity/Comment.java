@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @Entity
@@ -16,13 +18,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content; //내용
+    //내용
+    private String content;
+
+    //작성일
+    private LocalDateTime createdAt;
 
     @Setter
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-
 
     @Setter
     @ManyToOne
@@ -31,6 +36,7 @@ public class Comment {
 
     public Comment(String content) {
         this.content = content;
+        this.createdAt = LocalDateTime.now();
     }
 
     public void updateContent(String content) {
