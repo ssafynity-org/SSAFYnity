@@ -6,8 +6,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @SpringBootApplication
-@EnableScheduling
-@EnableWebSocket
 public class SSAFYnityBApplication {
 
 	public static void main(String[] args) {

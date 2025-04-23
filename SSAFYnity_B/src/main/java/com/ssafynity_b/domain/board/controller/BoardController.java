@@ -6,13 +6,18 @@ import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/board")
 @RequiredArgsConstructor
@@ -25,30 +30,27 @@ public class BoardController {
     @PostMapping
     public ResponseEntity<?> createBoard(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CreateBoardDto createBoardDto){
         Long boardId = boardService.createBoard(userDetails, createBoardDto);
-        return new ResponseEntity<Long>(boardId, HttpStatus.OK);
+        return new ResponseEntity<>(boardId, HttpStatus.OK);
     }
 
     @Operation(summary = "게시물 전체 조회")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<?> getAllBoard(){
-        long startTime = System.currentTimeMillis();
         List<GetBoardDto> boardList = boardService.getAllBoard();
-        long duration = System.currentTimeMillis() - startTime;
-        System.out.println("API 실행 시간(내용까지 다 가져옴): " + duration + "ms");
-        return new ResponseEntity<List<GetBoardDto>>(boardList, HttpStatus.OK);
+        return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
 
-    @Operation(summary = "게시물 제목 조회")
-    @GetMapping("/title")
-    public ResponseEntity<?> getAllTitle(){
-        long startTime = System.currentTimeMillis();
-        List<GetBoardDto> boardList = boardService.getAllTitle();
-        long duration = System.currentTimeMillis() - startTime;
-        System.out.println("API 실행 시간(지연로딩이라 내용 안가져옴): " + duration + "ms");
-        return new ResponseEntity<>(boardList,HttpStatus.OK);
+    @Operation(summary = "게시물 페이지네이션 조회")
+    @GetMapping()
+    public ResponseEntity<?> getBoardPage(GetBoardPageReqDto pageReqDto){
+        Map<String, Object> responseBody = new HashMap<>();
+        GetBoardPageResDto response = boardService.getBoardPage(pageReqDto);
+        responseBody.put("data", response);
+        responseBody.put("success", "success");
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    @Operation(summary = "게시물 조회")
+    @Operation(summary = "게시물 단일 조회")
     @GetMapping("/{boardId}")
     public ResponseEntity<?> getBoard(@PathVariable Long boardId){
         GetBoardDto board = boardService.getBoard(boardId);

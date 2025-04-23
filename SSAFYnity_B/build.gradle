@@ -65,6 +65,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	// jsonObject
 	implementation 'org.json:json:20210307'
+	// JUnit 5
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+	// Spring Boot Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {

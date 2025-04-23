@@ -1,6 +1,9 @@
 package com.ssafynity_b.domain.board.dto;
 
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -9,9 +12,10 @@ import lombok.*;
 @AllArgsConstructor
 public class CreateBoardDto {
 
-    //게시글 제목
+    //제목
     private String title;
-    //게시글 내용
+
+    //내용
     private String content;
 
 }
