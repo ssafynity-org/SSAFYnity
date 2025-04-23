@@ -7,16 +7,12 @@ import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.BoardNotFoundException;
 import com.ssafynity_b.global.exception.MemberNotEqualWriterException;
-import com.ssafynity_b.global.exception.MemberNotFoundException;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Safelist;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,6 +48,11 @@ public class BoardServiceImpl implements BoardService{
                         .likes(board.getLikes())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public GetBoardPageResDto getBoardPage(GetBoardPageReqDto pageReqDto) {
+        return boardRepository.getBoardPage(pageReqDto);
     }
 
     @Override

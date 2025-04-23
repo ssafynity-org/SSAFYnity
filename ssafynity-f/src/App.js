@@ -7,14 +7,16 @@ import './App.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import PrivateRoute from "./components/PrivateRoute";
-import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Message from "./pages/Message";
 import MessageWrite from "./pages/MessageWrite";
 import MessageDetail from "./pages/MessageDetail";
 import Conference from "./pages/Conference.js";
+import Board from "./pages/Board.js";
+import CreatePost from "./pages/CreatePost.js";
 import NewSignup from "./pages/NewSignUp.js";
+
 
 function App() {
   return (
@@ -33,7 +35,8 @@ function App() {
                 <Route path="/message/write" element={<PrivateRoute><MessageWrite /></PrivateRoute>} />
                 <Route path="/message/detail/:id" element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
                 <Route path="/conference/external" element={<PrivateRoute><Conference /></PrivateRoute>} />
-                <Route path="/" element={<h2>Welcome to the React App! Start here.</h2>} />
+                <Route path="/community/board" element={<PrivateRoute><Board /></PrivateRoute>} />
+                <Route path="/create-post" element={<CreatePost />} />
               </Routes>
             </main>
             <Footer />

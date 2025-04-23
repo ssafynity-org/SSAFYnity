@@ -31,6 +31,9 @@ public class Board {
     @Lob //대규모 문자열이기때문에 Lob어노테이션 사용
     private String content;
 
+    //카테고리
+    private String category;
+
     //작성일
     private LocalDateTime createdAt;
 
@@ -57,9 +60,10 @@ public class Board {
 //    }
 
     @Builder
-    public Board(String title, String content, LocalDateTime createdAt, int views, int likes) {
+    public Board(String title, String content, String category, LocalDateTime createdAt, int views, int likes) {
         this.title = title;
         this.content = content;
+        this.category = category;
         this.createdAt = createdAt;
         this.views = views;
         this.likes = likes;
