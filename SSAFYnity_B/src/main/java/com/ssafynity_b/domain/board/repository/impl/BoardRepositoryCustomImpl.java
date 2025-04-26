@@ -9,6 +9,7 @@ import com.ssafynity_b.domain.board.entity.QBoard;
 import com.ssafynity_b.domain.board.repository.BoardRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
 
         //현재 pageNumber의 일의자리에 따라 탐색해야할 다음페이지의 rows가 달라짐
         int searchRows = 0;
-        switch (pageReqDto.getPageNumber()%10) {
+        switch (pageReqDto.getNextPage()%10) {
 
             case 1 :
                 searchRows = 181;
@@ -65,10 +66,19 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
                 break;
 
         }
+        //이동할 페이지와 현재 페이지가 얼마나 차이가 나는지 확인
+        int pageDiff = pageReqDto.getNextPage() - pageReqDto.getCurrentPage();
+        System.out.println("pageReqDto.getNextPage() :" + pageReqDto.getNextPage());
+        System.out.println("pageReqDto.getCurrentPage() : " + pageReqDto.getCurrentPage());
+        System.out.println("pageDiff : " + pageDiff);
+        int semiOffSet = 0;
+        if(Math.abs(pageDiff)>0){
+            semiOffSet = 20*(Math.abs(pageDiff)-1);
+        }
 
-        //OFFSET 범위 지정
-        int offsetNum = (pageReqDto.getPageNumber()-1)*20;
-        System.out.println("offsetNum : " + offsetNum);
+        System.out.println("백엔드 firstId : " + pageReqDto.getFirstId());
+        System.out.println("semiOffSet : " + semiOffSet);
+
         //콘텐츠 조회
         List<GetBoardDto> content = queryFactory
                 .select(Projections.constructor(GetBoardDto.class,
@@ -80,23 +90,43 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
                         board.likes,
                         board.member.name.as("author")))
                 .from(board)
+                .where(
+                        pageDiff > 0
+                                ? (pageReqDto.getLastId() != null ? board.id.lt(pageReqDto.getLastId()) : null)
+                                : (pageReqDto.getFirstId() != null ? board.id.gt(pageReqDto.getFirstId()) : null)
+                )
                 .limit(20)
-                .offset(offsetNum)
-                .orderBy(board.id.desc())
+                .offset(semiOffSet)
+                .orderBy(pageDiff >= 0 ? board.id.desc() : board.id.asc())
                 .fetch();
 
         System.out.println("content : " + content.size());
+
+        //현재 페이지 기준 첫번째 Id
+        Long firstId = content.get(0).getBoardId();
+
+        //현재 페이지 기준 마지막 Id
+        Long lastId = content.get(content.size()-1).getBoardId();
+
+        //ASC, DESC 정렬 기준을 사용하기때문에 때에 맞게 유동적으로 조정하기 위함
+        if(firstId<lastId){
+            Long temp = null;
+            temp = firstId;
+            firstId = lastId;
+            lastId = temp;
+        }
 
         //전체 개수 조회
         List<Long> nextRows = queryFactory
                 .select(board.id)
                 .from(board)
-                .where(board.id.lt(content.get(content.size()-1).getBoardId()))
+                .where(board.id.lt(lastId))
                 .limit(searchRows)
                 .fetch();
 
-        int startPage = ((pageReqDto.getPageNumber() - 1) / 10) * 10 + 1;
-        int currentPage = pageReqDto.getPageNumber();
+        //이동할 페이지 기준으로 StartPage와 EndPage 계산
+        int startPage = ((pageReqDto.getNextPage() - 1) / 10) * 10 + 1;
+        int currentPage = pageReqDto.getNextPage();
         int endPage = currentPage + (nextRows.size() / 20);
 
         //표시된 페이지 중 맨끝 페이지의 마지막Id('>' 버튼 클릭시 활용함)
@@ -114,6 +144,10 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
         System.out.println("nextButton : " + nextButton);
         System.out.println("lastButton : " + lastButton);
 
-        return new GetBoardPageResDto<>(content, startPage, endPage, nextButton, lastButton, rangeLastId);
+        if (pageDiff < 0) {
+            Collections.reverse(content);
+        }
+
+        return new GetBoardPageResDto<>(content, startPage, currentPage, firstId, lastId, endPage, nextButton, lastButton, rangeLastId);
     }
 }

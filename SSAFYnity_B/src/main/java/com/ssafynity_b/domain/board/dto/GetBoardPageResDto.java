@@ -13,6 +13,15 @@ public class GetBoardPageResDto<T> {
     //시작 페이지
     private int startPage;
 
+    //현재 페이지
+    private int currentPage;
+
+    //현재 페이지의 첫번째 Id
+    private Long firstId;
+
+    //현재 페이지의 마지막 Id
+    private Long lastId;
+
     //끝 페이지
     private int endPage;
 
@@ -25,9 +34,12 @@ public class GetBoardPageResDto<T> {
     //표시된 페이지 중 맨끝 페이지의 마지막Id('>' 버튼 클릭시 활용함)
     private Long rangeLastId;
 
-    public GetBoardPageResDto(List<T> content, int startPage, int endPage, boolean nextButton, boolean lastButton, Long rangeLastId) {
+    public GetBoardPageResDto(List<T> content, int startPage, int currentPage, Long firstId, Long lastId, int endPage, boolean nextButton, boolean lastButton, Long rangeLastId) {
         this.content = content;
         this.startPage = startPage;
+        this.currentPage = currentPage;
+        this.firstId = firstId;
+        this.lastId = lastId;
         this.endPage = endPage;
         this.nextButton = nextButton;
         this.lastButton = lastButton;

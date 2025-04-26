@@ -9,9 +9,10 @@ const Board = () => {
     const location = useLocation();
 
     const [posts, setPosts] = useState([]);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [lastId, setLastId] = useState(); // 필요한 경우 유지
-    const [moveNumber, setTotalPages] = useState(1); // 백엔드 필요 시 유지
+    const [currentPage, setCurrentPage] = useState(1);
+    const [firstId, setFirstId] = useState();
+    const [lastId, setLastId] = useState();
+    const [nextPage, setNextPage] = useState(1);
 
     // 페이지네이션 상태
     const [startPage, setStartPage] = useState(1);
@@ -25,10 +26,16 @@ const Board = () => {
 
     useEffect(() => {
         const params = {
-            pageNumber: pageNumber,
+            currentPage: currentPage,
+            firstId: firstId,
             lastId: lastId,
-            moveNumber: moveNumber,
+            nextPage: nextPage,
         };
+
+        console.log("이번 요청에 들어간 currentPage : " + params.currentPage);
+        console.log("이번 요청에 들어간 firstId : " + params.firstId);
+        console.log("이번 요청에 들어간 lastId : " + params.lastId);
+        console.log("이번 요청에 들어간 nextPage : " + params.nextPage);
 
         axiosInstance
             .get("/api/board", { params })
@@ -36,6 +43,9 @@ const Board = () => {
                 const data = response.data.data;
 
                 setPosts(data.content);
+                setCurrentPage(data.currentPage);
+                setFirstId(data.firstId);
+                setLastId(data.lastId);
                 setStartPage(data.startPage);
                 setEndPage(data.endPage);
                 setHasNext(data.nextButton);
@@ -44,7 +54,7 @@ const Board = () => {
             .catch((error) => {
                 console.error("게시글 불러오기 실패:", error);
             });
-    }, [pageNumber]);
+    }, [nextPage]);
 
     return (
         <div className="board-page">
@@ -82,12 +92,12 @@ const Board = () => {
                 {/* 페이지네이션 */}
                 <div className="pagination-buttons">
                     {/* << 첫 페이지 */}
-                    <button onClick={() => setPageNumber(1)} disabled={pageNumber === 1}>
+                    <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
                         &laquo;
                     </button>
 
                     {/* < 이전 그룹 */}
-                    <button onClick={() => setPageNumber(Math.max(startPage - 1, 1))} disabled={startPage === 1}>
+                    <button onClick={() => setCurrentPage(Math.max(startPage - 1, 1))} disabled={startPage === 1}>
                         &lt;
                     </button>
 
@@ -97,9 +107,9 @@ const Board = () => {
                         return (
                             <button
                                 key={page}
-                                onClick={() => setPageNumber(page)}
+                                onClick={() => setNextPage(page)}
                                 style={{
-                                    fontWeight: page === pageNumber ? "bold" : "normal",
+                                    fontWeight: page === currentPage ? "bold" : "normal",
                                 }}
                             >
                                 {page}
@@ -108,12 +118,12 @@ const Board = () => {
                     })}
 
                     {/* > 다음 그룹 */}
-                    <button onClick={() => setPageNumber(endPage + 1)} disabled={!hasNext}>
+                    <button onClick={() => setNextPage(endPage + 1)} disabled={!hasNext}>
                         &gt;
                     </button>
 
                     {/* >> 마지막 페이지 (99999는 임시 대체) */}
-                    <button onClick={() => setPageNumber(130000)} disabled={!hasLast}>
+                    <button onClick={() => setNextPage(130000)} disabled={!hasLast}>
                         &raquo;
                     </button>
                 </div>
