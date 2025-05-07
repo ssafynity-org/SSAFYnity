@@ -17,5 +17,7 @@ public class GetBoardPageReqDto {
     //다음 페이지 번호
     private int nextPage;
 
+    //마지막 페이지 버튼 누름여부
+    private boolean lastButton;
 
 }

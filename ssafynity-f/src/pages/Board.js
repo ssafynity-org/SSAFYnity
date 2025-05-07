@@ -13,6 +13,7 @@ const Board = () => {
     const [firstId, setFirstId] = useState();
     const [lastId, setLastId] = useState();
     const [nextPage, setNextPage] = useState(1);
+    const [isLastButtonClicked, setIsLastButtonClicked] = useState(false);
 
     // 페이지네이션 상태
     const [startPage, setStartPage] = useState(1);
@@ -30,12 +31,14 @@ const Board = () => {
             firstId: firstId,
             lastId: lastId,
             nextPage: nextPage,
+            lastButton: isLastButtonClicked,
         };
 
         console.log("이번 요청에 들어간 currentPage : " + params.currentPage);
         console.log("이번 요청에 들어간 firstId : " + params.firstId);
         console.log("이번 요청에 들어간 lastId : " + params.lastId);
         console.log("이번 요청에 들어간 nextPage : " + params.nextPage);
+        console.log("이번 요청에 들어간 lastButton : " + params.lastButton);
 
         axiosInstance
             .get("/api/board", { params })
@@ -50,6 +53,7 @@ const Board = () => {
                 setEndPage(data.endPage);
                 setHasNext(data.nextButton);
                 setHasLast(data.lastButton);
+                setIsLastButtonClicked(false);
             })
             .catch((error) => {
                 console.error("게시글 불러오기 실패:", error);
@@ -122,8 +126,7 @@ const Board = () => {
                         &gt;
                     </button>
 
-                    {/* >> 마지막 페이지 (99999는 임시 대체) */}
-                    <button onClick={() => setNextPage(130000)} disabled={!hasLast}>
+                    <button onClick={() => {setIsLastButtonClicked(true); setNextPage(130000);}} disabled={!hasLast}>
                         &raquo;
                     </button>
                 </div>

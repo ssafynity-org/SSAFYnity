@@ -21,6 +21,19 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     public GetBoardPageResDto getBoardPage(GetBoardPageReqDto pageReqDto) {
         QBoard board = QBoard.board;
 
+        System.out.println("응답 시작");
+        System.out.println("라스트 버튼 눌렀는지 : " + pageReqDto.isLastButton());
+
+        if(pageReqDto.isLastButton()){
+            int total = queryFactory
+                    .select(board.count())
+                    .from(board)
+                    .where(board.id.lt(pageReqDto.getLastId()))
+                    .fetchOne().intValue();
+
+            pageReqDto.setNextPage(pageReqDto.getCurrentPage()+(total/20));
+        }
+
         //현재 pageNumber의 일의자리에 따라 탐색해야할 다음페이지의 rows가 달라짐
         int searchRows = 0;
         switch (pageReqDto.getNextPage()%10) {
@@ -76,10 +89,25 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
             semiOffSet = 20*(Math.abs(pageDiff)-1);
         }
 
-        System.out.println("백엔드 firstId : " + pageReqDto.getFirstId());
+        System.out.println("지금들어온 firstId : " + pageReqDto.getFirstId());
+        System.out.println("지금 차이난 pageDiff : " + pageDiff);
         System.out.println("semiOffSet : " + semiOffSet);
 
-        //콘텐츠 조회
+        // 1단계: 커버링 인덱스를 이용한 ID 목록 조회
+        List<Long> boardIds = queryFactory
+                .select(board.id)
+                .from(board)
+                .where(
+                        pageDiff > 0
+                                ? (pageReqDto.getLastId() != null ? board.id.lt(pageReqDto.getLastId()) : null)
+                                : (pageReqDto.getFirstId() != null ? board.id.gt(pageReqDto.getFirstId()) : null)
+                )
+                .orderBy(pageDiff >= 0 ? board.id.desc() : board.id.asc())
+                .limit(20)
+                .offset(semiOffSet)
+                .fetch();
+
+// 2단계: 실제 데이터 조회
         List<GetBoardDto> content = queryFactory
                 .select(Projections.constructor(GetBoardDto.class,
                         board.id,
@@ -90,15 +118,30 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
                         board.likes,
                         board.member.name.as("author")))
                 .from(board)
-                .where(
-                        pageDiff > 0
-                                ? (pageReqDto.getLastId() != null ? board.id.lt(pageReqDto.getLastId()) : null)
-                                : (pageReqDto.getFirstId() != null ? board.id.gt(pageReqDto.getFirstId()) : null)
-                )
-                .limit(20)
-                .offset(semiOffSet)
-                .orderBy(pageDiff >= 0 ? board.id.desc() : board.id.asc())
+                .where(board.id.in(boardIds))
+                .orderBy(pageDiff >= 0 ? board.id.desc() : board.id.asc()) // 정렬 유지
                 .fetch();
+
+        //콘텐츠 조회
+//        List<GetBoardDto> content = queryFactory
+//                .select(Projections.constructor(GetBoardDto.class,
+//                        board.id,
+//                        board.title,
+//                        board.content,
+//                        board.createdAt,
+//                        board.views,
+//                        board.likes,
+//                        board.member.name.as("author")))
+//                .from(board)
+//                .where(
+//                        pageDiff > 0
+//                                ? (pageReqDto.getLastId() != null ? board.id.lt(pageReqDto.getLastId()) : null)
+//                                : (pageReqDto.getFirstId() != null ? board.id.gt(pageReqDto.getFirstId()) : null)
+//                )
+//                .limit(20)
+//                .offset(semiOffSet)
+//                .orderBy(pageDiff >= 0 ? board.id.desc() : board.id.asc())
+//                .fetch();
 
         System.out.println("content : " + content.size());
 
@@ -147,7 +190,11 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
         if (pageDiff < 0) {
             Collections.reverse(content);
         }
-
+        System.out.println("이제 랜더링될 startPage : " + startPage);
+        System.out.println("이제 랜더링될 currentPage : " + currentPage);
+        System.out.println("이제 랜더링될 endPage : " + endPage);
+        System.out.println("이제 랜더링될 firstId : " + firstId);
+        System.out.println("이제 랜더링될 lastId : " + lastId);
         return new GetBoardPageResDto<>(content, startPage, currentPage, firstId, lastId, endPage, nextButton, lastButton, rangeLastId);
     }
 }
