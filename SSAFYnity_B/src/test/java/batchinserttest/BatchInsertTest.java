@@ -27,9 +27,9 @@ public class BatchInsertTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    private static final int MEMBER_COUNT = 1_000_000;
-    private static final int BOARD_COUNT = 13_000_000;
-    private static final int BATCH_SIZE = 1000;
+    private static final int MEMBER_COUNT = 100;
+    private static final int BOARD_COUNT = 1207;
+    private static final int BATCH_SIZE = 100;
 
     private static final String[] CAMPUSES = {
             "서울캠퍼스", "대전캠퍼스", "부울경캠퍼스", "광주캠퍼스", "구미캠퍼스"

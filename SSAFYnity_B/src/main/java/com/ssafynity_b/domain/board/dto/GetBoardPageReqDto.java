@@ -6,9 +6,18 @@ import lombok.Data;
 public class GetBoardPageReqDto {
 
     //현재 페이지 번호
-    private int pageNumber;
+    private int currentPage;
+
+    //현재 페이지의 첫번째 Id
+    private Long firstId;
 
     //현재 페이지의 마지막 Id
-    private long lastId;
+    private Long lastId;
+
+    //다음 페이지 번호
+    private int nextPage;
+
+    //마지막 페이지 버튼 누름여부
+    private boolean lastButton;
 
 }
