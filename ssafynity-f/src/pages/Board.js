@@ -18,6 +18,7 @@ const Board = () => {
     // 페이지네이션 상태
     const [startPage, setStartPage] = useState(1);
     const [endPage, setEndPage] = useState(1);
+    const [hasPrev, setHasPrev] = useState(false);
     const [hasNext, setHasNext] = useState(false);
     const [hasLast, setHasLast] = useState(false);
 
@@ -96,12 +97,13 @@ const Board = () => {
                 {/* 페이지네이션 */}
                 <div className="pagination-buttons">
                     {/* << 첫 페이지 */}
-                    <button onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
+                    <button onClick={() => setNextPage(1)} disabled={currentPage === 1}>
                         &laquo;
                     </button>
 
                     {/* < 이전 그룹 */}
-                    <button onClick={() => setCurrentPage(Math.max(startPage - 1, 1))} disabled={startPage === 1}>
+                    <button onClick={() => setNextPage(startPage - 10)}>
+                        {/* console.log(startPage - 1); */}
                         &lt;
                     </button>
 

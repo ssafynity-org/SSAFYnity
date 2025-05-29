@@ -31,10 +31,13 @@ public class GetBoardPageResDto<T> {
     //'>>' 버튼 활성화 여부
     private boolean lastButton;
 
+    //표시된 페이지 중 맨첫 페이지의 첫번째Id('<' 버튼 클릭시 활용함)
+    private Long rangeFirstId;
+
     //표시된 페이지 중 맨끝 페이지의 마지막Id('>' 버튼 클릭시 활용함)
     private Long rangeLastId;
 
-    public GetBoardPageResDto(List<T> content, int startPage, int currentPage, Long firstId, Long lastId, int endPage, boolean nextButton, boolean lastButton, Long rangeLastId) {
+    public GetBoardPageResDto(List<T> content, int startPage, int currentPage, Long firstId, Long lastId, int endPage, boolean nextButton, boolean lastButton, Long rangeFirstId, Long rangeLastId) {
         this.content = content;
         this.startPage = startPage;
         this.currentPage = currentPage;
@@ -43,6 +46,7 @@ public class GetBoardPageResDto<T> {
         this.endPage = endPage;
         this.nextButton = nextButton;
         this.lastButton = lastButton;
+        this.rangeFirstId = rangeFirstId;
         this.rangeLastId = rangeLastId;
     }
 }
