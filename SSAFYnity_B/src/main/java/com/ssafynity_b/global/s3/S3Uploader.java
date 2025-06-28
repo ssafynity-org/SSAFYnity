@@ -20,16 +20,19 @@ public class S3Uploader {
 
     private final String bucket;
     private final String region;
+    private final String cloudFrontUrl;
     private final S3Client s3Client;
 
     public S3Uploader(
             @Value("${cloud.aws.s3.bucket}") String bucket,
             @Value("${cloud.aws.credentials.access-key}") String accessKey,
             @Value("${cloud.aws.credentials.secret-key}") String secretKey,
-            @Value("${cloud.aws.region.static}") String region
+            @Value("${cloud.aws.region.static}") String region,
+            @Value("${cloud.aws.cloudfront.url}") String cloudFrontUrl
     ) {
         this.bucket = bucket;
         this.region = region;
+        this.cloudFrontUrl = cloudFrontUrl;
         this.s3Client = S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(
@@ -53,7 +56,7 @@ public class S3Uploader {
 
         s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-        return "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileName;
+        return cloudFrontUrl + fileName;
     }
 
     public List<String> uploadArticleImageList(Long articleId, List<MultipartFile> fileList) throws IOException {
@@ -65,4 +68,5 @@ public class S3Uploader {
         }
         return urls;
     }
+
 }

@@ -23,7 +23,7 @@ public class Article {
 
     private String content;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleImage> imageList;
 
     public void setImageList(List<ArticleImage> imageList) {

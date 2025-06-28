@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ArticleDto {
+public class ArticleRequest {
 
     @Schema(description = "기사 제목", example = "기사 제목을 입력해주세요.")
     private String title;
