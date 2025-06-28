@@ -8,7 +8,10 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,10 +46,10 @@ public class S3Uploader {
                 .build();
     }
 
-    public String uploadArticleImage(Long articleId, MultipartFile file) throws IOException{
+    public String uploadArticleImage(Long id, MultipartFile file) throws IOException{
         String originalFileName = file.getOriginalFilename();
         String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String fileName = "article/" + articleId + "/"+ UUID.randomUUID() + ext;
+        String fileName = "article/" + id + "/"+ UUID.randomUUID() + ext;
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
@@ -67,6 +70,21 @@ public class S3Uploader {
             urls.add(url);
         }
         return urls;
+    }
+
+    public void deleteArticleImage(Long id) {
+        ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                .bucket(bucket)
+                .prefix("article/" + id + "/")
+                .build();
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(listRequest);
+
+        for (S3Object s3Object : listResponse.contents()) {
+            s3Client.deleteObject(builder -> builder
+                    .bucket(bucket)
+                    .key(s3Object.key())
+                    .build());
+        }
     }
 
 }
