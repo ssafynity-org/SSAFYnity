@@ -2,14 +2,9 @@ package com.ssafynity_b.domain.member.entity;
 
 import com.ssafynity_b.domain.board.entity.Board;
 import com.ssafynity_b.domain.comment.entity.Comment;
-import com.ssafynity_b.domain.member.dto.CreateMemberDto;
 import com.ssafynity_b.domain.member.dto.UpdateMemberDto;
-import com.ssafynity_b.domain.message.entity.Message;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,12 +56,6 @@ public class Member {
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> commentList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sender", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Message> sendMessageList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "receiver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    private List<Message> receiveMessageList = new ArrayList<>();
 
     @Builder
     public Member(Long id, String email, String password, String name, int cohort, String campus, boolean jobSearch, String company, boolean profileImage, boolean companyBlind, String role) {
