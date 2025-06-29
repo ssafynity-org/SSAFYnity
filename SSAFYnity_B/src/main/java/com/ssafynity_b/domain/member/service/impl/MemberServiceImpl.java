@@ -7,18 +7,12 @@ import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.domain.member.service.MemberService;
 import com.ssafynity_b.global.exception.MemberCreationException;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
-import com.ssafynity_b.global.fileupload.minio.service.MinIoService;
-import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +23,6 @@ public class MemberServiceImpl implements MemberService {
 
     //Member객체를 저장할 MemberRepository
     private final MemberRepository memberRepository;
-
-    //파일 저장을 위한 MinIo서비스
-    private final MinIoService minIoService;
 
     //멤버생성 서비스
     @Override
@@ -76,23 +67,6 @@ public class MemberServiceImpl implements MemberService {
     public GetMemberDto getMember(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
         return new GetMemberDto(member);
-    }
-
-    //로그인 성공시 회원정보와 저장된 프로필이미지를 반환하는 서비스
-    @Override
-    public GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException {
-        //멤버 정보 조회
-        Long memberId = userDetails.getMember().getId();
-        //멤버가 존재하지않을 경우 예외발생(=>로그인 실패)
-        Member member = memberRepository.findById(memberId).orElseThrow(MemberNotFoundException::new);
-
-        //저장된 프로필 이미지가 있을경우 해당 프로필 이미지도 같이 반환
-        if(member.isProfileImage()) {
-            String profileImage = minIoService.getFileToMinIO(userDetails);
-            return new GetLoginDto(member, profileImage);
-        }
-        //없을경우 멤버 정보만 반환
-        return new GetLoginDto(member);
     }
 
     //멤버 정보 수정 서비스
