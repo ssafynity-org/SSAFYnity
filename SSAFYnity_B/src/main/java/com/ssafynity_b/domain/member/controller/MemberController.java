@@ -2,17 +2,13 @@ package com.ssafynity_b.domain.member.controller;
 
 import com.ssafynity_b.domain.member.dto.*;
 import com.ssafynity_b.domain.member.service.MemberService;
-import com.ssafynity_b.global.jwt.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/member")

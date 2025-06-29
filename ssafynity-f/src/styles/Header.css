@@ -1,130 +1,147 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
 
-.header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #ccc; /* 구분선 추가 */
-  box-sizing: border-box; /* border가 너비에 포함되도록 설정 */
-  display: flex;
-  justify-content:safe center;
-  align-items: safe center;
-  /* gap: 80px; */
-  max-height: 80px;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans KR", "42dot Sans", sans-serif;
 }
 
-.header-logo {
-  display: inline-block; /* 이미지 크기만큼만 공간 차지 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 60px;
+  height: 80px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eee;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .header-logo img {
-  display: block; /* 인라인 요소 특성 제거 */
-  width: 200px; /* 로고 너비를 고정 */
+  display: block;
+  height: 40px;
+  transition: transform 0.3s;
 }
 
-.header-navigation {
-  position: relative; /* 드롭다운 위치를 조정할 기준이 되는 부모 요소 */
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* 수직 중앙 정렬 */
-  padding: 0 50px 0 55px;
-  margin: 0 43px 0 43px;
+.header-logo img:hover {
+  transform: scale(1.05);
 }
 
-.nav-menu  {
+.nav-menu {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  gap: 40px;
+  list-style: none;
   margin: 0;
-  gap: 35px;
+  padding: 0;
 }
 
 .menu-item {
-  cursor: pointer;
-  white-space: nowrap;
-  /* font-family: "IBM Plex Sans KR", serif; */
-  font-family: "42dot Sans", serif;
+  position: relative;
   font-weight: 500;
-  font-style: normal;
-  font-size: 1.1rem;
-  color: black;
-  padding: 28.8px 0;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.menu-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: #6366f1;
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+.menu-item:hover {
+  color: #6366f1;
+}
+
+.menu-item:hover::after {
+  width: 100%;
 }
 
 .header-link {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100%;
-  }
-
-.header-support {
-  position: relative;
-  background-color: darkseagreen;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80px ;
 }
 
-.header-support img {
-  width: 150px; /* 로고 너비를 고정 */;
-  margin: 0 13px;
+.header-button {
+  background-color: #6366f1;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
-.header-discord {
-  background-color: blueviolet;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80px;
-}
-
-.header-discord img {
-  width: 150px;
-  margin: 0 13px;
+.header-button:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 102%;
+  top: 100%;
   left: 0;
-  background-color: white;
-  border-radius: 0 0 30px 30px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  list-style: none;
-  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
   display: flex;
   justify-content: center;
-  min-height: 280px; /* 최소 높이 설정 (4개일 때도 동일한 크기 유지) */
-  max-height: 280px;/* 최대 높이 설정 */
+  padding: 30px 24px;
+  min-height: 220px;
+  z-index: 20;
+  transition: all 0.3s ease;
 }
 
 .dropdown-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  min-width: 200px;
-  max-width: 200px;
-  margin: 35px 0px 0px 0px;
+  gap: 14px;
+  min-width: 160px;
+  margin: 0 24px;
 }
 
 .dropdown-link a {
   text-decoration: none;
-  color: inherit;
-  display: inline-block;
-  width: fit-content;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.dropdown-link a:hover {
+  color: #6366f1;
+  transform: translateX(4px);
 }
 
 .dropdown-v-line {
-  border-left : 1px solid gray;
-  height : 240px;
-  margin: 20px 0px 0px 0px;
+  border-left: 1px solid #ddd;
+  height: 180px;
 }
 
 .test-image {
-  width: 400px;
-  height: 250px;
-  margin: 15px 40px 0px 40px;
+  width: 260px;
+  height: 160px;
+  margin: 0 24px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.test-image:hover {
+  transform: scale(1.05);
 }
