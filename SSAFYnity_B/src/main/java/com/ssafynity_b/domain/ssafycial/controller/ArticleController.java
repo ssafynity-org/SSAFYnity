@@ -1,5 +1,6 @@
 package com.ssafynity_b.domain.ssafycial.controller;
 
+import com.ssafynity_b.domain.ssafycial.dto.ArticlePageResponse;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleRequest;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleResponse;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleUpdateRequest;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Tag(name = "기사")
 @RequestMapping("/articles")
@@ -36,15 +38,15 @@ public class ArticleController {
         return ResponseEntity.ok(response);
     }
 
-//    @Operation(summary = "페이지네이션 조회", description = "기사를 페이지네이션 조회합니다.")
-//    @GetMapping
-//    public ResponseEntity<?> getArticles(
-//            @Parameter(description = "페이지 번호", example = "0") @RequestParam(defaultValue = "0") int page,
-//            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size)
-//    {
-//        ArticleResponse response = articleService.getArticle(articleId);
-//        return ResponseEntity.ok(response);
-//    }
+    @Operation(summary = "페이지네이션 조회", description = "기사를 페이지네이션 조회합니다.")
+    @GetMapping
+    public ResponseEntity<?> getArticles(
+            @Parameter(description = "페이지 번호", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "페이지 크기", example = "10") @RequestParam(defaultValue = "10") int size)
+    {
+        ArticlePageResponse response = articleService.getArticles(page, size);
+        return ResponseEntity.ok(response);
+    }
 
     @Operation(summary = "수정", description = "기사 하나를 단일 조회합니다.")
     @PutMapping("/{id}")

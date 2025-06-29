@@ -1,5 +1,6 @@
 package com.ssafynity_b.domain.ssafycial.service.impl;
 
+import com.ssafynity_b.domain.ssafycial.dto.ArticlePageResponse;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleRequest;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleResponse;
 import com.ssafynity_b.domain.ssafycial.dto.ArticleUpdateRequest;
@@ -55,6 +56,30 @@ public class ArticleServiceImpl implements ArticleService {
                 .imageList(article.getImageList().stream()
                         .map(ArticleImage::getImageUrl)
                         .collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public ArticlePageResponse getArticles(int page, int size) {
+        int offset = page*size;
+
+        List<Article> articles = articleRepository.findArticles(offset, size);
+        long count = articleRepository.countArticles();
+
+        List<ArticleResponse> responses = articles.stream()
+                .map(article -> ArticleResponse.builder()
+                        .title(article.getTitle())
+                        .content(article.getContent())
+                        .imageList(article.getImageList().stream()
+                                .map(ArticleImage::getImageUrl)
+                                .collect(Collectors.toList()))
+                        .build())
+                .toList();
+
+
+        return ArticlePageResponse.builder()
+                .articles(responses)
+                .totalCount(count)
                 .build();
     }
 
