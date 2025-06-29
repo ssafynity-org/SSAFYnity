@@ -20,8 +20,8 @@ function Login() {
       const jwtToken = response.data.jwtToken;
       localStorage.setItem("jwtToken", jwtToken);
 
-      const userDataResponse = await axiosInstance.get(`/api/member/login`);
-      dispatch(login(userDataResponse.data)); // Redux Store에 저장
+      // const userDataResponse = await axiosInstance.get(`/api/member/login`);
+      // dispatch(login(userDataResponse.data)); // Redux Store에 저장
 
       navigate("/main");
     } catch (error) {
