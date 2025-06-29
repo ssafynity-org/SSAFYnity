@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/userSlice";
 import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
@@ -9,20 +7,14 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await axiosInstance.post(`/api/auth/login`, { email, password });
       const jwtToken = response.data.jwtToken;
       localStorage.setItem("jwtToken", jwtToken);
-
-      const userDataResponse = await axiosInstance.get(`/api/member/login`);
-      dispatch(login(userDataResponse.data)); // Redux Store에 저장
-
       navigate("/main");
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -33,42 +25,39 @@ function Login() {
     }
   };
 
-  const handleNavigateToSignUpPage = () => {
-    navigate("/signup");
-  };
-
   return (
     <div className="login-page">
+      <div className="big-logo"></div>
       <div className="login-container">
+        <h2>Sign In</h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">아이디</label>
+          <div className="input-group">
+            <span className="icon">👤</span>
             <input
               type="email"
-              id="email"
-              placeholder="ID"
+              placeholder="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="password">비밀번호</label>
+          <div className="input-group">
+            <span className="icon">🔒</span>
             <input
               type="password"
-              id="password"
-              placeholder="PASSWORD"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
-          <div className="form-group">
-            <button type="submit">로그인</button>
-            <button type="button" onClick={handleNavigateToSignUpPage}>회원가입</button>
-          </div>
-          {errorMessage && <p>{errorMessage}</p>}
+          <button type="submit">Sign In</button>
         </form>
+        <p className="signup-text">
+          Don't have an account?{" "}
+          <span className="signup-link" onClick={() => navigate("/signup")}>Sign Up</span>
+        </p>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );

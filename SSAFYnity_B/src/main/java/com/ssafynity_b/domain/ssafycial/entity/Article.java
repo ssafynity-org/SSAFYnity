@@ -23,10 +23,18 @@ public class Article {
 
     private String content;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleImage> imageList;
 
-    public void setImageList(List<ArticleImage> imageList) {
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void updateImageList(List<ArticleImage> imageList) {
         this.imageList = imageList;
     }
 

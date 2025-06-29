@@ -17,8 +17,6 @@ public interface MemberService {
 
     GetMemberDto getMember(Long memberId);
 
-    GetLoginDto getLoginInformation(CustomUserDetails userDetails) throws IOException;
-
     Long updateMember(UpdateMemberDto memberDto);
 
     void deleteMember(Long memberId);
