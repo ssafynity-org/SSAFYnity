@@ -17,6 +17,7 @@ public class CorsConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
+        System.out.println("allowedOrigins : " + allowedOrigins);
         configuration.addAllowedOrigin(allowedOrigins); // React 서버
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
