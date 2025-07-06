@@ -31,7 +31,7 @@ export default function LoginPage() {
                 const data = await response.json();
                 setError(data.message || "로그인에 실패했습니다.");
             }
-        } catch (err) {
+        } catch {
             setError("로그인에 실패했습니다.");
         } finally {
             setIsLoading(false);
