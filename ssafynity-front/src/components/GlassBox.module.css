@@ -1,0 +1,56 @@
+.glassBox {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 30px;
+    background: linear-gradient(45deg, #98a9f334 0%, #c09ae734 100%);
+    border: 1px solid #dadff5;
+    box-shadow: 0 10px 20px 0 rgba(93, 93, 114, 0.1);
+}
+
+.glassBox.hovered {
+    animation: glassBox-hover 1s ease-in-out forwards;
+}
+
+.glassBox.hovered2 {
+    animation: glassBox-hover-2 1s ease-in-out forwards;
+}
+
+@keyframes glassBox-hover {
+    0% {
+        transform: scaleX(1) scaleY(1);
+    }
+    10% {
+        transform: scaleX(1) scaleY(1.03);
+        box-shadow: 0 10px 20px 0 rgba(183, 183, 206, 0.2);
+    }
+    30% {
+        transform: scaleX(1.03) scaleY(0.97);
+        filter: brightness(1.02);
+    }
+    60% {
+        transform: scaleX(1) scaleY(1.02);
+    }
+    100% {
+        transform: scaleX(1) scaleY(1);
+    }
+}
+
+@keyframes glassBox-hover-2 {
+    0% {
+        transform: scaleX(1) scaleY(1);
+    }
+    10% {
+        transform: scaleX(1) scaleY(1.1);
+        box-shadow: 0 10px 20px 0 rgba(183, 183, 206, 0.2);
+    }
+    30% {
+        transform: scaleX(1.005) scaleY(0.97);
+        filter: brightness(1.02);
+    }
+    60% {
+        transform: scaleX(1) scaleY(1.03);
+    }
+    100% {
+        transform: scaleX(1) scaleY(1);
+    }
+}

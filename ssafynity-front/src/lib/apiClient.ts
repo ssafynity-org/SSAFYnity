@@ -1,11 +1,13 @@
+import { getAuthHeaders } from "../utils/auth";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}) {
     const res = await fetch(`${BASE_URL}${path}`, {
-        headers: { "Content-Type": "application/json" },
+        headers: getAuthHeaders(),
         ...options,
     });
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    if (!res.ok) console.error(res.status);
     return res.json() as Promise<T>;
 }
 
