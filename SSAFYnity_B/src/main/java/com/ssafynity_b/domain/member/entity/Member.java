@@ -2,6 +2,7 @@ package com.ssafynity_b.domain.member.entity;
 
 import com.ssafynity_b.domain.board.entity.Board;
 import com.ssafynity_b.domain.comment.entity.Comment;
+import com.ssafynity_b.domain.common.enums.Campus;
 import com.ssafynity_b.domain.member.dto.UpdateMemberDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -33,8 +34,9 @@ public class Member {
     @Column(nullable = false)
     private int cohort; //기수
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String campus; //캠퍼스
+    private Campus campus; //캠퍼스
 
     @Column(nullable = false)
     private boolean jobSearch; //취준중이면 true 아니면 false
@@ -58,7 +60,7 @@ public class Member {
     private List<Comment> commentList = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String email, String password, String name, int cohort, String campus, boolean jobSearch, String company, boolean profileImage, boolean companyBlind, String role) {
+    public Member(Long id, String email, String password, String name, int cohort, Campus campus, boolean jobSearch, String company, boolean profileImage, boolean companyBlind, String role) {
         this.id = id;
         this.email = email;
         this.password = password;

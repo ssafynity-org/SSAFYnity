@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 
+@Schema(description = "로그인 요청을 위한 DTO. 이메일과 비밀번호를 포함합니다.")
 @Getter
 @Setter
 public class LoginRequest {

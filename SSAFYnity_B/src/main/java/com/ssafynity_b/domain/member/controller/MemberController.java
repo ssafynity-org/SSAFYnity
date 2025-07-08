@@ -18,7 +18,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @Operation(summary = "회원정보 저장")
+    @Operation(summary = "회원가입")
     @PostMapping(value = "/signup")
     public ResponseEntity<?> createMember(@RequestBody CreateMemberDto memberDto) throws FileUploadException {
         memberService.createMember(memberDto);
