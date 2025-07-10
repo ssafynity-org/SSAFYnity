@@ -1,15 +1,15 @@
-package com.ssafynity_b.domain.board.service;
+package com.ssafynity_b.domain.board.service.impl;
 
 import com.ssafynity_b.domain.board.dto.*;
 import com.ssafynity_b.domain.board.entity.Board;
 import com.ssafynity_b.domain.board.repository.BoardRepository;
+import com.ssafynity_b.domain.board.service.BoardService;
 import com.ssafynity_b.domain.member.entity.Member;
 import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.global.exception.BoardNotFoundException;
 import com.ssafynity_b.global.exception.MemberNotEqualWriterException;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
