@@ -12,7 +12,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post(`/api/auth/login`, { email, password });
+      const response = await axiosInstance.post(`/auth/login`, { email, password });
       const jwtToken = response.data.jwtToken;
       localStorage.setItem("jwtToken", jwtToken);
       navigate("/main");
