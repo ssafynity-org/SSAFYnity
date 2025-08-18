@@ -27,6 +27,7 @@ public class YoutubeServiceImpl implements YoutubeService {
     public JSONObject fetchVideoData(String videoId) {
 
         String videoUrl = String.format(YOUTUBE_VIDEO_URL, videoId);
+        System.out.println("videoUrl : " + videoUrl);
         RestTemplate restTemplate = new RestTemplate();
         String videoResponse = restTemplate.getForObject(videoUrl, String.class);
 
