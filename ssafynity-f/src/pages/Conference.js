@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
 import ConferenceHeader from "../components/ConferenceHeader";
 import SearchBar from "../components/SearchBar";
@@ -11,45 +12,47 @@ function Conference() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [selectedCompany, setSelectedCompany] = useState(null); 
+  const [selectedCompany, setSelectedCompany] = useState(null);
 
   const observer = useRef();
+  const navigate = useNavigate();
 
+  // ✅ 회사 선택 핸들러
   const handleCompany = (newCompany) => {
-    setCompanyList(prevList => 
-      prevList.includes(newCompany) 
-        ? prevList.filter(item => item !== newCompany)  // 존재하면 삭제
-        : [...prevList, newCompany]  // 없으면 추가
+    setCompanyList((prevList) =>
+      prevList.includes(newCompany)
+        ? prevList.filter((item) => item !== newCompany)
+        : [...prevList, newCompany]
     );
     setPage(0);
     setVideoData([]);
   };
 
+  // ✅ 메뉴 선택 핸들러
   const handleMenu = (newMenu) => {
     if (menu === newMenu) return;
-    console.log("show");
     setMenu(newMenu);
     setPage(0);
     setVideoData([]);
     setHasMore(true);
     setCompanyList(null);
-    fetchVideoData();
+    fetchVideoData(0);
   };
 
+  // ✅ 영상 데이터 가져오기
   const fetchVideoData = async (currentPage) => {
     if (loading || !hasMore) return;
 
     try {
       setLoading(true);
 
-      const formattedCompanies = companyList.length > 0 
-        ? companyList.join(",") 
-        : null;
+      const formattedCompanies =
+        companyList && companyList.length > 0 ? companyList.join(",") : null;
 
       const response = await axiosInstance.get("/api/video/videolist", {
         params: {
-          tags: selectedCompany ? [selectedCompany] : null,  // ✅ 선택된 회사에 따라 태그 설정
-          companies: formattedCompanies,  // ✅ Swagger에 맞게 변환된 companies
+          tags: selectedCompany ? [selectedCompany] : null,
+          companies: formattedCompanies,
           page: currentPage,
           size: 15,
         },
@@ -66,7 +69,7 @@ function Conference() {
 
   useEffect(() => {
     fetchVideoData(page);
-  }, [page, companyList, selectedCompany]);  // ✅ selectedCompany 의존성 추가
+  }, [page, companyList, selectedCompany]);
 
   const lastVideoElementRef = useCallback(
     (node) => {
@@ -96,6 +99,8 @@ function Conference() {
                 ref={index === videoData.length - 1 ? lastVideoElementRef : null}
                 key={video.id}
                 className="video-container"
+                onClick={() => navigate(`/conference/external/${video.videoId}`)} // ✅ 상세 페이지 이동
+                style={{ cursor: "pointer" }}
               >
                 <div className="video-allcontent">
                   <div className="video-thumbnail">
