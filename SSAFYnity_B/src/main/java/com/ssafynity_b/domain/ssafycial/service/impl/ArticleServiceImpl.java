@@ -8,7 +8,7 @@ import com.ssafynity_b.domain.ssafycial.entity.Article;
 import com.ssafynity_b.domain.ssafycial.entity.ArticleImage;
 import com.ssafynity_b.domain.ssafycial.repository.ArticleRepository;
 import com.ssafynity_b.domain.ssafycial.service.ArticleService;
-import com.ssafynity_b.global.s3.S3Uploader;
+import com.ssafynity_b.global.s3.S3service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final S3Uploader s3Uploader;
+    private final S3service s3Service;
 
     @Transactional
     @Override
@@ -105,14 +105,14 @@ public class ArticleServiceImpl implements ArticleService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 기사가 없습니다. id=" + id));
 
         //2. s3에서 해당 기사의 첨부 이미지 삭제
-        s3Uploader.deleteArticleImage(article.getId());
+        s3Service.deleteArticleImage(article.getId());
 
         //3. 해당 기사 삭제
         articleRepository.delete(article);
     }
 
     private void updateArticleImageList(Article article, Long articleId, List<MultipartFile> imageList) throws IOException {
-        List<String> urlList = s3Uploader.uploadArticleImageList(articleId, imageList);
+        List<String> urlList = s3Service.uploadArticleImageList(articleId, imageList);
 
         List<ArticleImage> newImageList = new ArrayList<>();
         for (String url : urlList) {

@@ -77,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
         member.updateEmail(memberDto.getEmail())
                 .updatePassword(memberDto.getPassword())
                 .updateName(memberDto.getName())
-                .updatdCompany(memberDto.getCompany());
+                .updateCompany(memberDto.getCompany());
         return member.getId();
     }
 
