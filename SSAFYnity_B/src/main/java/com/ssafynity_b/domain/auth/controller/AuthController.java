@@ -28,7 +28,6 @@ public class AuthController {
     @Operation(summary = "사용자 로그인(로그인 성공 시 Jwt토큰 발급)")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        System.out.println("웨 안들어옴?");
         LoginResponse loginResponse = authService.authenticate(loginRequest);
 
         System.out.println("로그인 객체 : " + loginResponse.toString());
