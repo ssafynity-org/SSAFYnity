@@ -73,9 +73,10 @@ public class S3service {
         return cloudFrontUrl + fileName;
     }
 
-//    public String getProfileImage(Long memberId) {
-//
-//    }
+    public String getProfileImage(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
+        return member.getProfileImageUrl();
+    }
 
     public String uploadArticleImage(Long id, MultipartFile file) throws IOException{
         String originalFileName = file.getOriginalFilename();

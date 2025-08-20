@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux"; // useSelector import
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
@@ -7,10 +7,26 @@ import "../styles/Main.css";
 function Main() {
   const user = useSelector(state => state.user.userInfo); // Redux store에서 user 데이터 가져오기
   const navigate = useNavigate();
+  const [profileImageUrl, setProfileImageUrl] = useState(""); // 이미지 URL state
 
   const currentDate = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', month: 'long', day: 'numeric'
   });
+
+  //프로필 이미지 불러오기
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      try {
+        const res = await axiosInstance.get("/api/member/getProfileImage");
+        console.log("들어오는 이미지 : " , res.data);
+        setProfileImageUrl(res.data);
+      } catch (error) {
+        console.error("프로필 이미지 불러오기 실패:", error);
+      }
+    };
+
+    fetchProfileImage();
+  }, []);
 
   const handleCheckIn = async () => {
     try {
@@ -53,7 +69,11 @@ function Main() {
           {/* <p>Today's date: {currentDate}</p> */}
           {user && (
             <div className="profile-section">
-              <img src={`data:image/jpeg;base64,${user.profileImage}`} alt="User profile" style={{ width: 80, height: 80 }} />
+              <img
+                src={profileImageUrl || "/images/default-profile.png"} 
+                alt="User profile"
+                style={{ width: 80, height: 80 }}
+              />
               <div className="profile-info">
                 <p className="profile-campus">🏫대전 캠퍼스 10기</p>
                 <div className="profile-nameAndStatus">

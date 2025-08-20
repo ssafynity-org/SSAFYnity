@@ -79,13 +79,13 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-//    @Operation(summary = "프로필 사진 가져오기")
-//    @GetMapping("/getProfileImage")
-//    public ResponseEntity<?> getProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails){
-//        Long memberId = userDetails.getMember().getId();
-//
-//        //DB 또는 S3에서 해당 사용자의 프로필 이미지 URL 가져오기
-//        String profileImageUrl = s3service.
-//    }
+    @Operation(summary = "프로필 사진 가져오기")
+    @GetMapping("/getProfileImage")
+    public String getProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails){
+        Long memberId = userDetails.getMember().getId();
+
+        //DB에서 해당 사용자의 프로필 이미지 URL 가져오기
+        return s3service.getProfileImage(userDetails.getMember().getId());
+    }
 
 }
