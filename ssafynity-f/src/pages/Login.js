@@ -13,6 +13,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axiosInstance.post(`/auth/login`, { email, password });
+      console.log("로그인 응답:", response.data);
       const jwtToken = response.data.jwtToken;
       localStorage.setItem("jwtToken", jwtToken);
       navigate("/main");
