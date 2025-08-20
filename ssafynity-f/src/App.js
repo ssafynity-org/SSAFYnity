@@ -13,6 +13,7 @@ import Message from "./pages/Message";
 import MessageWrite from "./pages/MessageWrite";
 import MessageDetail from "./pages/MessageDetail";
 import Conference from "./pages/Conference.js";
+import ConferenceVideo from "./pages/ConferenceVideo";
 import Board from "./pages/Board.js";
 import CreatePost from "./pages/CreatePost.js";
 import NewSignup from "./pages/NewSignUp.js";
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/message/write" element={<PrivateRoute><MessageWrite /></PrivateRoute>} />
                 <Route path="/message/detail/:id" element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
                 <Route path="/conference/external" element={<PrivateRoute><Conference /></PrivateRoute>} />
+                <Route path="/conference/external/:videoId" element={<PrivateRoute><ConferenceVideo /></PrivateRoute>} />
                 <Route path="/community/board" element={<PrivateRoute><Board /></PrivateRoute>} />
                 <Route path="/create-post" element={<CreatePost />} />
               </Routes>

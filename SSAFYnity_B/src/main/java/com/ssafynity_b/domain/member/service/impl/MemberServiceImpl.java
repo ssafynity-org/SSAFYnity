@@ -7,6 +7,7 @@ import com.ssafynity_b.domain.member.repository.MemberRepository;
 import com.ssafynity_b.domain.member.service.MemberService;
 import com.ssafynity_b.global.exception.MemberCreationException;
 import com.ssafynity_b.global.exception.MemberNotFoundException;
+import com.ssafynity_b.global.s3.S3service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     //Member객체를 저장할 MemberRepository
     private final MemberRepository memberRepository;
+    private final S3service s3service;
 
     //멤버생성 서비스
     @Override
@@ -77,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
         member.updateEmail(memberDto.getEmail())
                 .updatePassword(memberDto.getPassword())
                 .updateName(memberDto.getName())
-                .updatdCompany(memberDto.getCompany());
+                .updateCompany(memberDto.getCompany());
         return member.getId();
     }
 

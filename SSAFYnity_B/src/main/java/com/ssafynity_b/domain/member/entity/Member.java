@@ -47,6 +47,8 @@ public class Member {
     @NotBlank
     private boolean profileImage; //프로필이미지 사용여부
 
+    private String profileImageUrl; //프로필이미지 Url (프론트에서 이걸 img태그에 삽입하면 됨)
+
     @Column(nullable = false)
     private boolean companyBlind; //직장명 공개를 원하면 true 아니면 false
 
@@ -95,8 +97,13 @@ public class Member {
         return this;
     }
 
-    public Member updatdCompany(String company) {
+    public Member updateCompany(String company) {
         this.company = company;
+        return this;
+    }
+
+    public Member updateProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
         return this;
     }
 }
