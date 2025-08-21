@@ -77,7 +77,7 @@ function SearchBar({ selectedMenu, selectedCompany, onCategorySelect }) {
             ))}
           </div>
           <div className="job-categories">
-          {categories.map((category, index) => (
+          {/* {categories.map((category, index) => (
             <div 
               key={index}
               className={`job-category-item ${selectedCategories.includes(category.name) ? "selected" : ""}`}
@@ -86,12 +86,12 @@ function SearchBar({ selectedMenu, selectedCompany, onCategorySelect }) {
             >
               {category.name}
             </div>
-          ))}
+          ))} */}
         </div>
           
-          <button className="search-button" onClick={handleSearch}>
+          {/* <button className="search-button" onClick={handleSearch}>
             검색
-          </button>
+          </button> */}
         </div>
       )}
     </div>

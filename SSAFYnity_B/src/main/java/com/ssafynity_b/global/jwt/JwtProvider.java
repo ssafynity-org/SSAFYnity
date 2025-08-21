@@ -14,24 +14,34 @@ public class JwtProvider {
     private final JwtConfig jwtConfig;
 
     //JWT 생성
-    public String generateToken(String email){
+    public String generateAccessToken(String email){
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getExpirationTime()))
-                .signWith(jwtConfig.getSecretKey()) //새로운 방식
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getAccessExpirationTime()))
+                .signWith(jwtConfig.getSecretKey()) //시크릿 키로 서명
                 .compact();
     }
 
-    //JWT 검증 및 MemberId 추출
-    public String extractMemberId(String token){
+    //Refresh Token 생성
+    public String generateRefreshToken(String email){
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + jwtConfig.getRefreshExpirationTime()))
+                .signWith(jwtConfig.getSecretKey()) //시크릿 키로 서명
+                .compact();
+    }
+
+    //JWT 검증 및 Member이메일 추출
+    public String extractMemberEmail(String token){
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtConfig.getSecretKey()) //새로운 방식
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject(); //MemberId 추출
+        return claims.getSubject(); //Member이메일 추출
     }
 
     //토큰 유효성 검사
