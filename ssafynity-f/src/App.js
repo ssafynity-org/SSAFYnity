@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate,BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../src/app/store.js';
@@ -39,6 +39,7 @@ function App() {
                 <Route path="/conference/external/:videoId" element={<ProtectedRoute><ConferenceVideo /></ProtectedRoute>} />
                 <Route path="/community/board" element={<ProtectedRoute><Board /></ProtectedRoute>} />
                 <Route path="/create-post" element={<CreatePost />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
             </main>
             <Footer />
