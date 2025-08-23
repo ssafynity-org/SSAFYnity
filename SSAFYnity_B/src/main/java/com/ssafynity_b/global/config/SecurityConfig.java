@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
@@ -31,34 +33,49 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .cors(cors -> cors
+//                        .configurationSource(corsConfigurationSource))
+//                .csrf(csrf -> csrf.disable()) // 필요 시 CSRF 설정
+//                .httpBasic(HttpBasicConfigurer::disable)
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 비활성화
+//                )
+//                .authorizeHttpRequests(request -> request
+//                        .anyRequest().permitAll() // 모든 요청에 대해 접근 허용
+//                )
+//                .exceptionHandling(exceptionHandling -> exceptionHandling
+//                        .authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가;
+//
+//        return http.build();
+//    }
+
+//    class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
+//
+//        @Override
+//        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+//            response.setContentType("application/json");
+//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            response.getWriter().write("{\"code\" : \"NP\" , \"message\" : \"No Permission.\"}");
+//        }
+//    }
+
     @Bean
-    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors
-                        .configurationSource(corsConfigurationSource))
-                .csrf(csrf -> csrf.disable()) // 필요 시 CSRF 설정
-                .httpBasic(HttpBasicConfigurer::disable)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 비활성화
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/auth/**",
+                                "/swagger-ui/**",   // swagger-ui 리소스 전체
+                                "/v3/api-docs/**"   // OpenAPI 문서
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 )
-                .authorizeHttpRequests(request -> request
-                        .anyRequest().permitAll() // 모든 요청에 대해 접근 허용
-                )
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(new FailedAuthenticationEntryPoint()))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가;
-
-        return http.build();
-    }
-
-    class FailedAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-        @Override
-        public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"code\" : \"NP\" , \"message\" : \"No Permission.\"}");
-        }
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
 

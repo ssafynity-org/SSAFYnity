@@ -6,6 +6,7 @@ import com.ssafynity_b.global.exception.MemberNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,91 +33,110 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
 
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//
+//        String requestPath = request.getRequestURI();
+//
+//        // Swagger 관련 경로, 회원가입,로그인 경로는 필터링하지 않음
+//        if (requestPath.startsWith("/ws") || requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/auth/login") || requestPath.startsWith("/api/member/signup")) {
+//            filterChain.doFilter(request, response); // 다음 필터로 이동
+//            return;
+//        }
+//
+//        try{
+//
+//            String token = parseBearerToken(request);
+//            if(token==null){
+//                return;
+//            }
+//
+//            String memberId = jwtProvider.extractMemberId(token);
+//            if(memberId==null){
+//                return;
+//            }
+//
+//            System.out.println("jwt토큰 검증 성공 : " + token);
+//            System.out.println("memberId : " + memberId);
+//
+//            Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow(MemberNotFoundException::new);
+//            String role = member.getRole(); //role : ROLE_USER, ROLE_ADMIN
+//
+//            System.out.println("role : " + role);
+//
+//            //권한 정보 설정
+//            List<GrantedAuthority> authorities = new ArrayList<>();
+//            authorities.add(new SimpleGrantedAuthority(role));
+//
+//            //권한정보를 담을 비어있는 SecurityContext를 생성
+//            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+//            CustomUserDetails userDetails = new CustomUserDetails(member, authorities);
+//
+//            //권한정보를 담은 토큰을 발행
+//            AbstractAuthenticationToken authenticationToken =
+//                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+//            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//
+//            //SecurityContext에 권한정보 토큰을 담아줌
+//            securityContext.setAuthentication(authenticationToken);
+//
+//            //SecurityContextHolder에 권한정보 토큰을 담은 SecurityContext를 저장
+//            SecurityContextHolder.setContext(securityContext);
+//
+//        }catch (ExpiredJwtException e) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setContentType("application/json");
+//            response.setCharacterEncoding("UTF-8");
+//            response.getWriter().write("{\"message\": \"JWT 토큰이 만료되었습니다.\", \"error\": \"Unauthorized\"}");
+//            return;
+//        } catch (Exception e) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.getWriter().write("Unauthorized: Invalid token");
+//            return;
+//        }
+//
+//        // 필터 체인 계속 진행
+//        filterChain.doFilter(request, response);
+//    }
+//
+//    //request객체로부터 토큰값을 가져오는 메소드
+//    private String parseBearerToken(HttpServletRequest request){
+//
+//        String authorization = request.getHeader("Authorization");
+//
+//        //Authorization Header에 실제로 값이 존재하는지 판단
+//        boolean hasAuthorization = StringUtils.hasText(authorization);
+//
+//        //Authorization이 존재하지않으면 null반환
+//        if(!hasAuthorization)
+//            return null;
+//
+//        //Authorization이 'Bearer '로 시작하지않는다면 null반환
+//        boolean isBearer = authorization.startsWith("Bearer ");
+//        if(!isBearer)
+//            return null;
+//
+//        //토큰값 반환
+//        String token = authorization.substring(7);
+//        return token;
+//    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String requestPath = request.getRequestURI();
+        String header = request.getHeader("Authorization");
 
-        // Swagger 관련 경로, 회원가입,로그인 경로는 필터링하지 않음
-        if (requestPath.startsWith("/ws") || requestPath.startsWith("/swagger-ui") || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/auth/login") || requestPath.startsWith("/api/member/signup")) {
-            filterChain.doFilter(request, response); // 다음 필터로 이동
-            return;
+        if(header != null && header.startsWith("Bearer ")){
+            String token = header.substring(7);
+
+            if(jwtProvider.isTokenValid(token)){
+                String email = jwtProvider.extractMemberEmail(token);
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(email, null, List.of());
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
         }
 
-        try{
-
-            String token = parseBearerToken(request);
-            if(token==null){
-                return;
-            }
-
-            String memberId = jwtProvider.extractMemberId(token);
-            if(memberId==null){
-                return;
-            }
-
-            System.out.println("jwt토큰 검증 성공 : " + token);
-            System.out.println("memberId : " + memberId);
-
-            Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow(MemberNotFoundException::new);
-            String role = member.getRole(); //role : ROLE_USER, ROLE_ADMIN
-
-            System.out.println("role : " + role);
-
-            //권한 정보 설정
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(role));
-
-            //권한정보를 담을 비어있는 SecurityContext를 생성
-            SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-            CustomUserDetails userDetails = new CustomUserDetails(member, authorities);
-
-            //권한정보를 담은 토큰을 발행
-            AbstractAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            //SecurityContext에 권한정보 토큰을 담아줌
-            securityContext.setAuthentication(authenticationToken);
-
-            //SecurityContextHolder에 권한정보 토큰을 담은 SecurityContext를 저장
-            SecurityContextHolder.setContext(securityContext);
-
-        }catch (ExpiredJwtException e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"message\": \"JWT 토큰이 만료되었습니다.\", \"error\": \"Unauthorized\"}");
-            return;
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Invalid token");
-            return;
-        }
-
-        // 필터 체인 계속 진행
         filterChain.doFilter(request, response);
-    }
-
-    //request객체로부터 토큰값을 가져오는 메소드
-    private String parseBearerToken(HttpServletRequest request){
-
-        String authorization = request.getHeader("Authorization");
-
-        //Authorization Header에 실제로 값이 존재하는지 판단
-        boolean hasAuthorization = StringUtils.hasText(authorization);
-
-        //Authorization이 존재하지않으면 null반환
-        if(!hasAuthorization)
-            return null;
-
-        //Authorization이 'Bearer '로 시작하지않는다면 null반환
-        boolean isBearer = authorization.startsWith("Bearer ");
-        if(!isBearer)
-            return null;
-
-        //토큰값 반환
-        String token = authorization.substring(7);
-        return token;
     }
 }

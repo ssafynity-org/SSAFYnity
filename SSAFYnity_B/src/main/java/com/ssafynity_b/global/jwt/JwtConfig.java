@@ -15,8 +15,12 @@ public class JwtConfig {
     private String secretKey;
 
     @Getter
-    @Value("${jwt.expiration-time}")
-    private long expirationTime;
+    @Value("${jwt.accessExpiration-time}")
+    private long accessExpirationTime;
+
+    @Getter
+    @Value("${jwt.refreshExpiration-time}")
+    private long refreshExpirationTime;
 
     public Key getSecretKey(){
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)); //Base64로 디코딩한후, 알고리즘 암호화처리

@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Navigate,BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from '../src/app/store.js';
 import './App.css';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import PrivateRoute from "./components/PrivateRoute";
+import ProtectedRoute from "./components/ProtectedRoute.js";
 import Login from "./pages/Login";
 import Main from "./pages/Main";
 import Message from "./pages/Message";
@@ -31,14 +31,15 @@ function App() {
                 {/* <Route path="/signup" element={<SignUp />} /> */}
                 <Route path="/signup" element={<NewSignup />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/main" element={<PrivateRoute><Main /></PrivateRoute>} />
-                <Route path="/message" element={<PrivateRoute><Message /></PrivateRoute>} />
-                <Route path="/message/write" element={<PrivateRoute><MessageWrite /></PrivateRoute>} />
-                <Route path="/message/detail/:id" element={<PrivateRoute><MessageDetail /></PrivateRoute>} />
-                <Route path="/conference/external" element={<PrivateRoute><Conference /></PrivateRoute>} />
-                <Route path="/conference/external/:videoId" element={<PrivateRoute><ConferenceVideo /></PrivateRoute>} />
-                <Route path="/community/board" element={<PrivateRoute><Board /></PrivateRoute>} />
+                <Route path="/main" element={<ProtectedRoute><Main /></ProtectedRoute>} />
+                <Route path="/message" element={<ProtectedRoute><Message /></ProtectedRoute>} />
+                <Route path="/message/write" element={<ProtectedRoute><MessageWrite /></ProtectedRoute>} />
+                <Route path="/message/detail/:id" element={<ProtectedRoute><MessageDetail /></ProtectedRoute>} />
+                <Route path="/conference/external" element={<ProtectedRoute><Conference /></ProtectedRoute>} />
+                <Route path="/conference/external/:videoId" element={<ProtectedRoute><ConferenceVideo /></ProtectedRoute>} />
+                <Route path="/community/board" element={<ProtectedRoute><Board /></ProtectedRoute>} />
                 <Route path="/create-post" element={<CreatePost />} />
+                <Route path="*" element={<Navigate to="/login" replace />} />
               </Routes>
             </main>
             <Footer />

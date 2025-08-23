@@ -5,7 +5,10 @@ import com.ssafynity_b.domain.auth.dto.LoginResponse;
 import com.ssafynity_b.domain.auth.service.AuthService;
 import com.ssafynity_b.global.jwt.CustomUserDetails;
 import com.ssafynity_b.global.jwt.JwtConfig;
+import com.ssafynity_b.global.jwt.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -20,9 +23,13 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtProvider jwtProvider;
+    private final RedisTemplate<String,String> redisTemplate;
 
-    public AuthController(JwtConfig jwtConfig, AuthService authService) {
+    public AuthController(JwtConfig jwtConfig, AuthService authService, JwtProvider jwtProvider, RedisTemplate redisTemplate) {
         this.authService = authService;
+        this.jwtProvider = jwtProvider;
+        this.redisTemplate = redisTemplate;
     }
 
     @Operation(summary = "사용자 로그인(로그인 성공 시 Jwt토큰 발급)")
@@ -30,9 +37,12 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         LoginResponse loginResponse = authService.authenticate(loginRequest);
 
-        System.out.println("로그인 객체 : " + loginResponse.toString());
         if (loginResponse != null) {
-            return ResponseEntity.ok(loginResponse); // 인증 성공
+            System.out.println("보내줄 쿠키 : " + loginResponse.getRefreshToken().toString());
+
+            return ResponseEntity.ok()
+                            .header(HttpHeaders.SET_COOKIE,loginResponse.getRefreshToken().toString())
+                            .body(loginResponse.getAccessToken());
         }
         return ResponseEntity.status(401).body("Unauthorized"); // 인증 실패
     }
@@ -55,6 +65,28 @@ public class AuthController {
             return ResponseEntity.ok("Token is valid");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
+    @Operation(summary = "Redis에서 리프레쉬토큰 확인 후, 엑세스 토큰 발급")
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@CookieValue("refresh") String refreshToken){
+        System.out.println("들어온 리프레쉬 토큰 : " + refreshToken);
+        if(!jwtProvider.isTokenValid(refreshToken)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String email = jwtProvider.extractMemberEmail(refreshToken);
+        String savedToken = redisTemplate.opsForValue().get("refresh:"+email);
+
+        if(savedToken!=null && savedToken.equals(refreshToken)) {
+            System.out.println("리프레쉬 토큰 검증 성공");
+            String newAccessToken = jwtProvider.generateAccessToken(email);
+            System.out.println("새로발급되는 액세스토큰 : " + newAccessToken);
+            return ResponseEntity.ok(newAccessToken);
+        } else {
+            System.out.println("리프레쉬 토큰 검증 실패");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }
