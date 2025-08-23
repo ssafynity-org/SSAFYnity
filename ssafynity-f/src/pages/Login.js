@@ -12,9 +12,9 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post(`/auth/login`, { email, password });
+      const response = await axiosInstance.post(`/auth/login`, { email, password },{withCredentials: true});
       console.log("로그인 응답:", response.data);
-      const jwtToken = response.data.jwtToken;
+      const jwtToken = response.data;
       localStorage.setItem("jwtToken", jwtToken);
       navigate("/main");
     } catch (error) {

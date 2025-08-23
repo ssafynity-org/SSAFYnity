@@ -1,16 +1,17 @@
 package com.ssafynity_b.domain.auth.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.ResponseCookie;
 
+@ToString
 @Builder
 @AllArgsConstructor
 @Getter
 @Setter
 public class LoginResponse {
 
-    private String jwtToken;
+    private String accessToken;
+
+    private ResponseCookie refreshToken;
 
 }

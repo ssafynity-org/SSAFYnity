@@ -10,9 +10,11 @@ import com.ssafynity_b.global.jwt.JwtConfig;
 import com.ssafynity_b.global.jwt.JwtProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -47,14 +49,24 @@ public class AuthServiceImpl implements AuthService {
 
             //Redis에 리프레쉬 토큰 저장
             redisTemplate.opsForValue().set(
-                    "refresh"+member.getEmail(),
+                    "refresh:"+member.getEmail(),
                     refreshToken,
                     jwtConfig.getRefreshExpirationTime(),
                     TimeUnit.MILLISECONDS
             );
 
+            ResponseCookie cookie = ResponseCookie.from("refresh", refreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("None")
+                    .path("/")
+                    .domain("localhost")
+                    .maxAge(Duration.ofDays(7))
+                    .build();
+
             return LoginResponse.builder()
-                    .jwtToken(accessToken)
+                    .accessToken(accessToken)
+                    .refreshToken(cookie)
                     .build();
         }
         return null; // 비밀번호가 일치하지 않는다면 null 반환
